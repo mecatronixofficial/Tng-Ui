@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -21,7 +22,7 @@ import {
 } from "react-icons/fa";
 
 import { siteConfig } from "@/data/site";
-import { categories } from "@/data/categories";
+import { api, type CategoryApi } from "@/lib/api";
 
 const companyLinks = [
   ["Our Store", "/about"],
@@ -92,6 +93,12 @@ const bizFacts = [
 
 export default function Footer() {
   const pathname = usePathname();
+  const [categories, setCategories] = useState<CategoryApi[]>([]);
+
+  useEffect(() => {
+    api.publicCategories().then(setCategories).catch(() => {});
+  }, []);
+
   if (pathname.startsWith("/admin")) return null;
 
   const year = new Date().getFullYear();
@@ -99,17 +106,21 @@ export default function Footer() {
   return (
     <footer className="border-t border-cream-200 bg-white text-ink">
       {/* Trade CTA */}
-      <div className="footer-cta-bg relative overflow-hidden bg-ink">
-        <div className="container-x grid gap-6 py-12 lg:grid-cols-[1fr_auto] lg:items-center">
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800">
+        {/* Blobs */}
+        <div className="pointer-events-none absolute -left-20 -top-12 h-72 w-72 rounded-full bg-primary-600/25 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-10 right-0 h-56 w-56 rounded-full bg-secondary/15 blur-3xl" />
+
+        <div className="container-x relative grid gap-6 py-12 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-primary-500/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-primary-300">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-xl border border-secondary/30 bg-secondary/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-secondary">
               <FaTags className="h-2.5 w-2.5" />
               Retail and wholesale cloth store
             </div>
             <h2 className="max-w-2xl text-2xl font-extrabold tracking-tight text-white md:text-[1.75rem] md:leading-snug">
               Need cloths for your home,&nbsp;shop, or bulk resale?
             </h2>
-            <p className="mt-3 max-w-xl text-sm leading-7 text-white/60">
+            <p className="mt-3 max-w-xl text-sm leading-7 text-white/55">
               Share your requirement on WhatsApp for petticoats, lungis, towels,
               gamcha, bed sheets, dhotis and handloom cloths.
             </p>
@@ -120,14 +131,14 @@ export default function Footer() {
               href={siteConfig.socials.whatsapp}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-secondary px-6 py-3 text-sm font-bold text-white shadow-lg shadow-secondary-dark/50 transition hover:bg-secondary/90 active:scale-95"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 py-3 text-sm font-black text-white shadow-lg shadow-[#25D366]/30 transition hover:bg-[#1ebe5d] active:scale-95"
             >
               <FaWhatsapp className="h-4 w-4" />
               Ask on WhatsApp
             </a>
             <a
               href={`tel:${siteConfig.phone.replace(/\s+/g, "")}`}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 px-6 py-3 text-sm font-bold text-white/90 transition hover:border-white/50 hover:bg-white/10 active:scale-95"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/[0.07] px-6 py-3 text-sm font-bold text-white/90 backdrop-blur-sm transition hover:border-white/40 hover:bg-white/15 active:scale-95"
             >
               <FaPhoneAlt className="h-4 w-4" />
               Call store

@@ -22,6 +22,7 @@ export interface Product {
   reviews: number;
   tags: string[];
   specifications?: { label: string; value: string }[];
+  bundleSize?: number; // pieces per wholesale bundle (default 12)
 }
 
 export interface Category {
@@ -30,6 +31,15 @@ export interface Category {
   slug: string;
   image: string;
   description: string;
+  productCount: number;
+}
+
+export interface Subcategory {
+  id: string;
+  name: string;
+  slug: string;
+  category: string;
+  image?: string;
   productCount: number;
 }
 

@@ -9,7 +9,7 @@ import Link from "next/link";
 
 type Step = "login" | "forgot" | "otp" | "reset" | "done";
 
-function BrandLogo({ className }: { className?: string }) {
+function BrandLogo({ className, dark }: { className?: string; dark?: boolean }) {
   return (
     <Link href="/" className={`flex items-center gap-4 group ${className ?? ""}`}>
       {siteConfig.logo ? (
@@ -20,8 +20,12 @@ function BrandLogo({ className }: { className?: string }) {
         </div>
       )}
       <div className="leading-tight">
-        <div className="display text-xl text-primary-900 font-semibold tracking-tight">{siteConfig.name}</div>
-        <div className="text-[10px] uppercase tracking-widest-x text-secondary-dark font-semibold">Admin Panel</div>
+        <div className={`display text-xl font-semibold tracking-tight ${dark ? "text-cream-50" : "text-primary-900"}`}>
+          {siteConfig.name}
+        </div>
+        <div className={`text-[10px] uppercase tracking-widest-x font-semibold ${dark ? "text-cream-100/60" : "text-secondary-dark"}`}>
+          Admin Panel
+        </div>
       </div>
     </Link>
   );
@@ -186,22 +190,22 @@ export default function AdminLoginPage() {
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen grid lg:grid-cols-5 bg-cream-50">
+    <div className="admin-login min-h-screen grid lg:grid-cols-5 bg-cream-50">
       {/* Visual side */}
       <div className="hidden lg:flex lg:col-span-2 relative bg-primary-950 text-cream-50 overflow-hidden">
         <div className="absolute inset-0 bg-weave-dark opacity-50" />
         <div className="absolute inset-0 bg-gradient-to-br from-primary-950 via-primary-900/90 to-primary-950" />
         <div className="relative flex flex-col justify-between p-12 w-full">
-          <BrandLogo />
+          <BrandLogo dark />
           <div>
             <div className="text-[11px] uppercase tracking-widest-x text-secondary-light font-semibold mb-4 flex items-center gap-2">
               <span className="h-px w-8 bg-secondary" /> Welcome back
             </div>
             <h2 className="display text-5xl font-semibold leading-tight">
-              Manage your catalogue, orders & content — all in one place.
+              Manage cloth stock, orders and shop content in one place.
             </h2>
             <p className="mt-5 text-cream-100/70 leading-relaxed max-w-md">
-              Update product images, publish blog posts, respond to enquiries, and keep the storefront fresh. Sign in to begin.
+              Update retail products, wholesale enquiries, banners and customer reviews without leaving the admin desk.
             </p>
           </div>
           <div className="text-xs text-cream-100/50">

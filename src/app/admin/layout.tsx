@@ -22,6 +22,7 @@ import { AdminAuthProvider, useAdminAuth } from "@/context/AdminAuthContext";
 import { ToastHost } from "@/components/admin/AdminUI";
 import { cn } from "@/utils";
 import { siteConfig } from "@/data/site";
+import "./admin.css";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", Icon: FaTachometerAlt, exact: true },
@@ -41,6 +42,7 @@ function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const isLoginPage = pathname === "/admin/login";
+  const section = pathname.split("/")[2] || "dashboard";
 
   useEffect(() => {
     if (loading) return;
@@ -63,9 +65,9 @@ function Shell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-cream-50 flex">
+    <div className="admin-shell min-h-screen bg-cream-50 flex">
       {/* Sidebar */}
-      <aside className="hidden lg:flex flex-col w-64 bg-primary-600 text-cream-50 shrink-0">
+      <aside className="admin-sidebar hidden lg:flex flex-col w-64 bg-primary-600 text-cream-50 shrink-0">
         <div className="px-6 py-6 border-b border-cream-50/10">
           <Link href="/admin" className="flex items-center gap-4 group">
             {siteConfig.logo ? (
@@ -84,8 +86,8 @@ function Shell({ children }: { children: React.ReactNode }) {
               <div className="display text-xl text-cream-50 font-semibold tracking-tight">
                 {siteConfig.name}
               </div>
-              <div className="text-[10px] uppercase tracking-widest-x text-secondary-dark font-semibold">
-                Textile · {siteConfig.address.city}
+              <div className="text-[10px] uppercase tracking-widest-x text-secondary-light font-semibold">
+                Retail · Wholesale · {siteConfig.address.city}
               </div>
             </div>
           </Link>
@@ -133,12 +135,12 @@ function Shell({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="admin-workspace flex-1 flex flex-col min-w-0">
         {/* Topbar */}
-        <header className="bg-white border-b border-cream-200 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
+        <header className="admin-topbar border-b border-cream-200 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
           <div>
             <div className="text-[10px] uppercase tracking-widest-x text-secondary-dark font-semibold">
-              Admin
+              Operations
             </div>
             <h1 className="display text-xl text-primary-700 font-semibold">
               {navItems.find((n) =>
@@ -160,7 +162,7 @@ function Shell({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Mobile nav strip */}
-        <nav className="lg:hidden bg-primary-600 text-cream-50 overflow-x-auto no-scrollbar">
+        <nav className="lg:hidden bg-primary-800 text-cream-50 overflow-x-auto no-scrollbar">
           <div className="flex gap-1 px-2 py-2">
             {navItems.map(({ href, label, Icon, exact }) => {
               const active = exact
@@ -185,7 +187,14 @@ function Shell({ children }: { children: React.ReactNode }) {
           </div>
         </nav>
 
-        <main className="flex-1 p-6 lg:p-8 overflow-x-hidden">{children}</main>
+        <main
+          className={cn(
+            "admin-content flex-1 overflow-x-hidden p-6 lg:p-8",
+            `admin-section-${section}`,
+          )}
+        >
+          {children}
+        </main>
       </div>
     </div>
   );

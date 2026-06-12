@@ -18,13 +18,10 @@ import SectionTitle from "@/components/SectionTitle";
 import ProductGallery from "./ProductGallery";
 import ProductActions from "./ProductActions";
 
-import { products as staticProducts } from "@/data/products";
 import { loadProductBySlug, loadRelatedProducts } from "@/lib/data";
 
-// Build-time params come from static seed data. Any product added in admin after
-// build is rendered on-demand (dynamicParams = true is the default).
 export function generateStaticParams() {
-  return staticProducts.map((p) => ({ slug: p.slug }));
+  return [];
 }
 
 export async function generateMetadata({

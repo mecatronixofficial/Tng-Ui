@@ -21,7 +21,7 @@ export default function CategoryCard({
     >
       <Link
         href={`/products?category=${category.slug}`}
-        className="group block h-full overflow-hidden rounded-lg border border-primary-100 bg-white shadow-soft transition hover:-translate-y-1 hover:border-primary-500 hover:shadow-soft"
+        className="group block h-full overflow-hidden rounded-lg border border-primary-100 bg-white shadow-soft transition hover:-translate-y-1 hover:border-primary-500 hover:shadow-warm"
       >
         <div className="relative aspect-[4/3] overflow-hidden bg-primary-50">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -30,7 +30,7 @@ export default function CategoryCard({
             alt={category.name}
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-primary-950/55 via-primary-950/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-950/65 via-primary-950/10 to-transparent" />
 
           <div className="absolute left-3 top-3 inline-flex items-center gap-2 rounded-md bg-primary-600 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-widest-x text-white shadow-soft">
             <FaTags className="h-3 w-3" />
@@ -42,8 +42,8 @@ export default function CategoryCard({
               <FaStore className="h-3 w-3 text-primary-600" />
               Retail
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-md bg-primary-900/90 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide text-white">
-              <FaBoxes className="h-3 w-3 text-primary-300" />
+            <span className="inline-flex items-center gap-1.5 rounded-md bg-secondary/95 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide text-white">
+              <FaBoxes className="h-3 w-3 text-white/80" />
               Wholesale
             </span>
           </div>
@@ -61,7 +61,7 @@ export default function CategoryCard({
             <span className="text-[10px] font-bold uppercase tracking-widest-x text-primary-600">
               Cloth category
             </span>
-            <span className="inline-flex items-center gap-2 rounded-md bg-primary-600 px-3 py-2 text-xs font-bold text-white transition group-hover:bg-primary-700">
+            <span className="inline-flex items-center gap-2 rounded-md bg-primary-600 px-3 py-2 text-xs font-bold text-white transition group-hover:bg-secondary">
               Shop <FaArrowRight className="h-3 w-3" />
             </span>
           </div>

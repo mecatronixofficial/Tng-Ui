@@ -13,6 +13,7 @@
 import type {
   Category as CategoryType,
   Product as ProductType,
+  Subcategory as SubcategoryType,
   HeroSlide,
   BlogPost,
   Testimonial,
@@ -21,8 +22,6 @@ import type {
   Faq,
 } from "@/types";
 
-import { categories as staticCategories } from "@/data/categories";
-import { products as staticProducts } from "@/data/products";
 
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api/v1";
@@ -55,6 +54,17 @@ function mapCategory(api: any): CategoryType {
     slug: api.slug,
     image: api.image,
     description: api.description,
+    productCount: api.productCount ?? 0,
+  };
+}
+
+function mapSubcategory(api: any): SubcategoryType {
+  return {
+    id: api.id || api._id,
+    name: api.name,
+    slug: api.slug,
+    category: api.category,
+    image: api.image,
     productCount: api.productCount ?? 0,
   };
 }
@@ -166,28 +176,31 @@ function mapOpening(api: any): OpeningCardData {
 export async function loadCategories(): Promise<CategoryType[]> {
   const res = await tryFetch<any[]>("/categories");
   if (res && res.length > 0) return res.map(mapCategory);
-  return staticCategories;
+  return [];
+}
+
+export async function loadSubcategories(category: string): Promise<SubcategoryType[]> {
+  const res = await tryFetch<any[]>(`/subcategories?category=${encodeURIComponent(category)}`);
+  if (res && res.length > 0) return res.map(mapSubcategory);
+  return [];
 }
 
 export async function loadProducts(): Promise<ProductType[]> {
   const res = await tryFetch<ApiPaginated<any>>("/products?limit=100");
   if (res && res.data.length > 0) return res.data.map(mapProduct);
-  return staticProducts;
+  return [];
 }
 
 export async function loadProductBySlug(slug: string): Promise<ProductType | null> {
   const res = await tryFetch<any>(`/products/${slug}`);
   if (res) return mapProduct(res);
-  return staticProducts.find((p) => p.slug === slug) || null;
+  return null;
 }
 
 export async function loadRelatedProducts(slug: string): Promise<ProductType[]> {
   const res = await tryFetch<any[]>(`/products/${slug}/related`);
   if (res && res.length > 0) return res.map(mapProduct);
-  // Static fallback
-  const current = staticProducts.find((p) => p.slug === slug);
-  if (!current) return [];
-  return staticProducts.filter((p) => p.slug !== slug && p.category === current.category).slice(0, 4);
+  return [];
 }
 
 export async function loadHeroSlides(): Promise<HeroSlide[]> {
