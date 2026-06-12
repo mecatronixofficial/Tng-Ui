@@ -22,65 +22,98 @@ export default function FloatingWhatsApp() {
   if (pathname.startsWith("/admin")) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-40 flex items-end gap-3">
+    <div className="fixed bottom-6 right-6 z-40 flex items-end gap-3">
+      {/* Popup card */}
       <AnimatePresence>
         {tooltipOpen && (
           <motion.div
-            initial={{ opacity: 0, x: 10, scale: 0.95 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 10, scale: 0.95 }}
-            transition={{ duration: 0.25 }}
-            className="relative hidden max-w-[300px] overflow-hidden rounded-lg border border-secondary/30 bg-white shadow-warm sm:block"
+            initial={{ opacity: 0, y: 10, scale: 0.92 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.92 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="relative hidden w-72 overflow-hidden rounded-2xl bg-white shadow-[0_8px_40px_-8px_rgba(0,0,0,0.18)] sm:block"
           >
-            <button
-              type="button"
-              onClick={() => setTooltipOpen(false)}
-              aria-label="Dismiss"
-              className="absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-md text-primary-800 transition hover:bg-primary-50"
-            >
-              <FaTimes className="h-3 w-3" />
-            </button>
-            <div className="bg-primary-900 px-4 py-3 pr-10 text-white">
-              <div className="text-[10px] font-bold uppercase tracking-widest-x text-secondary-light">
-                Cloth enquiry
-              </div>
-              <div className="mt-1 text-sm font-extrabold leading-5">
-                Retail and wholesale support on WhatsApp
+            {/* Green header */}
+            <div className="relative overflow-hidden bg-[#128C7E] px-4 pb-4 pt-4">
+              <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full bg-white/10" />
+              <div className="absolute -right-1 bottom-1 h-10 w-10 rounded-full bg-white/10" />
+              <button
+                type="button"
+                onClick={() => setTooltipOpen(false)}
+                aria-label="Dismiss"
+                className="absolute right-2.5 top-2.5 grid h-6 w-6 place-items-center rounded-full bg-white/20 text-white transition hover:bg-white/30"
+              >
+                <FaTimes className="h-2.5 w-2.5" />
+              </button>
+              <div className="flex items-center gap-3 pr-6">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/20">
+                  <FaWhatsapp className="h-5 w-5 text-white" />
+                </span>
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-white/70">
+                    Thangavel Textile
+                  </div>
+                  <div className="text-sm font-extrabold leading-tight text-white">
+                    Retail &amp; wholesale support
+                  </div>
+                </div>
               </div>
             </div>
+
+            {/* Options */}
             <div className="grid gap-2 p-3">
-              <div className="flex items-center gap-2 rounded-md bg-primary-50 px-3 py-2 text-xs font-bold text-primary-950">
-                <FaStore className="h-3.5 w-3.5 text-primary-600" />
-                Single piece and family shopping
-              </div>
-              <div className="flex items-center gap-2 rounded-md bg-secondary/10 px-3 py-2 text-xs font-bold text-primary-950">
-                <FaBoxes className="h-3.5 w-3.5 text-secondary-dark" />
-                Bulk orders for shops and traders
-              </div>
+              <a
+                href={buildWhatsAppEnquiryUrl()}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-3 rounded-xl border border-green-100 bg-green-50 px-3 py-2.5 transition hover:bg-green-100"
+              >
+                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#25D366] text-white">
+                  <FaStore className="h-3.5 w-3.5" />
+                </span>
+                <div>
+                  <div className="text-xs font-extrabold text-gray-900">Retail order</div>
+                  <div className="text-[10px] text-gray-500">Single piece, family shopping</div>
+                </div>
+              </a>
+              <a
+                href={buildWhatsAppEnquiryUrl()}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-3 rounded-xl border border-green-100 bg-green-50 px-3 py-2.5 transition hover:bg-green-100"
+              >
+                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#128C7E] text-white">
+                  <FaBoxes className="h-3.5 w-3.5" />
+                </span>
+                <div>
+                  <div className="text-xs font-extrabold text-gray-900">Wholesale enquiry</div>
+                  <div className="text-[10px] text-gray-500">Bulk orders for shops &amp; traders</div>
+                </div>
+              </a>
             </div>
-            <div className="absolute -right-1.5 bottom-6 h-3 w-3 rotate-45 border-b border-r border-secondary/30 bg-white" />
+
+            {/* Arrow pointing right */}
+            <div className="absolute -right-1.5 bottom-8 h-3 w-3 rotate-45 border-b border-r border-gray-100 bg-white" />
           </motion.div>
         )}
       </AnimatePresence>
 
-      <a
+      {/* Main WhatsApp button */}
+      <motion.a
         href={buildWhatsAppEnquiryUrl()}
         target="_blank"
         rel="noreferrer"
         aria-label="Chat on WhatsApp"
-        className="group relative flex items-center gap-2 rounded-full border border-secondary/30 bg-primary-900 p-1.5 pr-3 text-white shadow-warm transition hover:bg-primary-800"
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.95 }}
+        className="relative grid h-16 w-16 place-items-center rounded-full bg-[#25D366] shadow-[0_8px_32px_-4px_rgba(37,211,102,0.55)] transition"
+        onClick={() => setTooltipOpen((v) => !v)}
       >
-        <span className="absolute inset-0 rounded-full bg-secondary opacity-30 animate-ping" />
-        <span className="relative grid h-12 w-12 place-items-center rounded-full bg-secondary text-white transition group-hover:scale-105">
-          <FaWhatsapp className="h-6 w-6" />
-        </span>
-        <span className="relative hidden pr-1 text-left sm:block">
-          <span className="block text-[10px] font-bold uppercase tracking-widest-x text-secondary-light">
-            WhatsApp
-          </span>
-          <span className="block text-xs font-extrabold">Ask cloth details</span>
-        </span>
-      </a>
+        {/* Ripple rings */}
+        <span className="absolute inset-0 rounded-full bg-[#25D366] opacity-40 animate-ping [animation-duration:1.4s]" />
+        <span className="absolute -inset-2 rounded-full border-2 border-[#25D366] opacity-20 animate-ping [animation-duration:1.9s]" />
+        <FaWhatsapp className="relative h-8 w-8 text-white" />
+      </motion.a>
     </div>
   );
 }

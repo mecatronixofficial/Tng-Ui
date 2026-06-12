@@ -117,7 +117,7 @@ function LiveClock() {
       <div className="display text-2xl font-semibold text-white tabular-nums">
         {now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}
       </div>
-      <div className="text-xs text-ink-muted mt-0.5">
+      <div className="text-xs text-white/60 mt-0.5">
         {now.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
       </div>
     </div>
@@ -170,7 +170,7 @@ export default function AdminDashboardPage() {
     return (
       <AdminCard className="p-8 text-center">
         <FaExclamationTriangle className="h-8 w-8 text-amber-500 mx-auto mb-3" />
-        <h3 className="display text-xl text-white">Couldn't load dashboard</h3>
+        <h3 className="display text-xl text-primary-900">Couldn't load dashboard</h3>
         <p className="text-ink-muted text-sm mt-2">{error || "Unknown error"}</p>
         <p className="text-ink-muted text-xs mt-4">
           Check that the backend is running at{" "}
@@ -226,9 +226,9 @@ export default function AdminDashboardPage() {
     <div className="space-y-8 ">
 
       {/* ── Welcome header ──────────────────────────────────── */}
-      <div className="rounded-2xl bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 px-8 py-6 flex items-center justify-between gap-6">
+      <div className="admin-hero-banner rounded-2xl px-8 py-6 flex items-center justify-between gap-6">
         <div className="min-w-0">
-          <p className="text-secondary text-sm font-semibold uppercase tracking-widest-x mb-1">
+          <p className="text-white/70 text-sm font-semibold uppercase tracking-widest-x mb-1">
             Jai India Enterprises — Admin
           </p>
           <h1 className="display text-2xl md:text-3xl font-bold text-cream-50">
@@ -537,9 +537,9 @@ export default function AdminDashboardPage() {
             <Link
               key={href}
               href={href}
-              className="rounded-2xl bg-primary-600 text-cream-50 p-5 flex items-center gap-4 hover:bg-primary-500 transition group"
+              className="admin-quick-card rounded-2xl p-5 flex items-center gap-4 transition group"
             >
-              <div className="grid h-11 w-11 place-items-center rounded-xl bg-secondary text-white group-hover:scale-105 transition shrink-0">
+              <div className="admin-quick-card-icon grid h-11 w-11 place-items-center rounded-xl group-hover:scale-105 transition shrink-0">
                 <Icon className="h-4 w-4" />
               </div>
               <div className="min-w-0">

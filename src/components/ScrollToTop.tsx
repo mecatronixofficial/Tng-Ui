@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaArrowUp, FaStore } from "react-icons/fa";
+import { FaChevronUp } from "react-icons/fa";
 
 export default function ScrollToTop() {
   const pathname = usePathname();
@@ -11,7 +11,7 @@ export default function ScrollToTop() {
 
   useEffect(() => {
     const onScroll = () => setShow(window.scrollY > 600);
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -21,25 +21,19 @@ export default function ScrollToTop() {
     <AnimatePresence>
       {show && (
         <motion.button
-          initial={{ opacity: 0, scale: 0.7 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.7 }}
-          onClick={() =>
-            window.scrollTo({ top: 0, behavior: "smooth" })
-          }
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 12 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          whileHover={{ y: -3 }}
+          whileTap={{ scale: 0.92 }}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           aria-label="Scroll to top"
-          className="group fixed bottom-24 right-5 z-40 flex items-center gap-2 rounded-full border border-secondary/30 bg-primary-900 p-1.5 pr-3 text-white shadow-warm transition hover:bg-primary-800"
+          className="fixed bottom-[6.5rem] right-6 z-40 grid h-12 w-12 place-items-center rounded bg-gradient-to-br from-primary-500 to-primary-700 shadow-[0_6px_24px_-4px_rgba(79,70,229,0.5)] transition"
         >
-          <span className="grid h-9 w-9 place-items-center rounded-full bg-secondary text-white transition group-hover:scale-105">
-            <FaArrowUp className="h-3.5 w-3.5" />
-          </span>
-          <span className="hidden text-left sm:block">
-            <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest-x text-secondary-light">
-              <FaStore className="h-3 w-3" />
-              Top
-            </span>
-            <span className="block text-xs font-extrabold">Cloth store</span>
-          </span>
+          <FaChevronUp className="h-4 w-4 text-white" />
+          {/* subtle shimmer line */}
+          <span className="absolute inset-x-2 top-1.5 h-px rounded-full bg-white/30" />
         </motion.button>
       )}
     </AnimatePresence>

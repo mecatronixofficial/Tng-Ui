@@ -1,11 +1,10 @@
 import type { MetadataRoute } from "next";
-import { products } from "@/data/products";
-import { loadCategories, loadBlogs } from "@/lib/data";
+import { loadCategories, loadBlogs, loadProducts } from "@/lib/data";
 
 const BASE = "https://www.jai-india.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [categories, blogPosts] = await Promise.all([loadCategories(), loadBlogs()]);
+  const [categories, blogPosts, products] = await Promise.all([loadCategories(), loadBlogs(), loadProducts()]);
 
   const staticRoutes = [
     "",

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   FaArrowRight,
@@ -14,13 +15,20 @@ import {
 import PageHero from "@/components/PageHero";
 import ProductCard from "@/components/ProductCard";
 import { siteConfig } from "@/data/site";
-import { products } from "@/data/products";
+import { api, type ProductApi } from "@/lib/api";
 import { useWishlist } from "@/store";
+import type { Product } from "@/types";
 
 export default function WishlistPage() {
   const items = useWishlist((s) => s.items);
   const clear = useWishlist((s) => s.clear);
-  const saved = products.filter((p) => items.includes(p.id));
+  const [allProducts, setAllProducts] = useState<ProductApi[]>([]);
+
+  useEffect(() => {
+    api.publicProducts().then((res) => setAllProducts(res.data)).catch(() => {});
+  }, []);
+
+  const saved = allProducts.filter((p) => items.includes(p.id)) as unknown as Product[];
   const message = encodeURIComponent(
     `Hello, I have shortlisted ${saved.length} cloth product(s). Please share retail/wholesale availability.`,
   );

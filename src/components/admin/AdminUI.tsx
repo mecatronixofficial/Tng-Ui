@@ -15,6 +15,7 @@ import {
   FaUpload,
 } from "react-icons/fa";
 import { api } from "@/lib/api";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import { cn } from "@/utils";
 
 /* -------------------------------- Button -------------------------------- */
@@ -30,12 +31,12 @@ export function AdminButton({
   loading?: boolean;
 }) {
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold transition disabled:opacity-50 disabled:cursor-not-allowed";
+    "admin-button inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold transition disabled:opacity-50 disabled:cursor-not-allowed";
   const v = {
-    primary: "bg-primary-600 text-white shadow-soft hover:bg-secondary hover:shadow-warm",
-    outline: "border border-primary-200 bg-white text-primary-800 hover:border-secondary hover:text-secondary",
-    ghost: "text-ink-soft hover:bg-primary-50 hover:text-primary-800",
-    danger: "bg-red-600 text-white hover:bg-red-700",
+    primary: "admin-button-primary bg-primary-600 text-white shadow-soft hover:bg-secondary hover:shadow-warm",
+    outline: "admin-button-outline border border-primary-200 bg-white text-primary-800 hover:border-secondary hover:text-secondary",
+    ghost: "admin-button-ghost text-ink-soft hover:bg-primary-50 hover:text-primary-800",
+    danger: "admin-button-danger bg-red-600 text-white hover:bg-red-700",
   }[variant];
   return (
     <button {...rest} disabled={rest.disabled || loading} className={cn(base, v, className)}>
@@ -49,7 +50,7 @@ export function AdminButton({
 
 export function AdminCard({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("rounded-lg bg-white border border-primary-100 shadow-soft", className)}>
+    <div className={cn("admin-card rounded-lg bg-white border border-primary-100 shadow-soft", className)}>
       {children}
     </div>
   );
@@ -72,7 +73,7 @@ export function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-2 flex items-center gap-2 text-[10px] uppercase tracking-widest-x text-primary-800 font-bold">
+      <span className="admin-field-label mb-2 flex items-center gap-2 text-[10px] uppercase tracking-widest-x text-primary-800 font-bold">
         <FaTags className="h-3 w-3 text-secondary" />
         {label} {required && <span className="text-red-600">*</span>}
       </span>
@@ -88,7 +89,7 @@ export function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
     <input
       {...props}
       className={cn(
-        "w-full rounded-lg border border-primary-100 bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-muted/60 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/10 transition",
+        "admin-input w-full rounded-lg border border-primary-100 bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-muted/60 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/10 transition",
         props.className,
       )}
     />
@@ -100,7 +101,7 @@ export function TextArea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement
     <textarea
       {...props}
       className={cn(
-        "w-full rounded-lg border border-primary-100 bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-muted/60 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/10 transition resize-y",
+        "admin-input w-full rounded-lg border border-primary-100 bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-muted/60 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/10 transition resize-y",
         props.className,
       )}
     />
@@ -112,7 +113,7 @@ export function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
     <select
       {...props}
       className={cn(
-        "w-full rounded-lg border border-primary-100 bg-white px-3.5 py-2.5 text-sm text-ink focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/10 transition",
+        "admin-input w-full rounded-lg border border-primary-100 bg-white px-3.5 py-2.5 text-sm text-ink focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/10 transition",
         props.className,
       )}
     />
@@ -132,7 +133,7 @@ export function Toggle({
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className="inline-flex items-center gap-3"
+      className="admin-toggle inline-flex items-center gap-3"
     >
       <span
         className={cn(
@@ -190,7 +191,7 @@ export function Modal({
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={(e) => e.stopPropagation()}
-            className={cn("w-full overflow-hidden bg-white rounded-lg border border-secondary/30 shadow-warm", maxWidth)}
+            className={cn("admin-modal w-full overflow-hidden bg-white rounded-lg border border-secondary/30 shadow-warm", maxWidth)}
           >
             <div className="flex items-center justify-between border-b border-primary-100 bg-primary-50 px-6 py-4">
               <div>
@@ -324,8 +325,8 @@ export function ImageUploader({
     try {
       const uploaded: string[] = [];
       for (const file of Array.from(files)) {
-        const res = await api.uploadImage(file);
-        uploaded.push(res.url);
+        const res = await uploadToCloudinary(file);
+        uploaded.push(res.secure_url);
       }
       if (multiple) onChange([...value, ...uploaded]);
       else onChange([uploaded[0]]);
@@ -339,7 +340,7 @@ export function ImageUploader({
 
   return (
     <div>
-      <div className="mb-2 flex items-center gap-2 text-[10px] uppercase tracking-widest-x text-primary-800 font-bold">
+      <div className="admin-field-label mb-2 flex items-center gap-2 text-[10px] uppercase tracking-widest-x text-primary-800 font-bold">
         <FaTags className="h-3 w-3 text-secondary" />
         {label}
       </div>
@@ -370,7 +371,7 @@ export function ImageUploader({
       <label className="block">
         <div
           className={cn(
-            "border-2 border-dashed border-primary-200 rounded-lg p-6 text-center cursor-pointer hover:border-secondary hover:bg-primary-50 transition",
+            "admin-uploader border-2 border-dashed border-primary-200 rounded-lg p-6 text-center cursor-pointer hover:border-secondary hover:bg-primary-50 transition",
             uploading && "opacity-60 pointer-events-none",
           )}
         >
@@ -415,7 +416,7 @@ export function StatTile({
   accent?: "secondary" | "maroon";
 }) {
   return (
-    <AdminCard className="overflow-hidden p-0">
+    <AdminCard className="admin-stat-tile overflow-hidden p-0">
       <div className="flex items-center justify-between border-b border-primary-100 bg-primary-50 px-5 py-4">
         <div className="text-[10px] uppercase tracking-widest-x text-primary-800 font-bold">
           {label}

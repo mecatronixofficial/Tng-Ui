@@ -2,15 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  FaBoxes,
-  FaHeart,
-  FaRegHeart,
-  FaStore,
-  FaTruckMoving,
-  FaWhatsapp,
-  FaStar,
-} from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaWhatsapp, FaStar } from "react-icons/fa";
 
 import type { Product } from "@/types";
 import { useWishlist } from "@/store";
@@ -25,141 +17,160 @@ export default function ProductCard({ product }: { product: Product }) {
     productLink: `https://thangaveltextile.in/products/${product.slug}`,
   });
 
+  const discount =
+    product.originalPrice && product.offerPrice && product.originalPrice > product.offerPrice
+      ? Math.round(((product.originalPrice - product.offerPrice) / product.originalPrice) * 100)
+      : 0;
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.5 }}
-      className="group relative h-full overflow-hidden rounded-lg border border-primary-100 bg-white shadow-soft transition hover:-translate-y-1 hover:border-secondary hover:shadow-warm"
+      transition={{ duration: 0.4 }}
+      className="group relative flex flex-col"
     >
-      {/* Full-card link overlay — sits below interactive elements */}
-      <Link
-        href={`/products/${product.slug}`}
-        className="absolute inset-0 z-0"
-        aria-label={product.name}
-      />
+      {/* ── Image shell ─────────────────────────────────────── */}
+      <div className="relative overflow-hidden rounded-2xl bg-primary-50 aspect-[3/4]">
 
-      {/* Image */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-primary-50">
+        {/* Card link */}
+        <Link
+          href={`/products/${product.slug}`}
+          className="absolute inset-0 z-0"
+          aria-label={product.name}
+        ><span className="sr-only">{product.name}</span></Link>
+
+        {/* Images */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={product.images[0] ?? ""}
           alt={product.name}
           loading="eager"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.07]"
         />
-
-        {/* Hover image */}
         {product.images[1] && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={product.images[1]}
-            alt={product.name}
+            alt=""
             loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           />
         )}
 
-        {/* Badges */}
+        {/* Vignette */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/5" />
+
+        {/* ── Top-left badges ── */}
         <div className="absolute left-3 top-3 z-10 flex flex-col gap-1.5">
           {product.newArrival && (
-            <span className="inline-flex items-center gap-1.5 rounded-md bg-white px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-widest-x text-primary-800 shadow-soft">
-              <FaStar className="h-3 w-3 text-secondary" />
+            <span className="rounded-full bg-secondary px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-white shadow-lg">
               New
             </span>
           )}
-        </div>
-
-        <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-md bg-white/95 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide text-primary-900">
-            <FaStore className="h-3 w-3 text-primary-600" />
-            Retail
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-md bg-primary-900/90 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide text-white">
-            <FaBoxes className="h-3 w-3 text-primary-300" />
-            Wholesale
-          </span>
-        </div>
-
-        {/* Out of stock overlay */}
-        {product.stock === 0 && (
-          <div className="absolute inset-0 grid place-items-center bg-cream-50/85 z-10">
-            <span className="text-primary-800 uppercase tracking-widest-x text-xs font-bold">
-              Out of stock
+          {discount >= 10 && (
+            <span className="rounded-full bg-rose-500 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-white shadow-lg">
+              -{discount}%
             </span>
-          </div>
-        )}
+          )}
+          {product.stock === 0 && (
+            <span className="rounded-full bg-black/70 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white/90 backdrop-blur-sm">
+              Sold out
+            </span>
+          )}
+        </div>
 
-        {/* Wishlist — z-10 so it sits above the card link overlay */}
+        {/* ── Wishlist ── */}
         <button
           type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            toggle(product.id);
-          }}
-          aria-label={has ? "Remove from wishlist" : "Add to wishlist"}
-          className="absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-lg bg-white/95 text-primary-800 shadow-soft backdrop-blur transition hover:bg-primary-600 hover:text-white"
+          onClick={(e) => { e.stopPropagation(); toggle(product.id); }}
+          aria-label={has ? "Remove from wishlist" : "Save"}
+          className="absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-full bg-white/80 shadow-md backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white"
         >
-          {has ? (
-            <FaHeart className="h-3.5 w-3.5 text-secondary" />
-          ) : (
-            <FaRegHeart className="h-3.5 w-3.5" />
-          )}
+          {has
+            ? <FaHeart className="h-4 w-4 text-rose-500" />
+            : <FaRegHeart className="h-4 w-4 text-gray-600" />}
         </button>
 
-        {/* WhatsApp CTA — slides up on hover, z-10 so it sits above the card link */}
-        <div className="absolute left-0 right-0 top-1/2 z-10 px-3 opacity-0 transition duration-300 group-hover:-translate-y-1/2 group-hover:opacity-100">
+        {/* ── Price pill (bottom-left) — fades out on hover ── */}
+        <div className="absolute bottom-3 left-3 z-10 transition-all duration-300 group-hover:opacity-0 group-hover:translate-y-1">
+          {product.offerPrice ? (
+            <div className="flex items-baseline gap-1.5 rounded-full bg-black/55 px-3 py-1.5 backdrop-blur-sm">
+              <span className="text-sm font-black text-white">₹{product.offerPrice}</span>
+              {product.originalPrice && product.originalPrice !== product.offerPrice && (
+                <span className="text-[11px] font-medium text-white/55 line-through">
+                  ₹{product.originalPrice}
+                </span>
+              )}
+            </div>
+          ) : null}
+        </div>
+
+        {/* ── WhatsApp CTA — slides up on hover ── */}
+        <div className="absolute inset-x-0 bottom-0 z-10 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0">
           <a
             href={whatsappUrl}
             target="_blank"
             rel="noreferrer"
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-secondary px-4 py-3 text-xs font-bold text-white shadow-warm transition hover:bg-secondary-dark"
+            onClick={(e) => e.stopPropagation()}
+            className="flex w-full items-center justify-center gap-2 bg-[#25D366] py-3 text-sm font-black text-white transition-colors hover:bg-[#1ebe5d]"
           >
-            <FaWhatsapp className="h-4 w-4" /> Enquire
+            <FaWhatsapp className="h-4 w-4" />
+            Enquire on WhatsApp
           </a>
         </div>
       </div>
 
-      {/* Info */}
-      <div className="relative z-10 p-4 pointer-events-none">
-        <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-widest-x text-primary-800">
-          <span className="rounded-md bg-primary-50 px-2 py-1">
+      {/* ── Info ────────────────────────────────────────────── */}
+      <Link href={`/products/${product.slug}`} className="mt-3 px-1">
+        {/* Category + rating */}
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[11px] font-semibold uppercase tracking-widest text-ink-muted">
             {product.category}
           </span>
-          <span className="flex items-center gap-1">
-            <FaStar className="h-2.5 w-2.5 text-secondary" />
-            {product.rating} ({product.reviews})
+          <span className="flex items-center gap-1 text-[11px] font-bold text-secondary">
+            <FaStar className="h-2.5 w-2.5" />
+            {product.rating}
           </span>
         </div>
 
-        <h3 className="mt-3 text-lg font-extrabold leading-tight text-primary-950 transition group-hover:text-primary-700 md:text-xl">
+        {/* Name */}
+        <h3 className="mt-1 line-clamp-2 text-sm font-extrabold leading-snug text-primary-950 transition group-hover:text-primary-600">
           {product.name}
         </h3>
 
-        <div className="mt-3 flex items-center gap-2 rounded-lg bg-primary-50 px-3 py-2 text-xs font-bold text-primary-950">
-          <FaTruckMoving className="h-3.5 w-3.5 text-secondary" />
-          <span>{product.stock > 0 ? `${product.stock} ready stock` : "Check availability"}</span>
-        </div>
-
-        {/* Color swatches */}
-        {product.colors.length > 0 && (
-          <div className="mt-3 flex items-center gap-1.5">
-            {product.colors.slice(0, 4).map((c, i) => (
-              <span
-                key={i}
-                title={c}
-                className={`${colorSwatch(c)} inline-block h-2.5 w-2.5 rounded-full border border-cream-300`}
-              />
-            ))}
-            {product.colors.length > 4 && (
-              <span className="text-[10px] text-ink-muted">
-                +{product.colors.length - 4}
+        {/* Price row (below image) — shows on mobile or always */}
+        <div className="mt-1.5 flex items-center justify-between gap-2">
+          {product.offerPrice ? (
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-base font-black text-primary-700">
+                ₹{product.offerPrice}
               </span>
-            )}
-          </div>
-        )}
-      </div>
+              {product.originalPrice && product.originalPrice !== product.offerPrice && (
+                <span className="text-xs font-medium text-ink-muted line-through">
+                  ₹{product.originalPrice}
+                </span>
+              )}
+            </div>
+          ) : null}
+
+          {/* Color dots */}
+          {product.colors.length > 0 && (
+            <div className="flex items-center gap-1">
+              {product.colors.slice(0, 4).map((c, i) => (
+                <span
+                  key={i}
+                  title={c}
+                  className={`${colorSwatch(c)} h-3 w-3 rounded-full ring-1 ring-black/10`}
+                />
+              ))}
+              {product.colors.length > 4 && (
+                <span className="text-[10px] text-ink-muted">+{product.colors.length - 4}</span>
+              )}
+            </div>
+          )}
+        </div>
+      </Link>
     </motion.article>
   );
 }
@@ -172,7 +183,7 @@ function colorSwatch(name: string): string {
   if (n.includes("black")) return "bg-[#1a1410]";
   if (n.includes("navy") || n.includes("indigo")) return "bg-[#1e3a8a]";
   if (n.includes("blue")) return "bg-[#2563eb]";
-  if (n.includes("sea green")) return "bg-[#2dd4bf]"; // must precede "green"
+  if (n.includes("sea green")) return "bg-[#2dd4bf]";
   if (n.includes("green") || n.includes("bottle")) return "bg-[#15803d]";
   if (n.includes("yellow") || n.includes("mustard")) return "bg-[#eab308]";
   if (n.includes("orange")) return "bg-[#ea580c]";

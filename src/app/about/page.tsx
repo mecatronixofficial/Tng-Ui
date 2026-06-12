@@ -16,7 +16,7 @@ import {
 import PageHero from "@/components/PageHero";
 import SectionTitle from "@/components/SectionTitle";
 import StatsCounter from "@/components/StatsCounter";
-import { categories } from "@/data/categories";
+import { loadCategories } from "@/lib/data";
 import { siteConfig, stats } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -58,7 +58,8 @@ const tradeFlow = [
   "Confirm order and despatch preference",
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const categories = await loadCategories();
   return (
     <>
       <PageHero

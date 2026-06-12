@@ -12,12 +12,11 @@ import {
 
 import PageHero from "@/components/PageHero";
 import ProductCard from "@/components/ProductCard";
-import { loadCategories, loadProducts } from "@/lib/data";
-import { categories as staticCategories } from "@/data/categories";
+import { loadCategories, loadProducts, loadSubcategories } from "@/lib/data";
 import { siteConfig } from "@/data/site";
 
 export function generateStaticParams() {
-  return staticCategories.map((c) => ({ slug: c.slug }));
+  return [];
 }
 
 export async function generateMetadata({
@@ -37,19 +36,36 @@ export async function generateMetadata({
 
 export default async function CategoryDetail({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ sub?: string }>;
 }) {
   const { slug } = await params;
-  const [categories, allProducts] = await Promise.all([
+  const { sub } = await searchParams;
+
+  const [categories, allProducts, subcategories] = await Promise.all([
     loadCategories(),
     loadProducts(),
+    loadSubcategories(slug),
   ]);
 
   const cat = categories.find((c) => c.slug === slug);
   if (!cat) notFound();
 
-  const list = allProducts.filter((p) => p.category === slug);
+  const activeSub = subcategories.find((s) => s.slug === sub);
+
+  const list = allProducts.filter((p) => {
+    if (p.category !== slug) return false;
+    if (activeSub) {
+      const pSub = (p.subcategory ?? "").toLowerCase();
+      return (
+        pSub === activeSub.slug.toLowerCase() ||
+        pSub === activeSub.name.toLowerCase()
+      );
+    }
+    return true;
+  });
 
   return (
     <>
@@ -93,11 +109,11 @@ export default async function CategoryDetail({
             <div>
               <div className="mb-3 inline-flex items-center gap-2 rounded-lg border border-secondary/30 bg-white px-3 py-2 text-[10px] font-bold uppercase tracking-widest-x text-primary-800 shadow-soft">
                 <FaTags className="h-3 w-3 text-secondary" />
-                {list.length} {list.length === 1 ? "product" : "products"} in{" "}
-                {cat.name}
+                {list.length} {list.length === 1 ? "product" : "products"}{" "}
+                {activeSub ? `in ${activeSub.name}` : `in ${cat.name}`}
               </div>
               <h2 className="text-3xl font-extrabold leading-tight text-primary-950 md:text-4xl">
-                Browse {cat.name} cloth products
+                Browse {activeSub ? activeSub.name : cat.name} cloth products
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-ink-muted">
                 Select a product for details, retail order support, or wholesale
@@ -124,6 +140,46 @@ export default async function CategoryDetail({
             </div>
           </div>
 
+          {/* Subcategory filter tabs */}
+          {subcategories.length > 0 && (
+            <div className="mb-8 flex flex-wrap gap-2">
+              <Link
+                href={`/categories/${slug}`}
+                className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-bold transition ${
+                  !activeSub
+                    ? "border-primary-900 bg-primary-900 text-white shadow-soft"
+                    : "border-primary-200 bg-white text-primary-800 hover:border-primary-900 hover:text-primary-900"
+                }`}
+              >
+                All
+              </Link>
+              {subcategories.map((s) => (
+                <Link
+                  key={s.id}
+                  href={`/categories/${slug}?sub=${s.slug}`}
+                  className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-bold transition ${
+                    activeSub?.slug === s.slug
+                      ? "border-secondary bg-secondary text-white shadow-soft"
+                      : "border-primary-200 bg-white text-primary-800 hover:border-secondary hover:text-secondary"
+                  }`}
+                >
+                  {s.name}
+                  {s.productCount > 0 && (
+                    <span
+                      className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
+                        activeSub?.slug === s.slug
+                          ? "bg-white/20 text-white"
+                          : "bg-primary-100 text-primary-700"
+                      }`}
+                    >
+                      {s.productCount}
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </div>
+          )}
+
           {list.length === 0 ? (
             <div className="rounded-lg border border-primary-100 bg-white p-12 text-center shadow-soft">
               <div className="mx-auto mb-5 grid h-14 w-14 place-items-center rounded-lg bg-primary-50 text-secondary">
@@ -133,8 +189,8 @@ export default async function CategoryDetail({
                 Stock update coming soon
               </h3>
               <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-ink-muted">
-                We are updating this category. Message us on WhatsApp for current
-                retail and wholesale availability.
+                We are updating this category. Message us on WhatsApp for
+                current retail and wholesale availability.
               </p>
             </div>
           ) : (
