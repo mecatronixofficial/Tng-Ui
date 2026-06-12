@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /*
+    Common theme colors.
+    Change the primary RGB values here to update every orange/primary class.
+  */
+  --color-primary-50:  238 242 255;
+  --color-primary-100: 224 231 255;
+  --color-primary-200: 199 210 254;
+  --color-primary-300: 165 180 252;
+  --color-primary-400: 129 140 248;
+  --color-primary-500: 99 102 241;
+  --color-primary-600: 79 70 229;
+  --color-primary-700: 67 56 202;
+  --color-primary-800: 55 48 163;
+  --color-primary-900: 49 46 129;
+  --color-primary-950: 30 27 75;
+
+  --color-accent-400: 45 212 191;
+  --color-accent-600: 15 118 110;
+  --color-accent-700: 13 99 93;
+
+  --color-surface-50:  255 255 255;
+  --color-surface-100: 248 249 255;
+  --color-surface-200: 238 240 255;
+  --color-surface-300: 218 220 254;
+  --color-surface-400: 199 210 254;
+
+  --color-ink: 15 23 42;
+  --color-ink-soft: 51 65 85;
+  --color-ink-muted: 100 116 139;
+
+  --brand:        rgb(var(--color-primary-600));
+  --brand-deep:   rgb(var(--color-primary-900));
+  --accent:       rgb(var(--color-accent-600));
+  --accent-light: rgb(var(--color-accent-400));
+  --cream:        rgb(var(--color-surface-50));
+  --ink:          rgb(var(--color-ink));
+
+  /* Legacy aliases — keep so any remaining inline var() still resolves */
+  --maroon:       var(--brand);
+  --maroon-deep:  var(--brand-deep);
+  --gold:         var(--accent);
+  --gold-light:   var(--accent-light);
+  --orange:       var(--brand);
+  --green:        var(--accent);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--cream);
+  color: var(--ink);
+  font-feature-settings: "ss01", "cv01";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: rgb(var(--color-primary-800));
+}
+
+.text-cream-50 h1,
+.text-cream-50 h2,
+.text-cream-50 h3,
+.text-cream-50 h4,
+.text-cream-50 h5,
+.text-cream-50 h6,
+.text-white h1,
+.text-white h2,
+.text-white h3,
+.text-white h4,
+.text-white h5,
+.text-white h6 {
+  color: #ffffff;
+}
+
+[class*="text-cream-50/"],
+[class*="text-cream-100/"] {
+  color: #ffffff;
+}
+
+[class*="placeholder:text-cream-100/"]::placeholder {
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* Selection */
+::selection {
+  background: var(--orange);
+  color: #ffffff;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar        { width: 10px; height: 10px; }
+::-webkit-scrollbar-track  { background: rgb(var(--color-surface-200)); }
+::-webkit-scrollbar-thumb  { background: rgb(var(--color-primary-600)); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: rgb(var(--color-primary-800)); }
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-5 md:px-8;
+  }
+
+  .section-y {
+    @apply py-16 md:py-24;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-medium tracking-wide transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-cream-50 focus:ring-primary-400;
+  }
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 shadow-soft hover:shadow-warm;
+  }
+  .btn-secondary {
+    @apply btn bg-secondary text-white hover:bg-secondary-dark shadow-warm;
+  }
+  .btn-outline {
+    @apply btn border border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white;
+  }
+  .btn-ghost {
+    @apply btn text-ink hover:text-primary-600;
+  }
+
+  /* Typography */
+  .display {
+    font-family: var(--font-display), Georgia, serif;
+  }
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[11px] uppercase tracking-widest-x text-primary-700 font-semibold;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply h-px w-8 bg-secondary;
+  }
+  .eyebrow-center {
+    @apply text-[11px] uppercase tracking-widest-x text-primary-700 font-semibold;
+  }
+
+  /* Decorative */
+  .secondary-divider {
+    @apply relative h-px bg-gradient-to-r from-transparent via-secondary to-transparent;
+  }
+  .weave-bg {
+    @apply bg-weave-light;
+  }
+
+  /* Cards */
+  .card {
+    @apply rounded-2xl bg-white border border-cream-300 shadow-soft;
+  }
+
+  /* Form */
+  .field {
+    @apply w-full rounded-xl border border-cream-300 bg-white px-4 py-3 text-ink placeholder:text-ink-muted focus:outline-none focus:border-primary-600 focus:ring-2 focus:ring-primary-600/10 transition;
+  }
+  .label {
+    @apply block text-xs uppercase tracking-wider-x text-ink-soft font-semibold mb-2;
+  }
+}
+
+/* Marquee duplicate gap */
+.marquee-track > * {
+  @apply shrink-0;
+}
+
+/* Footer CTA radial accent gradients — primary indigo + secondary teal */
+.footer-cta-bg {
+  background-image:
+    radial-gradient(ellipse at 80% 50%, rgba(79,70,229,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse at 10% 80%, rgba(15,118,110,0.12) 0%, transparent 50%);
+}
+
+/* Hide scrollbar but keep scrollable */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Loading shimmer */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgb(var(--color-surface-200)) 0%,
+    rgb(var(--color-surface-100)) 50%,
+    rgb(var(--color-surface-200)) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2.5s linear infinite;
+}
