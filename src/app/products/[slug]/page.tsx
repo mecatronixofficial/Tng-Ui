@@ -34,11 +34,11 @@ export async function generateMetadata({
   if (!product) return { title: "Product Not Found" };
   return {
     title: product.name,
-    description: product.description.slice(0, 160),
+    description: product.description?.slice(0, 160) ?? "",
     openGraph: {
       title: product.name,
-      description: product.description.slice(0, 160),
-      images: [product.images[0]],
+      description: product.description?.slice(0, 160) ?? "",
+      images: product.images[0] ? [product.images[0]] : [],
     },
   };
 }
@@ -80,14 +80,18 @@ export default async function ProductDetailPage({
             {/* Info */}
             <div className="lg:col-span-5">
               <div className="mb-4 flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-widest-x">
-                <span className="inline-flex items-center gap-1.5 rounded-md bg-primary-50 px-2.5 py-1.5 text-primary-800">
-                  <FaStore className="h-3 w-3 text-secondary" />
-                  Retail
-                </span>
-                <span className="inline-flex items-center gap-1.5 rounded-md bg-secondary/10 px-2.5 py-1.5 text-secondary-dark">
-                  <FaBoxes className="h-3 w-3" />
-                  Wholesale
-                </span>
+                {(product.retailEnabled ?? true) && (
+                  <span className="inline-flex items-center gap-1.5 rounded-md bg-primary-50 px-2.5 py-1.5 text-primary-800">
+                    <FaStore className="h-3 w-3 text-secondary" />
+                    Retail
+                  </span>
+                )}
+                {(product.wholesaleEnabled ?? true) && (
+                  <span className="inline-flex items-center gap-1.5 rounded-md bg-secondary/10 px-2.5 py-1.5 text-secondary-dark">
+                    <FaBoxes className="h-3 w-3" />
+                    Wholesale
+                  </span>
+                )}
                 <span className="rounded-md bg-white px-2.5 py-1.5 text-primary-800">
                   {product.category}
                 </span>
@@ -102,9 +106,9 @@ export default async function ProductDetailPage({
 
               <div className="mt-4 flex items-center gap-3 text-sm font-semibold text-ink-muted">
                 <span className="text-secondary">
-                  {"★".repeat(Math.round(product.rating))}
+                  {"★".repeat(Math.min(5, Math.max(0, Math.round(product.rating ?? 4.5))))}
                   <span className="text-primary-200">
-                    {"★".repeat(5 - Math.round(product.rating))}
+                    {"★".repeat(5 - Math.min(5, Math.max(0, Math.round(product.rating ?? 4.5))))}
                   </span>
                 </span>
                 <span>·</span>
@@ -180,6 +184,14 @@ export default async function ProductDetailPage({
                 ["Cloth Type", product.clothType],
                 ["Colors Available", product.colors.join(", ")],
                 ["Sizes Available", product.sizes.join(", ")],
+                ["Retail Orders", (product.retailEnabled ?? true) ? "Enabled" : "Disabled"],
+                ["Wholesale Orders", (product.wholesaleEnabled ?? true) ? `Enabled (${product.bundleSize ?? 12} pieces per bundle)` : "Disabled"],
+                (product.wholesaleEnabled ?? true) && product.allowMixedColors
+                  ? ["Bulk Mixed Colors", "Enabled"]
+                  : null,
+                (product.wholesaleEnabled ?? true) && product.allowMixedSizes
+                  ? ["Bulk Mixed Sizes", "Enabled"]
+                  : null,
                 ["Washable", product.washable ? "Yes — machine wash recommended" : "Dry clean only"],
                 ["Country of Origin", "India (Erode, Tamil Nadu)"],
                 ...(product.specifications?.map((s) => [s.label, s.value]) || []),

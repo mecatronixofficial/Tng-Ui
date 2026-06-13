@@ -22,7 +22,11 @@ export interface Product {
   reviews: number;
   tags: string[];
   specifications?: { label: string; value: string }[];
+  retailEnabled?: boolean;
+  wholesaleEnabled?: boolean;
   bundleSize?: number; // pieces per wholesale bundle (default 12)
+  allowMixedColors?: boolean;
+  allowMixedSizes?: boolean;
 }
 
 export interface Category {

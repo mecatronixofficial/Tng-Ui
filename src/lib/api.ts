@@ -299,6 +299,11 @@ export interface ProductApi {
   reviews: number;
   tags: string[];
   specifications?: { label: string; value: string }[];
+  retailEnabled?: boolean;
+  wholesaleEnabled?: boolean;
+  bundleSize?: number;
+  allowMixedColors?: boolean;
+  allowMixedSizes?: boolean;
   active: boolean;
   createdAt?: string;
   updatedAt?: string;

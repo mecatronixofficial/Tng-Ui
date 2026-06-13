@@ -55,6 +55,11 @@ interface FormState {
   featured: boolean;
   newArrival: boolean;
   active: boolean;
+  retailEnabled: boolean;
+  wholesaleEnabled: boolean;
+  bundleSize: number;
+  allowMixedColors: boolean;
+  allowMixedSizes: boolean;
   rating: number;
   reviews: number;
 }
@@ -66,6 +71,8 @@ const emptyForm: FormState = {
   stock: 0, offerPrice: 0, originalPrice: 0,
   material: "", gsm: "", pattern: "", tags: "",
   washable: true, featured: false, newArrival: false, active: true,
+  retailEnabled: true, wholesaleEnabled: true, bundleSize: 12,
+  allowMixedColors: false, allowMixedSizes: false,
   rating: 4.5, reviews: 0,
 };
 
@@ -135,6 +142,11 @@ export default function AdminProductsPage() {
       featured: p.featured,
       newArrival: p.newArrival,
       active: p.active,
+      retailEnabled: p.retailEnabled ?? true,
+      wholesaleEnabled: p.wholesaleEnabled ?? true,
+      bundleSize: p.bundleSize ?? 12,
+      allowMixedColors: p.allowMixedColors ?? false,
+      allowMixedSizes: p.allowMixedSizes ?? false,
       rating: p.rating,
       reviews: p.reviews,
     });
@@ -148,6 +160,14 @@ export default function AdminProductsPage() {
     }
     if (form.images.length === 0) {
       toast("At least one image is required.", "error");
+      return;
+    }
+    if (!form.retailEnabled && !form.wholesaleEnabled) {
+      toast("Enable retail, wholesale, or both for this product.", "error");
+      return;
+    }
+    if (form.wholesaleEnabled && Number(form.bundleSize) < 1) {
+      toast("Bulk bundle quantity must be at least 1 piece.", "error");
       return;
     }
 
@@ -174,6 +194,11 @@ export default function AdminProductsPage() {
         featured: form.featured,
         newArrival: form.newArrival,
         active: form.active,
+        retailEnabled: form.retailEnabled,
+        wholesaleEnabled: form.wholesaleEnabled,
+        bundleSize: Number(form.bundleSize),
+        allowMixedColors: form.wholesaleEnabled && form.allowMixedColors,
+        allowMixedSizes: form.wholesaleEnabled && form.allowMixedSizes,
         rating: Number(form.rating),
         reviews: Number(form.reviews),
       };
@@ -457,6 +482,52 @@ export default function AdminProductsPage() {
                 min={0}
               />
             </Field>
+            <Field label="Bulk Bundle Qty" hint="Pieces per bundle">
+              <Input
+                type="number"
+                value={form.bundleSize}
+                onChange={(e) => setForm({ ...form, bundleSize: Number(e.target.value) })}
+                min={1}
+                disabled={!form.wholesaleEnabled}
+              />
+            </Field>
+          </div>
+
+          <div className="rounded-lg border border-cream-200 bg-cream-50 p-4">
+            <div className="mb-4 text-[10px] font-bold uppercase tracking-widest-x text-primary-800">
+              Retail and Bulk Options
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Toggle
+                checked={form.retailEnabled}
+                onChange={(v) => setForm({ ...form, retailEnabled: v })}
+                label="Enable retail quantity"
+              />
+              <Toggle
+                checked={form.wholesaleEnabled}
+                onChange={(v) =>
+                  setForm({
+                    ...form,
+                    wholesaleEnabled: v,
+                    allowMixedColors: v ? form.allowMixedColors : false,
+                    allowMixedSizes: v ? form.allowMixedSizes : false,
+                  })
+                }
+                label="Enable bulk bundles"
+              />
+              <Toggle
+                checked={form.allowMixedColors}
+                onChange={(v) => setForm({ ...form, allowMixedColors: v })}
+                label="Allow mixed colors in bulk"
+                disabled={!form.wholesaleEnabled}
+              />
+              <Toggle
+                checked={form.allowMixedSizes}
+                onChange={(v) => setForm({ ...form, allowMixedSizes: v })}
+                label="Allow mixed sizes in bulk"
+                disabled={!form.wholesaleEnabled}
+              />
+            </div>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4">
