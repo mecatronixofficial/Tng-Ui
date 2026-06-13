@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { FaArrowRight, FaBoxes, FaStore, FaTags, FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp } from "react-icons/fa";
 
+import CategoryCard from "@/components/CategoryCard";
 import PageHero from "@/components/PageHero";
 import SectionTitle from "@/components/SectionTitle";
 import { loadCategories } from "@/lib/data";
@@ -46,54 +46,13 @@ export default async function CategoriesPage() {
 
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {categories.map((cat, i) => (
-              <Link
+              <CategoryCard
                 key={cat.id}
+                category={cat}
                 href={`/categories/${cat.slug}`}
-                className="group overflow-hidden rounded-lg border border-primary-100 bg-white shadow-soft transition hover:-translate-y-1 hover:border-secondary hover:shadow-warm"
-              >
-                <div className="relative aspect-[16/10] overflow-hidden bg-primary-50">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={cat.image}
-                    alt={cat.name}
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute left-4 top-4 rounded-lg bg-secondary px-3 py-2 text-[10px] font-bold uppercase tracking-widest-x text-white shadow-soft">
-                    {cat.productCount} items
-                  </div>
-                  <div className="absolute right-4 top-4 rounded-lg bg-secondary/90 px-3 py-2 text-[10px] font-bold uppercase tracking-widest-x text-white">
-                    {String(i + 1).padStart(2, "0")}
-                  </div>
-                </div>
-
-                <div className="p-5">
-                  <div className="mb-3 flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center gap-1.5 rounded-md bg-primary-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-primary-800">
-                      <FaStore className="h-3 w-3 text-secondary" />
-                      Retail
-                    </span>
-                    <span className="inline-flex items-center gap-1.5 rounded-md bg-secondary/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-secondary-dark">
-                      <FaBoxes className="h-3 w-3" />
-                      Wholesale
-                    </span>
-                  </div>
-                  <h3 className="text-2xl font-extrabold leading-tight text-primary-950 group-hover:text-primary-700">
-                    {cat.name}
-                  </h3>
-                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-ink-muted">
-                    {cat.description}
-                  </p>
-                  <div className="mt-5 flex items-center justify-between border-t border-primary-100 pt-4">
-                    <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest-x text-primary-800">
-                      <FaTags className="h-3 w-3 text-secondary" />
-                      Cloth category
-                    </span>
-                    <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-secondary">
-                      Explore <FaArrowRight className="h-3 w-3" />
-                    </span>
-                  </div>
-                </div>
-              </Link>
+                index={i}
+                rank={i + 1}
+              />
             ))}
           </div>
         </div>
