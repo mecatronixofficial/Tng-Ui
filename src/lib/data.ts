@@ -47,6 +47,48 @@ interface ApiPaginated<T> {
 
 // ----- Mapping helpers (backend → frontend types) -----
 
+function asString(value: unknown, fallback = ""): string {
+  return typeof value === "string" ? value : fallback;
+}
+
+function asNumber(value: unknown, fallback = 0): number {
+  const number = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(number) ? number : fallback;
+}
+
+function asStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => (typeof item === "string" ? item.trim() : ""))
+      .filter(Boolean);
+  }
+
+  if (typeof value === "string") {
+    return value
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
+function asSpecifications(value: unknown): ProductType["specifications"] {
+  if (!Array.isArray(value)) return undefined;
+
+  const specifications = value
+    .map((item) => {
+      if (!item || typeof item !== "object") return null;
+      const record = item as Record<string, unknown>;
+      const label = asString(record.label).trim();
+      const specValue = asString(record.value).trim();
+      return label && specValue ? { label, value: specValue } : null;
+    })
+    .filter((item): item is { label: string; value: string } => Boolean(item));
+
+  return specifications.length > 0 ? specifications : undefined;
+}
+
 function mapCategory(api: any): CategoryType {
   return {
     id: api.id || api._id,
@@ -71,32 +113,32 @@ function mapSubcategory(api: any): SubcategoryType {
 
 function mapProduct(api: any): ProductType {
   return {
-    id: api.id || api._id,
-    name: api.name,
-    slug: api.slug,
-    category: api.category,
-    subcategory: api.subcategory,
-    images: api.images || [],
-    description: api.description ?? "",
-    clothType: api.clothType ?? "",
-    colors: api.colors || [],
-    sizes: api.sizes || [],
-    stock: api.stock ?? 0,
-    offerPrice: api.offerPrice,
-    originalPrice: api.originalPrice,
-    material: api.material,
-    gsm: api.gsm,
-    pattern: api.pattern,
+    id: asString(api.id || api._id),
+    name: asString(api.name, "Product"),
+    slug: asString(api.slug),
+    category: asString(api.category, "Textiles"),
+    subcategory: asString(api.subcategory) || undefined,
+    images: asStringArray(api.images),
+    description: asString(api.description),
+    clothType: asString(api.clothType),
+    colors: asStringArray(api.colors),
+    sizes: asStringArray(api.sizes),
+    stock: asNumber(api.stock),
+    offerPrice: asNumber(api.offerPrice),
+    originalPrice: asNumber(api.originalPrice),
+    material: asString(api.material),
+    gsm: asString(api.gsm) || undefined,
+    pattern: asString(api.pattern) || undefined,
     washable: api.washable ?? true,
     featured: api.featured ?? false,
     newArrival: api.newArrival ?? false,
-    rating: api.rating ?? 4.5,
-    reviews: api.reviews ?? 0,
-    tags: api.tags || [],
-    specifications: api.specifications,
+    rating: asNumber(api.rating, 4.5),
+    reviews: asNumber(api.reviews),
+    tags: asStringArray(api.tags),
+    specifications: asSpecifications(api.specifications),
     retailEnabled: api.retailEnabled ?? true,
     wholesaleEnabled: api.wholesaleEnabled ?? true,
-    bundleSize: api.bundleSize ?? 12,
+    bundleSize: asNumber(api.bundleSize, 12),
     allowMixedColors: api.allowMixedColors ?? false,
     allowMixedSizes: api.allowMixedSizes ?? false,
   };

@@ -4,6 +4,9 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/utils";
 
+const FALLBACK_IMAGE =
+  "https://images.unsplash.com/photo-1564584217132-2271feaeb3c5?w=1200&auto=format&fit=crop&q=85";
+
 export default function ProductGallery({
   images,
   name,
@@ -11,13 +14,14 @@ export default function ProductGallery({
   images: string[];
   name: string;
 }) {
+  const galleryImages = images.length > 0 ? images : [FALLBACK_IMAGE];
   const [active, setActive] = useState(0);
 
   return (
     <div className="grid grid-cols-5 gap-4 rounded-lg border border-primary-100 bg-white p-3 shadow-soft">
       {/* Thumbs */}
       <div className="col-span-1 flex flex-col gap-3">
-        {images.map((img, i) => (
+        {galleryImages.map((img, i) => (
           <button
             key={i}
             type="button"
@@ -40,7 +44,7 @@ export default function ProductGallery({
         <AnimatePresence mode="wait">
           <motion.img
             key={active}
-            src={images[active]}
+            src={galleryImages[active]}
             alt={name}
             initial={{ opacity: 0, scale: 1.03 }}
             animate={{ opacity: 1, scale: 1 }}
