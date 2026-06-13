@@ -21,9 +21,12 @@ const MIXED_COLOR = "Mixed / Assorted Colors";
 const MIXED_SIZE = "Mixed / Assorted Sizes";
 
 export default function ProductActions({ product }: { product: Product }) {
-  const bundleSize = product.bundleSize ?? 12;
+  const bundleSize = Math.max(1, product.bundleSize ?? 12);
+  const retailEnabled = product.retailEnabled ?? true;
+  const wholesaleEnabled = product.wholesaleEnabled ?? true;
+  const initialMode: Mode = retailEnabled ? "retail" : "wholesale";
 
-  const [mode, setMode] = useState<Mode>("retail");
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [color, setColor] = useState(product.colors[0] || "");
   const [size, setSize] = useState(product.sizes[0] || "");
   const [qty, setQty] = useState(1);
@@ -34,18 +37,27 @@ export default function ProductActions({ product }: { product: Product }) {
 
   const totalPieces = bundles * bundleSize;
 
+  const activeMode: Mode =
+    mode === "retail" && !retailEnabled && wholesaleEnabled
+      ? "wholesale"
+      : mode === "wholesale" && !wholesaleEnabled && retailEnabled
+      ? "retail"
+      : mode;
+
   const whatsapp = buildWhatsAppOrderUrl({
     productName: product.name,
     color,
     size,
     quantity:
-      mode === "wholesale"
+      activeMode === "wholesale"
         ? `${bundles} bundle${bundles > 1 ? "s" : ""} (${totalPieces} pieces) – Wholesale`
         : `${qty} piece${qty > 1 ? "s" : ""} – Retail`,
     productLink: `https://thangaveltextile.in/products/${product.slug}`,
   });
 
   const switchMode = (next: Mode) => {
+    if (next === "retail" && !retailEnabled) return;
+    if (next === "wholesale" && !wholesaleEnabled) return;
     setMode(next);
     setColor(product.colors[0] || "");
     setSize(product.sizes[0] || "");
@@ -58,7 +70,7 @@ export default function ProductActions({ product }: { product: Product }) {
       if (navigator.share) {
         await navigator.share({
           title: product.name,
-          text: product.description.slice(0, 100),
+          text: product.description?.slice(0, 100) ?? "",
           url: window.location.href,
         });
       } else {
@@ -73,37 +85,53 @@ export default function ProductActions({ product }: { product: Product }) {
   return (
     <div className="space-y-5 rounded-lg border border-primary-100 bg-white p-5 shadow-soft">
       {/* Mode toggle */}
-      <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-primary-50 p-1.5">
-        <button
-          type="button"
-          onClick={() => switchMode("retail")}
-          className={cn(
-            "flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-xs font-bold uppercase tracking-wide transition",
-            mode === "retail"
-              ? "bg-white shadow text-primary-900 border border-primary-100"
-              : "text-ink-muted hover:text-primary-800"
+      {retailEnabled && wholesaleEnabled ? (
+        <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-primary-50 p-1.5">
+          <button
+            type="button"
+            onClick={() => switchMode("retail")}
+            className={cn(
+              "flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-xs font-bold uppercase tracking-wide transition",
+              activeMode === "retail"
+                ? "bg-white shadow text-primary-900 border border-primary-100"
+                : "text-ink-muted hover:text-primary-800"
+            )}
+          >
+            <FaStore className={cn("h-3.5 w-3.5", activeMode === "retail" ? "text-secondary" : "text-ink-muted")} />
+            Retail
+          </button>
+          <button
+            type="button"
+            onClick={() => switchMode("wholesale")}
+            className={cn(
+              "flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-xs font-bold uppercase tracking-wide transition",
+              activeMode === "wholesale"
+                ? "bg-white shadow text-primary-900 border border-primary-100"
+                : "text-ink-muted hover:text-primary-800"
+            )}
+          >
+            <FaBoxes className={cn("h-3.5 w-3.5", activeMode === "wholesale" ? "text-secondary" : "text-ink-muted")} />
+            Wholesale
+          </button>
+        </div>
+      ) : (
+        <div className="inline-flex items-center gap-2 rounded-lg bg-primary-50 px-4 py-3 text-xs font-bold uppercase tracking-wide text-primary-900">
+          {activeMode === "wholesale" ? (
+            <>
+              <FaBoxes className="h-3.5 w-3.5 text-secondary" />
+              Wholesale only
+            </>
+          ) : (
+            <>
+              <FaStore className="h-3.5 w-3.5 text-secondary" />
+              Retail only
+            </>
           )}
-        >
-          <FaStore className={cn("h-3.5 w-3.5", mode === "retail" ? "text-secondary" : "text-ink-muted")} />
-          Retail
-        </button>
-        <button
-          type="button"
-          onClick={() => switchMode("wholesale")}
-          className={cn(
-            "flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-xs font-bold uppercase tracking-wide transition",
-            mode === "wholesale"
-              ? "bg-white shadow text-primary-900 border border-primary-100"
-              : "text-ink-muted hover:text-primary-800"
-          )}
-        >
-          <FaBoxes className={cn("h-3.5 w-3.5", mode === "wholesale" ? "text-secondary" : "text-ink-muted")} />
-          Wholesale
-        </button>
-      </div>
+        </div>
+      )}
 
       {/* Wholesale info banner */}
-      {mode === "wholesale" && (
+      {activeMode === "wholesale" && (
         <div className="flex items-center gap-2 rounded-lg bg-secondary/10 px-4 py-3 text-xs font-semibold text-secondary-dark">
           <FaBoxes className="h-3.5 w-3.5 shrink-0" />
           1 bundle = {bundleSize} pieces &nbsp;·&nbsp; Choose bundles below
@@ -132,7 +160,7 @@ export default function ProductActions({ product }: { product: Product }) {
                 {c}
               </button>
             ))}
-            {mode === "wholesale" && (
+            {activeMode === "wholesale" && product.allowMixedColors && (
               <button
                 type="button"
                 onClick={() => setColor(MIXED_COLOR)}
@@ -172,7 +200,7 @@ export default function ProductActions({ product }: { product: Product }) {
                 {s}
               </button>
             ))}
-            {mode === "wholesale" && (
+            {activeMode === "wholesale" && product.allowMixedSizes && (
               <button
                 type="button"
                 onClick={() => setSize(MIXED_SIZE)}
@@ -191,7 +219,7 @@ export default function ProductActions({ product }: { product: Product }) {
       )}
 
       {/* Retail quantity */}
-      {mode === "retail" && (
+      {activeMode === "retail" && (
         <div>
           <div className="mb-3 text-[10px] font-bold uppercase tracking-widest-x text-primary-800">
             Quantity
@@ -224,7 +252,7 @@ export default function ProductActions({ product }: { product: Product }) {
       )}
 
       {/* Wholesale bundle quantity */}
-      {mode === "wholesale" && (
+      {activeMode === "wholesale" && (
         <div>
           <div className="mb-3 text-[10px] font-bold uppercase tracking-widest-x text-primary-800">
             Bundles
@@ -268,7 +296,7 @@ export default function ProductActions({ product }: { product: Product }) {
           className="inline-flex min-w-[200px] flex-1 items-center justify-center gap-2 rounded-lg bg-secondary px-5 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-secondary-dark"
         >
           <FaWhatsapp className="h-4 w-4" />
-          {mode === "wholesale" ? "Enquire Wholesale" : "Ask on WhatsApp"}
+          {activeMode === "wholesale" ? "Enquire Wholesale" : "Ask on WhatsApp"}
         </a>
         <button
           type="button"

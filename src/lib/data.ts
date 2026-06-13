@@ -77,8 +77,8 @@ function mapProduct(api: any): ProductType {
     category: api.category,
     subcategory: api.subcategory,
     images: api.images || [],
-    description: api.description,
-    clothType: api.clothType,
+    description: api.description ?? "",
+    clothType: api.clothType ?? "",
     colors: api.colors || [],
     sizes: api.sizes || [],
     stock: api.stock ?? 0,
@@ -94,6 +94,11 @@ function mapProduct(api: any): ProductType {
     reviews: api.reviews ?? 0,
     tags: api.tags || [],
     specifications: api.specifications,
+    retailEnabled: api.retailEnabled ?? true,
+    wholesaleEnabled: api.wholesaleEnabled ?? true,
+    bundleSize: api.bundleSize ?? 12,
+    allowMixedColors: api.allowMixedColors ?? false,
+    allowMixedSizes: api.allowMixedSizes ?? false,
   };
 }
 
