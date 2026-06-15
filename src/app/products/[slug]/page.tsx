@@ -20,9 +20,7 @@ import ProductActions from "./ProductActions";
 
 import { loadProductBySlug, loadRelatedProducts } from "@/lib/data";
 
-export function generateStaticParams() {
-  return [];
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
