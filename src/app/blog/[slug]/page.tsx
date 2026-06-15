@@ -17,10 +17,7 @@ import PageHero from "@/components/PageHero";
 import { siteConfig } from "@/data/site";
 import { loadBlogs, loadBlogBySlug } from "@/lib/data";
 
-export async function generateStaticParams() {
-  const blogs = await loadBlogs();
-  return blogs.map((b) => ({ slug: b.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
