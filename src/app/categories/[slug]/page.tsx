@@ -15,9 +15,7 @@ import ProductCard from "@/components/ProductCard";
 import { loadCategories, loadProducts, loadSubcategories } from "@/lib/data";
 import { siteConfig } from "@/data/site";
 
-export function generateStaticParams() {
-  return [];
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

@@ -43,6 +43,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<ProductApi[]>([]);
   const [categories, setCategories] = useState<CategoryApi[]>([]);
   const [subcategories, setSubcategories] = useState<SubcategoryApi[]>([]);
+  const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState(initialCategory);
   const [subcategory, setSubcategory] = useState(initialSubcategory);
   const [search, setSearch] = useState("");
@@ -53,8 +54,11 @@ export default function ProductsPage() {
   useEffect(() => {
     api
       .publicProducts()
-      .then((r) => setProducts(r.data))
-      .catch(() => {});
+      .then((r) => {
+        setProducts(r.data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(true));
     api.publicCategories().then(setCategories).catch(() => {});
     api.publicSubcategories().then(setSubcategories).catch(() => {});
   }, []);
@@ -159,6 +163,20 @@ export default function ProductsPage() {
 
       <section className="section-y bg-cream-50">
         <div className="container-x">
+          {loading ? (
+            <div className="grid min-h-[360px] place-items-center rounded-lg border border-primary-100 bg-white p-10 text-center shadow-soft">
+              <div>
+                <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-primary-100 border-t-secondary" />
+                <h2 className="mt-5 text-2xl font-extrabold text-primary-950">
+                  Loading products
+                </h2>
+                <p className="mt-2 text-sm text-ink-muted">
+                  Fetching your uploaded product details.
+                </p>
+              </div>
+            </div>
+          ) : (
+          <>
           <div className="mb-6 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
             <div className="relative">
               <FaSearch className="absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-secondary" />
@@ -352,6 +370,8 @@ export default function ProductsPage() {
               </AnimatePresence>
             </div>
           </div>
+          </>
+          )}
         </div>
       </section>
     </>
