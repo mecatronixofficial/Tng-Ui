@@ -71,10 +71,10 @@ export default async function AboutPage() {
       />
 
       {/* Buyer profile */}
-      <section className="section-y bg-cream-50">
+      <section className="section-y bg-white">
         <div className="container-x grid gap-10 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-5">
-            <div className="relative overflow-hidden rounded-lg border border-primary-100 bg-white shadow-warm">
+            <div className="overflow-hidden rounded-2xl border border-primary-100">
               <div className="aspect-[4/5] overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -83,16 +83,13 @@ export default async function AboutPage() {
                   className="h-full w-full object-cover"
                 />
               </div>
-              <div className="absolute left-5 top-5 rounded-lg bg-secondary px-3 py-2 text-[10px] font-bold uppercase tracking-widest-x text-white shadow-soft">
-                Retail + Wholesale
+            </div>
+            <div className="mt-4 rounded-2xl border border-primary-100 p-4">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-primary-500">
+                {siteConfig.address.city}, {siteConfig.address.state}
               </div>
-              <div className="absolute bottom-5 left-5 right-5 rounded-lg bg-primary-900/95 p-4 text-white shadow-soft">
-                <div className="text-[10px] font-bold uppercase tracking-widest-x text-secondary-light">
-                  {siteConfig.address.city}, {siteConfig.address.state}
-                </div>
-                <div className="mt-1 text-xl font-extrabold">
-                  Cloths for homes, shops and traders.
-                </div>
+              <div className="mt-1 text-lg font-bold text-primary-950">
+                Cloths for homes, shops and traders.
               </div>
             </div>
           </div>
@@ -108,12 +105,12 @@ export default async function AboutPage() {
               {buyerPaths.map(({ title, text, Icon }) => (
                 <div
                   key={title}
-                  className="rounded-lg border border-primary-100 bg-white p-5 shadow-soft"
+                  className="rounded-2xl border border-primary-100 p-5"
                 >
-                  <div className="grid h-11 w-11 place-items-center rounded-lg bg-primary-600 text-white">
+                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary-50 text-primary-600">
                     <Icon className="h-4 w-4" />
                   </div>
-                  <h3 className="mt-4 text-base font-extrabold text-primary-950">
+                  <h3 className="mt-4 text-base font-bold text-primary-950">
                     {title}
                   </h3>
                   <p className="mt-2 text-sm leading-6 text-ink-muted">{text}</p>
@@ -124,7 +121,7 @@ export default async function AboutPage() {
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/products"
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary-600 px-6 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-secondary"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary-100 px-6 py-3 text-sm font-bold text-primary-700 transition hover:border-primary-300"
               >
                 View Cloth Range <FaArrowRight className="h-3.5 w-3.5" />
               </Link>
@@ -132,9 +129,9 @@ export default async function AboutPage() {
                 href={siteConfig.socials.whatsapp}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-secondary/30 bg-white px-6 py-3 text-sm font-bold text-secondary transition hover:bg-secondary hover:text-white"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary-100 px-6 py-3 text-sm font-bold text-ink transition hover:border-primary-300"
               >
-                <FaWhatsapp className="h-4 w-4" />
+                <FaWhatsapp className="h-4 w-4 text-[#25D366]" />
                 Ask on WhatsApp
               </a>
             </div>
@@ -160,7 +157,7 @@ export default async function AboutPage() {
             />
             <Link
               href="/categories"
-              className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider-x text-primary-800 hover:text-secondary"
+              className="inline-flex items-center gap-2 text-sm font-bold text-primary-700 hover:text-primary-900"
             >
               View categories <FaArrowRight className="h-3 w-3" />
             </Link>
@@ -171,22 +168,22 @@ export default async function AboutPage() {
               <Link
                 key={category.id}
                 href={`/products?category=${category.slug}`}
-                className="group rounded-lg border border-primary-100 bg-primary-50 p-4 transition hover:border-secondary hover:bg-white hover:shadow-soft"
+                className="rounded-2xl border border-primary-100 p-4 transition hover:border-primary-300"
               >
                 <div className="flex items-center gap-3">
-                  <div className="h-14 w-14 overflow-hidden rounded-lg bg-white">
+                  <div className="h-14 w-14 overflow-hidden rounded-xl bg-primary-50">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="h-full w-full object-cover transition group-hover:scale-105"
+                      className="h-full w-full object-cover"
                     />
                   </div>
                   <div>
-                    <div className="font-extrabold text-primary-950">
+                    <div className="font-bold text-primary-950">
                       {category.name}
                     </div>
-                    <div className="mt-1 text-[10px] font-bold uppercase tracking-widest-x text-secondary">
+                    <div className="mt-1 text-[10px] font-bold uppercase tracking-widest text-primary-500">
                       {category.productCount} items
                     </div>
                   </div>
@@ -212,9 +209,9 @@ export default async function AboutPage() {
             {promises.map((item) => (
               <div
                 key={item}
-                className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/6 p-4"
+                className="flex items-start gap-3 rounded-xl border border-white/10 p-4"
               >
-                <FaCheckCircle className="mt-1 h-4 w-4 shrink-0 text-secondary-light" />
+                <FaCheckCircle className="mt-1 h-4 w-4 shrink-0 text-secondary" />
                 <span className="text-sm font-semibold leading-6 text-white/80">
                   {item}
                 </span>
@@ -225,23 +222,22 @@ export default async function AboutPage() {
       </section>
 
       {/* Founder and flow */}
-      <section className="section-y bg-cream-50">
+      <section className="section-y bg-white">
         <div className="container-x grid gap-8 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <div className="relative overflow-hidden rounded-lg border border-secondary/30 bg-white p-7 shadow-warm md:p-10">
-              <FaQuoteRight className="absolute right-6 top-6 h-16 w-16 text-secondary/10" />
-              <div className="mb-5 inline-flex items-center gap-2 rounded-lg bg-primary-50 px-3 py-2 text-[10px] font-bold uppercase tracking-widest-x text-primary-800">
-                <FaHandshake className="h-3 w-3 text-secondary" />
+            <div className="rounded-2xl border border-primary-100 p-7 md:p-10">
+              <div className="mb-5 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary-500">
+                <FaHandshake className="h-3 w-3" />
                 From the founder
               </div>
-              <blockquote className="relative text-2xl font-extrabold leading-snug text-primary-950 md:text-3xl">
+              <blockquote className="text-xl font-bold leading-snug text-primary-950 md:text-2xl">
                 &ldquo;We believe cloth buying should be simple. Retail customers
                 need dependable everyday products, and wholesale buyers need
                 clear details, repeat stock and honest despatch timelines.&rdquo;
               </blockquote>
               <div className="mt-6 border-t border-primary-100 pt-5">
-                <div className="font-extrabold text-ink">{siteConfig.ceo}</div>
-                <div className="mt-1 text-xs font-bold uppercase tracking-widest-x text-secondary">
+                <div className="font-bold text-ink">{siteConfig.ceo}</div>
+                <div className="mt-1 text-xs font-bold uppercase tracking-widest text-primary-500">
                   Founder, {siteConfig.name}
                 </div>
               </div>
@@ -249,18 +245,18 @@ export default async function AboutPage() {
           </div>
 
           <div className="lg:col-span-5">
-            <div className="rounded-lg border border-primary-100 bg-white p-7 shadow-soft md:p-8">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-lg bg-primary-50 px-3 py-2 text-[10px] font-bold uppercase tracking-widest-x text-primary-800">
-                <FaTruckMoving className="h-3 w-3 text-secondary" />
+            <div className="rounded-2xl border border-primary-100 p-7 md:p-8">
+              <div className="mb-5 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary-500">
+                <FaTruckMoving className="h-3 w-3" />
                 Wholesale flow
               </div>
               <div className="space-y-4">
                 {tradeFlow.map((step, index) => (
                   <div key={step} className="flex gap-3">
-                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-secondary text-sm font-extrabold text-white">
-                      {index + 1}
+                    <span className="text-sm font-bold text-secondary-dark">
+                      {String(index + 1).padStart(2, "0")}
                     </span>
-                    <div className="rounded-lg bg-primary-50 px-4 py-3 text-sm font-bold leading-6 text-primary-950">
+                    <div className="text-sm font-semibold leading-6 text-primary-950">
                       {step}
                     </div>
                   </div>
@@ -282,7 +278,7 @@ export default async function AboutPage() {
             />
           </div>
           <div className="lg:col-span-8">
-            <dl className="grid overflow-hidden rounded-lg border border-primary-100 bg-primary-100 gap-px sm:grid-cols-2">
+            <dl className="grid gap-px overflow-hidden rounded-2xl border border-primary-100 sm:grid-cols-2">
               {[
                 ["Nature of Business", siteConfig.natureOfBusiness, FaStore],
                 ["Additional Business", siteConfig.additionalBusiness.join(", "), FaBoxes],
@@ -300,15 +296,13 @@ export default async function AboutPage() {
                 const InfoIcon = Icon as React.ComponentType<{ className?: string }>;
                 return (
                   <div key={label as string} className="bg-white p-5">
-                    <div className="flex items-center gap-3">
-                      <span className="grid h-10 w-10 place-items-center rounded-lg bg-primary-50 text-secondary">
-                        <InfoIcon className="h-4 w-4" />
-                      </span>
-                      <dt className="text-[10px] font-bold uppercase tracking-widest-x text-primary-800">
+                    <div className="flex items-center gap-2">
+                      <InfoIcon className="h-3.5 w-3.5 text-primary-500" />
+                      <dt className="text-[10px] font-bold uppercase tracking-widest text-primary-500">
                         {label as string}
                       </dt>
                     </div>
-                    <dd className="mt-4 text-lg font-extrabold leading-snug text-primary-950">
+                    <dd className="mt-3 text-base font-bold leading-snug text-primary-950">
                       {value as string}
                     </dd>
                   </div>

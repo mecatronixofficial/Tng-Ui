@@ -19,12 +19,13 @@ import {
 
 import HeroSlider from "@/components/HeroSlider";
 import SectionTitle from "@/components/SectionTitle";
-import CategoryCard from "@/components/CategoryCard";
+import CategorySlider from "@/components/CategorySlider";
 import ProductCard from "@/components/ProductCard";
 import StatsCounter from "@/components/StatsCounter";
 import TestimonialSlider from "@/components/TestimonialSlider";
 import FAQAccordion from "@/components/FAQAccordion";
 import OfferBanner from "@/components/OfferBanner";
+import ContactForm from "@/components/ContactForm";
 
 import {
   loadCategories,
@@ -98,102 +99,153 @@ export default async function HomePage() {
       <HeroSlider />
 
       {/* Buyer paths */}
-      <section className="border-y border-cream-200 bg-white">
-        <div className="container-x grid gap-4 py-8 lg:grid-cols-[1fr_1fr_auto] lg:items-stretch">
-          {buyerPaths.map(({ title, text, href, action, Icon, ...rest }) => {
-            const external = "external" in rest ? rest.external : false;
-            const content = (
-              <>
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-primary-600 text-white transition group-hover:bg-secondary-dark">
-                  <Icon className="h-5 w-5" />
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-lg font-extrabold text-ink">
-                    {title}
-                  </span>
-                  <span className="mt-1 block text-sm leading-6 text-ink-muted">
-                    {text}
-                  </span>
-                  <span className="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-primary-600">
-                    {action} <FaArrowRight className="h-3 w-3" />
-                  </span>
-                </span>
-              </>
-            );
+      <section className="border-y border-primary-100 bg-white py-12">
+        <div className="container-x">
+          <div className="mb-8 flex justify-center">
+            <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary-600">
+              <FaStore className="h-3 w-3 text-primary-500" />
+              How would you like to buy?
+            </span>
+          </div>
 
-            return external ? (
-              <a
-                key={title}
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                className="group flex gap-4 rounded-lg border border-cream-200 bg-cream-50 p-5 transition hover:border-primary-600 hover:bg-white"
-              >
-                {content}
-              </a>
-            ) : (
-              <Link
-                key={title}
-                href={href}
-                className="group flex gap-4 rounded-lg border border-cream-200 bg-cream-50 p-5 transition hover:border-primary-600 hover:bg-white"
-              >
-                {content}
-              </Link>
-            );
-          })}
+          <div className="grid gap-5 lg:grid-cols-[1fr_1fr_auto] lg:items-stretch">
+            {buyerPaths.map(({ title, text, href, action, Icon, ...rest }) => {
+              const external = "external" in rest ? rest.external : false;
+              const isWholesale = external;
+              const iconCls = isWholesale
+                ? "bg-[#25D366]/10 text-[#128C7E]"
+                : "bg-primary-50 text-primary-600";
+              const badge = isWholesale ? "B2B · Bulk orders" : "B2C · Retail";
 
-          <div className="rounded-lg border border-cream-200 bg-ink p-5 text-white">
-            <div className="flex items-center gap-3">
-              <span className="grid h-12 w-12 place-items-center rounded-lg bg-white/10">
-                <FaPhoneAlt className="h-5 w-5" />
-              </span>
-              <span>
-                <span className="block text-xs text-white/60">Call store</span>
-                <span className="block text-lg font-extrabold">
-                  {siteConfig.phone}
+              const content = (
+                <div className="flex gap-4">
+                  <span
+                    className={`grid h-12 w-12 shrink-0 place-items-center rounded-xl ${iconCls}`}
+                  >
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <div className="min-w-0">
+                    <span className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-primary-400">
+                      {badge}
+                    </span>
+                    <span className="block text-lg font-bold text-ink">
+                      {title}
+                    </span>
+                    <span className="mt-1 block text-sm leading-6 text-ink-muted">
+                      {text}
+                    </span>
+                    <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-primary-600">
+                      {action}
+                      <FaArrowRight className="h-2.5 w-2.5" />
+                    </span>
+                  </div>
+                </div>
+              );
+
+              return external ? (
+                <a
+                  key={title}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-2xl border border-primary-100 bg-white p-6 transition hover:border-primary-300"
+                >
+                  {content}
+                </a>
+              ) : (
+                <Link
+                  key={title}
+                  href={href}
+                  className="rounded-2xl border border-primary-100 bg-white p-6 transition hover:border-primary-300"
+                >
+                  {content}
+                </Link>
+              );
+            })}
+
+            <div className="rounded-2xl border border-primary-100 bg-primary-950 p-6 text-white">
+              <div className="flex items-center gap-3">
+                <span className="grid h-12 w-12 place-items-center rounded-xl bg-secondary/15 text-secondary">
+                  <FaPhoneAlt className="h-5 w-5" />
                 </span>
-              </span>
-            </div>
-            <div className="mt-4 text-xs leading-5 text-white/60">
-              {siteConfig.workingHours}
+                <div>
+                  <span className="block text-[10px] font-bold uppercase tracking-widest text-white/50">
+                    Call store directly
+                  </span>
+                  <span className="block text-lg font-bold">
+                    {siteConfig.phone}
+                  </span>
+                </div>
+              </div>
+              <div className="mt-4 border-t border-white/10 pt-3 text-xs leading-5 text-white/55">
+                {siteConfig.workingHours}
+              </div>
             </div>
           </div>
         </div>
       </section>
-
+      
       {/* Intro / stats */}
-      <section className="section-y bg-cream-50">
-        <div className="container-x grid gap-10 lg:grid-cols-12 lg:items-center">
-          <div className="lg:col-span-5">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-lg border border-primary-600/20 bg-white px-3 py-2 text-[10px] font-bold uppercase tracking-widest-x text-primary-600">
-              <FaTags className="h-3 w-3 text-secondary-dark" />
-              {siteConfig.address.city}, Tamil Nadu
+      <section className="relative overflow-hidden bg-primary-950 py-16 text-white md:py-24">
+        <div className="absolute inset-0 bg-weave-dark opacity-30" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_16%_20%,rgba(255,214,51,0.14),transparent_48%),radial-gradient(ellipse_80%_70%_at_84%_10%,rgba(66,133,252,0.22),transparent_52%)]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary/70 to-transparent" />
+
+        <div className="container-x relative gap-10 flex flex-col">
+          <div className="relative lg:col-span-5">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-4 py-2 text-[10px] font-black uppercase tracking-widest-x text-secondary-light shadow-[0_0_0_1px_rgba(255,255,255,0.04)]">
+              <FaTags className="h-3 w-3" />
+              Est. {siteConfig.established} · {siteConfig.address.city}, Tamil
+              Nadu
             </div>
-            <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-ink md:text-5xl">
-              Cloths for homes, shops and wholesale trade.
+            <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-white md:text-5xl">
+              {siteConfig.tagline}
             </h2>
-            <p className="mt-5 text-base leading-7 text-ink-muted">
-              {siteConfig.name} supplies practical cotton and handloom textile
-              products from Erode. Retail customers can shop everyday essentials,
-              while wholesale buyers can request bulk supply and repeat stock.
+            <p className="mt-5 text-base leading-7 text-white/65">
+              {siteConfig.description}
             </p>
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              {[
+                "Petticoats & Lungis",
+                "Towels, Gamcha & Dhotis",
+                `GST registered since ${siteConfig.gstSince}`,
+                "Pan-India despatch",
+              ].map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2.5 text-sm font-semibold text-white/80"
+                >
+                  <FaCheckCircle className="h-3.5 w-3.5 shrink-0 text-secondary-light" />
+                  {item}
+                </div>
+              ))}
+            </div>
+
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Link href="/products" className="btn-primary rounded-lg">
-                Browse Cloth Range
+              <Link
+                href="/products"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-secondary px-6 py-3 text-sm font-black text-primary-950 shadow-[0_16px_40px_-20px_rgba(255,214,51,0.8)] transition hover:-translate-y-0.5 hover:bg-secondary-light"
+              >
+                Browse Cloth Range <FaArrowRight className="h-3.5 w-3.5" />
               </Link>
               <a
                 href={siteConfig.socials.whatsapp}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-cream-300 bg-white px-6 py-3 text-sm font-bold text-ink transition hover:border-secondary-dark hover:text-secondary-dark"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.07] px-6 py-3 text-sm font-bold text-white/90 shadow-soft backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-[#25D366]/50 hover:bg-[#25D366]/10 hover:text-white"
               >
                 <FaWhatsapp className="h-4 w-4" />
                 Wholesale Enquiry
               </a>
             </div>
           </div>
-          <div className="lg:col-span-7">
-            <StatsCounter items={stats} />
+
+          <div className="relative lg:col-span-7">
+            <div className="absolute -inset-4 rounded-[2rem]" />
+            <div className="relative">
+              <StatsCounter items={stats} light />
+            </div>
           </div>
         </div>
       </section>
@@ -207,29 +259,39 @@ export default async function HomePage() {
               title="Shop by product type"
               description="Retail and wholesale-ready categories for daily wear, home use, festivals, shop stock and repeat trade."
             />
-            <Link
-              href="/categories"
-              className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider-x text-primary-600 hover:text-secondary-dark"
-            >
-              All Categories <FaArrowRight className="h-3 w-3" />
-            </Link>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/categories"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary-100 px-5 py-3 text-sm font-bold text-primary-700 transition hover:border-primary-300 hover:text-primary-900"
+              >
+                All Categories <FaArrowRight className="h-3 w-3" />
+              </Link>
+              <Link
+                href="/products"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary-100 px-5 py-3 text-sm font-bold text-primary-700 transition hover:border-primary-300 hover:text-primary-900"
+              >
+                All Products <FaArrowRight className="h-3 w-3" />
+              </Link>
+              <a
+                href={siteConfig.socials.whatsapp}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary-100 px-5 py-3 text-sm font-bold text-ink transition hover:border-primary-300"
+              >
+                <FaWhatsapp className="h-4 w-4 text-[#25D366]" />
+                Wholesale
+              </a>
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-            {categories.slice(0, 4).map((c, i) => (
-              <CategoryCard key={c.id} category={c} index={i} />
-            ))}
-          </div>
-          <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3">
-            {categories.slice(4).map((c, i) => (
-              <CategoryCard key={c.id} category={c} index={i + 4} />
-            ))}
+          <div className="rounded-2xl border border-primary-100 p-3 md:p-5">
+            <CategorySlider categories={categories.slice(-5)} />
           </div>
         </div>
       </section>
 
       {/* Wholesale-ready products */}
-      <section className="section-y bg-cream-50">
+      <section className="section-y bg-white">
         <div className="container-x">
           <div className="mb-10 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
             <SectionTitle
@@ -239,7 +301,7 @@ export default async function HomePage() {
             />
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-secondary-dark"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary-100 px-5 py-3 text-sm font-bold text-primary-700 transition hover:border-primary-300 hover:text-primary-900"
             >
               View All Products <FaArrowRight className="h-3.5 w-3.5" />
             </Link>
@@ -255,7 +317,7 @@ export default async function HomePage() {
 
       {/* Offer */}
       {offers.length > 0 && (
-        <section className="bg-white py-12">
+        <section className="bg-gradient-to-b from-white to-primary-50/60 py-12">
           <div className="container-x">
             <OfferBanner offer={offers[0]} />
           </div>
@@ -273,7 +335,7 @@ export default async function HomePage() {
             />
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider-x text-primary-600 hover:text-secondary-dark"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary-100 px-5 py-3 text-sm font-bold text-primary-700 transition hover:border-primary-300 hover:text-primary-900"
             >
               Shop New Arrivals <FaArrowRight className="h-3 w-3" />
             </Link>
@@ -289,18 +351,14 @@ export default async function HomePage() {
       </section>
 
       {/* Order process */}
-      <section className="section-y relative overflow-hidden bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white">
-        {/* Background blobs */}
-        <div className="pointer-events-none absolute -left-24 top-0 h-96 w-96 rounded-full bg-primary-600/20 blur-3xl" />
-        <div className="pointer-events-none absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-secondary/10 blur-3xl" />
-
-        <div className="container-x relative grid gap-10 lg:grid-cols-12 lg:items-start">
+      <section className="section-y bg-primary-950 text-white">
+        <div className="container-x grid gap-10 lg:grid-cols-12 lg:items-start">
           <div className="lg:col-span-4">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-xl border border-secondary/30 bg-secondary/10 px-3 py-2 text-[10px] font-black uppercase tracking-widest-x text-secondary">
+            <div className="mb-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest-x text-secondary">
               <FaTruckMoving className="h-3 w-3" />
               Bulk order flow
             </div>
-            <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-white">
+            <h2 className="text-3xl font-bold leading-tight tracking-tight text-white">
               Simple buying for wholesale cloth orders.
             </h2>
             <p className="mt-4 text-sm leading-6 text-white/60">
@@ -313,15 +371,15 @@ export default async function HomePage() {
             {tradeSteps.map((step, i) => (
               <div
                 key={step}
-                className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-sm transition hover:border-secondary/40 hover:bg-white/10"
+                className="rounded-2xl border border-white/10 p-5 transition hover:border-white/20"
               >
-                <div className="mb-4 flex items-center gap-3">
-                  <span className="grid h-9 w-9 place-items-center rounded-xl bg-secondary text-sm font-black text-primary-950 shadow-lg shadow-secondary/30">
-                    {i + 1}
+                <div className="mb-3 flex items-center gap-3">
+                  <span className="text-sm font-bold text-secondary">
+                    {String(i + 1).padStart(2, "0")}
                   </span>
-                  <FaCheckCircle className="h-4 w-4 text-secondary/70" />
+                  <FaCheckCircle className="h-3.5 w-3.5 text-white/30" />
                 </div>
-                <div className="text-base font-bold leading-6 text-white/90">
+                <div className="text-base font-semibold leading-6 text-white/90">
                   {step}
                 </div>
               </div>
@@ -331,7 +389,7 @@ export default async function HomePage() {
       </section>
 
       {/* Why choose */}
-      <section className="section-y bg-cream-50">
+      <section className="section-y bg-white">
         <div className="container-x">
           <SectionTitle
             eyebrow={`Why ${siteConfig.name}`}
@@ -345,15 +403,15 @@ export default async function HomePage() {
               return (
                 <div
                   key={i}
-                  className="rounded-lg border border-cream-200 bg-white p-6 transition hover:border-primary-600"
+                  className="rounded-2xl border border-primary-100 bg-white p-6 transition hover:border-primary-300"
                 >
-                  <div className="mb-5 grid h-11 w-11 place-items-center rounded-lg bg-primary-600 text-white">
+                  <div className="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-primary-50 text-primary-600">
                     {Icon && <Icon className="h-5 w-5" />}
                   </div>
-                  <h3 className="text-lg font-extrabold leading-tight text-ink">
+                  <h3 className="text-base font-bold leading-tight text-ink">
                     {item.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-ink-muted">
+                  <p className="mt-2 text-sm leading-6 text-ink-muted">
                     {item.description}
                   </p>
                 </div>
@@ -376,14 +434,12 @@ export default async function HomePage() {
             {manufacturingProcess.map((p) => (
               <div
                 key={p.step}
-                className="rounded-lg border border-cream-200 bg-cream-50 p-5"
+                className="rounded-2xl border border-primary-100 bg-white p-5 transition hover:border-primary-300"
               >
-                <div className="text-3xl font-extrabold leading-none text-primary-600">
+                <div className="text-3xl font-bold leading-none text-primary-500">
                   {p.step}
                 </div>
-                <h3 className="mt-5 text-base font-extrabold text-ink">
-                  {p.title}
-                </h3>
+                <h3 className="mt-4 text-base font-bold text-ink">{p.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-ink-muted">
                   {p.description}
                 </p>
@@ -394,7 +450,7 @@ export default async function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="section-y bg-cream-50">
+      <section className="section-y bg-gradient-to-b from-primary-50/70 to-white">
         <div className="container-x grid gap-10 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-4">
             <SectionTitle
@@ -402,18 +458,22 @@ export default async function HomePage() {
               title="Customers who come back"
               description="Retail buyers, shop owners and wholesale partners trust us for practical cloths and steady response."
             />
-            <Link href="/testimonials" className="btn-outline rounded-lg">
+            <Link
+              href="/testimonials"
+              className="btn-outline rounded-xl bg-white shadow-soft"
+            >
               All Reviews <FaArrowRight className="h-3 w-3" />
             </Link>
           </div>
-          <div className="rounded-lg border border-cream-200 bg-white p-7 shadow-soft lg:col-span-8 md:p-10">
+          <div className="relative overflow-hidden rounded-2xl border border-white/70 bg-white p-7 shadow-[0_18px_60px_-34px_rgba(4,14,48,0.55)] lg:col-span-8 md:p-10">
+            <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-secondary/60 to-transparent" />
             <TestimonialSlider items={testimonials.slice(0, 4)} />
           </div>
         </div>
       </section>
 
       {/* Articles and updates */}
-      <section className="section-y bg-primary-50/60">
+      <section className="section-y bg-white">
         <div className="container-x">
           <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <SectionTitle
@@ -423,7 +483,7 @@ export default async function HomePage() {
             />
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-wider-x text-primary-600 hover:text-secondary-dark transition"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary-100 px-5 py-3 text-sm font-bold text-primary-700 transition hover:border-primary-300 hover:text-primary-900"
             >
               All Articles <FaArrowRight className="h-3 w-3" />
             </Link>
@@ -435,26 +495,26 @@ export default async function HomePage() {
                 <Link
                   key={b.id}
                   href={`/blog/${b.slug}`}
-                  className="group overflow-hidden rounded-2xl border border-primary-100 bg-white shadow-sm transition hover:border-primary-400 hover:shadow-[0_4px_24px_-4px_rgba(79,70,229,0.15)]"
+                  className="group overflow-hidden rounded-2xl border border-primary-100 bg-white transition hover:border-primary-300"
                 >
                   <div className="aspect-[16/10] overflow-hidden bg-primary-50">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={b.coverImage}
                       alt={b.title}
-                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
                     />
                   </div>
                   <div className="p-5">
                     <div className="flex items-center gap-2 text-[11px] font-semibold text-ink-muted">
-                      <span className="rounded-full bg-primary-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary-600">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-primary-500">
                         Blog
                       </span>
                       <span>{moment(b.publishedAt).format("MMM D, YYYY")}</span>
                       <span>·</span>
                       <span>{b.readTime} min read</span>
                     </div>
-                    <h3 className="mt-2 text-xl font-extrabold leading-tight text-primary-950 group-hover:text-primary-600 transition">
+                    <h3 className="mt-2 text-lg font-bold leading-snug text-primary-950 group-hover:text-primary-700">
                       {b.title}
                     </h3>
                     <p className="mt-2 line-clamp-2 text-sm leading-6 text-ink-muted">
@@ -466,30 +526,28 @@ export default async function HomePage() {
             </div>
 
             <aside className="lg:col-span-4">
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-900 to-primary-950 p-6 text-white">
-                {/* Decorative blob */}
-                <div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-secondary/15 blur-2xl" />
-                <div className="relative text-[10px] font-black uppercase tracking-widest-x text-secondary">
+              <div className="rounded-2xl border border-primary-100 p-6">
+                <div className="text-[10px] font-bold uppercase tracking-widest-x text-primary-500">
                   Latest Updates
                 </div>
-                <div className="relative mt-5 space-y-5">
+                <div className="mt-5 space-y-5">
                   {latestUpdates.map((u) => (
                     <div
                       key={u.id}
-                      className="border-b border-white/10 pb-5 last:border-0 last:pb-0"
+                      className="border-b border-primary-100 pb-5 last:border-0 last:pb-0"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="rounded-full bg-secondary/20 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-secondary">
+                        <span className="text-[9px] font-bold uppercase tracking-widest text-secondary-dark">
                           {u.tag}
                         </span>
-                        <span className="text-[10px] text-white/40">
+                        <span className="text-[10px] text-ink-muted">
                           {moment(u.date).fromNow()}
                         </span>
                       </div>
-                      <h4 className="mt-2 text-base font-extrabold leading-tight text-white">
+                      <h4 className="mt-2 text-base font-bold leading-tight text-primary-950">
                         {u.title}
                       </h4>
-                      <p className="mt-1.5 text-sm leading-6 text-white/55">
+                      <p className="mt-1.5 text-sm leading-6 text-ink-muted">
                         {u.excerpt}
                       </p>
                     </div>
@@ -502,7 +560,7 @@ export default async function HomePage() {
       </section>
 
       {/* FAQ */}
-      <section className="section-y bg-cream-50">
+      <section className="section-y bg-gradient-to-b from-primary-50/70 to-white">
         <div className="container-x grid gap-10 lg:grid-cols-12 lg:items-start">
           <div className="lg:col-span-4">
             <SectionTitle
@@ -510,54 +568,15 @@ export default async function HomePage() {
               title="Retail and wholesale questions"
               description="Common questions about cloth categories, bulk orders, WhatsApp quotes and despatch."
             />
-            <Link href="/contact" className="btn-outline rounded-lg">
+            <Link
+              href="/contact"
+              className="btn-outline rounded-xl bg-white shadow-soft"
+            >
               Ask Your Own
             </Link>
           </div>
-          <div className="lg:col-span-8">
+          <div className="rounded-2xl border border-white/70 bg-white p-4 shadow-[0_18px_60px_-34px_rgba(4,14,48,0.55)] lg:col-span-8 md:p-6">
             <FAQAccordion items={faqs.slice(0, 5)} />
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="bg-white py-14">
-        <div className="container-x">
-          <div className="relative overflow-hidden grid gap-8 rounded-2xl bg-gradient-to-br from-primary-900 via-primary-800 to-primary-950 p-7 text-white md:grid-cols-[1fr_auto] md:items-center md:p-10">
-            {/* Decorative blobs */}
-            <div className="pointer-events-none absolute -right-16 -top-16 h-72 w-72 rounded-full bg-primary-600/30 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-10 left-1/3 h-48 w-48 rounded-full bg-secondary/20 blur-2xl" />
-
-            <div className="relative">
-              <div className="mb-3 text-[10px] font-bold uppercase tracking-widest-x text-secondary">
-                Ready to buy cloths?
-              </div>
-              <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-white md:text-4xl">
-                Message us for retail products or wholesale supply.
-              </h2>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-white/65">
-                Send product type, quantity and city. We will respond with
-                practical options for petticoats, lungis, towels, bed sheets,
-                dhotis, gamcha and handloom cloths.
-              </p>
-            </div>
-            <div className="relative flex flex-col gap-3 sm:flex-row md:flex-col">
-              <a
-                href={siteConfig.socials.whatsapp}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 py-3 text-sm font-black text-white shadow-lg shadow-[#25D366]/30 transition hover:bg-[#1ebe5d]"
-              >
-                <FaWhatsapp className="h-4 w-4" />
-                Ask on WhatsApp
-              </a>
-              <Link
-                href="/products"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3 text-sm font-bold text-white backdrop-blur-sm transition hover:bg-white/20"
-              >
-                Browse Cloths
-              </Link>
-            </div>
           </div>
         </div>
       </section>

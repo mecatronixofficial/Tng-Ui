@@ -8,23 +8,23 @@
     Change values here to retheme every component at once.
   */
 
-  /* Primary: rich indigo / violet */
-  --color-primary-50:  238 242 255;
-  --color-primary-100: 224 231 255;
-  --color-primary-200: 199 210 254;
-  --color-primary-300: 165 180 252;
-  --color-primary-400: 129 140 248;
-  --color-primary-500: 99 102 241;
-  --color-primary-600: 79 70 229;
-  --color-primary-700: 67 56 202;
-  --color-primary-800: 55 48 163;
-  --color-primary-900: 49 46 129;
-  --color-primary-950: 30 27 75;
+  /* Primary: navy blue */
+  --color-primary-50:  238 243 255;
+  --color-primary-100: 219 230 255;
+  --color-primary-200: 183 210 255;
+  --color-primary-300: 128 175 255;
+  --color-primary-400: 66 133 252;
+  --color-primary-500: 24 90 230;
+  --color-primary-600: 14 68 190;
+  --color-primary-700: 11 52 152;
+  --color-primary-800: 9 40 116;
+  --color-primary-900: 8 30 82;
+  --color-primary-950: 4 14 48;
 
-  /* Secondary / accent: bright amber gold */
-  --color-accent-400: 252 211 77;
-  --color-accent-600: 245 158 11;
-  --color-accent-700: 180 83 9;
+  /* Secondary / accent: rich gold */
+  --color-accent-400: 255 214 51;
+  --color-accent-600: 212 175 55;
+  --color-accent-700: 161 130 10;
 
   /* Surface: warm white */
   --color-surface-50:  255 255 255;
