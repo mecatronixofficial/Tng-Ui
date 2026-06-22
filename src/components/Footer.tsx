@@ -19,6 +19,9 @@ import {
   FaTruckMoving,
   FaIndustry,
   FaTags,
+  FaGem,
+  FaShieldAlt,
+  FaStar,
 } from "react-icons/fa";
 
 import { siteConfig } from "@/data/site";
@@ -39,7 +42,7 @@ const buyerCards = [
     href: "/products",
     Icon: FaStore,
     external: false,
-    accent: "group-hover:bg-primary-600",
+    iconBg: "bg-primary-600",
   },
   {
     title: "Wholesale Supply",
@@ -47,7 +50,7 @@ const buyerCards = [
     href: siteConfig.socials.whatsapp,
     Icon: FaBoxes,
     external: true,
-    accent: "group-hover:bg-secondary-dark",
+    iconBg: "bg-secondary",
   },
 ] as const;
 
@@ -62,41 +65,87 @@ const socials = [
     href: siteConfig.socials.facebook,
     Icon: FaFacebookF,
     label: "Facebook",
-    hover: "hover:bg-[#1877F2] hover:border-[#1877F2] hover:text-white",
+    bg: "bg-[#1877F2]",
+    shadow: "shadow-[0_8px_24px_-8px_rgba(24,119,242,0.65)]",
   },
   {
     href: siteConfig.socials.instagram,
     Icon: FaInstagram,
     label: "Instagram",
-    hover: "hover:bg-[#E1306C] hover:border-[#E1306C] hover:text-white",
+    bg: "bg-gradient-to-br from-[#f09433] via-[#dc2743] to-[#bc1888]",
+    shadow: "shadow-[0_8px_24px_-8px_rgba(220,39,67,0.65)]",
   },
   {
     href: siteConfig.socials.youtube,
     Icon: FaYoutube,
     label: "YouTube",
-    hover: "hover:bg-[#FF0000] hover:border-[#FF0000] hover:text-white",
+    bg: "bg-[#FF0000]",
+    shadow: "shadow-[0_8px_24px_-8px_rgba(255,0,0,0.65)]",
   },
   {
     href: siteConfig.socials.whatsapp,
     Icon: FaWhatsapp,
     label: "WhatsApp",
-    hover: "hover:bg-[#25D366] hover:border-[#25D366] hover:text-white",
+    bg: "bg-[#25D366]",
+    shadow: "shadow-[0_8px_24px_-8px_rgba(37,211,102,0.65)]",
   },
 ];
 
 const bizFacts = [
-  { label: "Established", value: siteConfig.established },
-  { label: "Business", value: "Retail & Wholesale" },
-  { label: "GST Since", value: siteConfig.gstSince },
-  { label: "Nature", value: siteConfig.natureOfBusiness },
+  { label: "Established", value: siteConfig.established, Icon: FaStar },
+  { label: "Business Type", value: "Retail & Wholesale", Icon: FaStore },
+  { label: "GST Since", value: siteConfig.gstSince, Icon: FaShieldAlt },
+  { label: "Nature", value: siteConfig.natureOfBusiness, Icon: FaGem },
 ];
+
+const contactItems = [
+  {
+    Icon: FaMapMarkerAlt,
+    render: () => (
+      <>
+        {siteConfig.address.line2},<br />
+        {siteConfig.address.city}, {siteConfig.address.state} –{" "}
+        {siteConfig.address.pincode}
+      </>
+    ),
+  },
+  {
+    Icon: FaPhoneAlt,
+    render: () => (
+      <a
+        href={`tel:${siteConfig.phone.replace(/\s+/g, "")}`}
+        className="transition hover:text-secondary-light"
+      >
+        {siteConfig.phone}
+      </a>
+    ),
+  },
+  {
+    Icon: FaEnvelope,
+    render: () => (
+      <a
+        href={`mailto:${siteConfig.email}`}
+        className="transition hover:text-secondary-light"
+      >
+        {siteConfig.email}
+      </a>
+    ),
+  },
+  {
+    Icon: FaClock,
+    render: () => <>{siteConfig.workingHours}</>,
+  },
+] as const;
 
 export default function Footer() {
   const pathname = usePathname();
   const [categories, setCategories] = useState<CategoryApi[]>([]);
 
   useEffect(() => {
-    api.publicCategories().then(setCategories).catch(() => {});
+    api
+      .publicCategories()
+      .then(setCategories)
+      .catch(() => {});
   }, []);
 
   if (pathname.startsWith("/admin")) return null;
@@ -104,41 +153,51 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-cream-200 bg-white text-ink">
-      {/* Trade CTA */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800">
-        {/* Blobs */}
-        <div className="pointer-events-none absolute -left-20 -top-12 h-72 w-72 rounded-full bg-primary-600/25 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-10 right-0 h-56 w-56 rounded-full bg-secondary/15 blur-3xl" />
+    <footer className="relative overflow-hidden bg-primary-950 text-white">
+      {/* Ambient glows */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-40 top-0 h-[480px] w-[480px] rounded-full bg-secondary/8 blur-[130px]" />
+        <div className="absolute -right-40 bottom-1/3 h-[380px] w-[380px] rounded-full bg-primary-700/25 blur-[110px]" />
+        <div className="absolute inset-0 bg-weave-dark opacity-[0.15]" />
+      </div>
 
-        <div className="container-x relative grid gap-6 py-12 lg:grid-cols-[1fr_auto] lg:items-center">
+      {/* ── Trade CTA ── */}
+      <div className="relative overflow-hidden border-b border-white/[0.07]">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-900/80 via-primary-950/90 to-primary-950" />
+        <div className="absolute inset-0 bg-weave-dark opacity-20" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary/70 to-transparent" />
+
+        <div className="container-x relative grid gap-8 py-14 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
-            <div className="mb-4 inline-flex items-center gap-2 rounded-xl border border-secondary/30 bg-secondary/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-secondary">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-secondary shadow-[0_0_20px_-6px_rgba(212,175,55,0.5)]">
               <FaTags className="h-2.5 w-2.5" />
-              Retail and wholesale cloth store
+              Retail &amp; wholesale cloth store
             </div>
-            <h2 className="max-w-2xl text-2xl font-extrabold tracking-tight text-white md:text-[1.75rem] md:leading-snug">
-              Need cloths for your home,&nbsp;shop, or bulk resale?
+            <h2 className="max-w-2xl text-3xl font-extrabold leading-tight tracking-tight text-white md:text-[2rem]">
+              Need cloths for your home,{" "}
+              <span className="bg-gradient-to-r from-secondary-light to-secondary bg-clip-text text-transparent">
+                shop, or bulk resale?
+              </span>
             </h2>
-            <p className="mt-3 max-w-xl text-sm leading-7 text-white/55">
+            <p className="mt-4 max-w-xl text-sm leading-7 text-white/55">
               Share your requirement on WhatsApp for petticoats, lungis, towels,
               gamcha, bed sheets, dhotis and handloom cloths.
             </p>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
+          <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
             <a
               href={siteConfig.socials.whatsapp}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 py-3 text-sm font-black text-white shadow-lg shadow-[#25D366]/30 transition hover:bg-[#1ebe5d] active:scale-95"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] px-7 py-3.5 text-sm font-black text-white shadow-[0_16px_40px_-16px_rgba(37,211,102,0.75)] transition hover:-translate-y-0.5 hover:bg-[#1ebe5d] active:scale-95"
             >
               <FaWhatsapp className="h-4 w-4" />
               Ask on WhatsApp
             </a>
             <a
               href={`tel:${siteConfig.phone.replace(/\s+/g, "")}`}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/[0.07] px-6 py-3 text-sm font-bold text-white/90 backdrop-blur-sm transition hover:border-white/40 hover:bg-white/15 active:scale-95"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-secondary/25 bg-secondary/8 px-7 py-3.5 text-sm font-bold text-white/85 transition hover:-translate-y-0.5 hover:border-secondary/50 hover:bg-secondary/15 active:scale-95"
             >
               <FaPhoneAlt className="h-4 w-4" />
               Call store
@@ -147,213 +206,207 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Main content */}
-      <div className="container-x grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-12">
-        {/* Brand */}
-        <div className="lg:col-span-4">
-          <Link href="/" className="inline-flex items-center gap-3">
-            {siteConfig.logo ? (
-              <img
-                src={siteConfig.logo}
-                alt={siteConfig.name}
-                className="h-12 w-12 rounded-xl object-cover ring-2 ring-cream-200"
-              />
-            ) : (
-              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 text-white shadow-md shadow-primary-200">
-                <FaStore className="h-5 w-5" />
-              </span>
-            )}
-            <span>
-              <span className="block text-xl font-extrabold tracking-tight text-ink">
-                {siteConfig.name}
-              </span>
-              <span className="mt-0.5 block text-[10px] font-bold uppercase tracking-widest text-primary-600">
-                Retail • Wholesale • Cloths
-              </span>
-            </span>
-          </Link>
+      {/* ── Main grid ── */}
+      <div className="relative">
+        <div className="container-x grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-12">
 
-          <p className="mt-5 max-w-sm text-sm leading-7 text-ink-muted">
-            {siteConfig.description}
-          </p>
-
-          <div className="mt-6 grid gap-2">
-            {servicePoints.map(({ label, Icon }) => (
-              <div
-                key={label}
-                className="flex items-center gap-3 rounded-xl border border-cream-200 bg-cream-50 px-3 py-2.5 text-sm font-semibold text-ink transition hover:border-primary-200 hover:bg-primary-50/40"
-              >
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 text-white shadow-sm">
-                  <Icon className="h-3.5 w-3.5" />
+          {/* Brand */}
+          <div className="lg:col-span-4">
+            <Link href="/" className="group inline-flex items-center gap-3">
+              {siteConfig.logo ? (
+                <img
+                  src={siteConfig.logo}
+                  alt={siteConfig.name}
+                  className="h-14 w-14 rounded-2xl object-cover ring-2 ring-secondary/30 shadow-[0_0_28px_-6px_rgba(212,175,55,0.45)] transition group-hover:ring-secondary/60"
+                />
+              ) : (
+                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-secondary-light to-secondary text-primary-950 shadow-[0_0_28px_-6px_rgba(212,175,55,0.55)] transition group-hover:shadow-[0_0_40px_-4px_rgba(212,175,55,0.8)]">
+                  <FaStore className="h-6 w-6" />
                 </span>
-                {label}
+              )}
+              <span>
+                <span className="block text-xl font-extrabold tracking-tight text-white transition group-hover:text-secondary-light">
+                  {siteConfig.name}
+                </span>
+                <span className="mt-0.5 block text-[10px] font-bold uppercase tracking-widest text-secondary/70">
+                  Retail · Wholesale · Cloths
+                </span>
+              </span>
+            </Link>
+
+            <p className="mt-5 text-sm leading-7 text-white/55">
+              {siteConfig.description}
+            </p>
+
+            <div className="mt-6 flex flex-col gap-2">
+              {servicePoints.map(({ label, Icon }) => (
+                <div
+                  key={label}
+                  className="group flex items-center gap-3 rounded-xl border border-white/[0.07] bg-primary-900/40 px-4 py-2.5 text-sm font-semibold text-white/70 transition hover:border-secondary/25 hover:bg-primary-800/40 hover:text-secondary-light"
+                >
+                  <span className="shrink-0 text-secondary transition group-hover:scale-110">
+                    <Icon className="h-3.5 w-3.5" />
+                  </span>
+                  {label}
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-7">
+              <div className="mb-3 text-[10px] font-bold uppercase tracking-widest text-white/35">
+                Follow us
               </div>
-            ))}
-          </div>
-
-          <div className="mt-6 flex items-center gap-2">
-            {socials.map(({ href, Icon, label, hover }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={label}
-                className={`grid h-10 w-10 place-items-center rounded-xl border border-cream-200 bg-white text-ink-muted transition ${hover}`}
-              >
-                <Icon className="h-4 w-4" />
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {/* Buyer cards */}
-        <div className="lg:col-span-3">
-          <SectionLabel>Buy From Us</SectionLabel>
-          <div className="grid gap-3">
-            {buyerCards.map(({ title, text, href, Icon, external, accent }) => {
-              const cls =
-                "group rounded-xl border border-cream-200 bg-cream-50 p-4 transition hover:border-primary-200 hover:bg-white hover:shadow-md hover:shadow-primary-100/60";
-              const content = (
-                <>
-                  <span
-                    className={`mb-4 grid h-10 w-10 place-items-center rounded-xl bg-primary-100 text-primary-600 transition ${accent} group-hover:text-white`}
+              <div className="flex items-center gap-2.5">
+                {socials.map(({ href, Icon, label, bg, shadow }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={label}
+                    className={`grid h-11 w-11 place-items-center rounded-xl text-white transition hover:-translate-y-1 hover:scale-105 active:scale-95 ${bg} ${shadow}`}
                   >
                     <Icon className="h-4 w-4" />
-                  </span>
-                  <span className="block text-sm font-extrabold text-ink">
-                    {title}
-                  </span>
-                  <span className="mt-1.5 block text-xs leading-5 text-ink-muted">
-                    {text}
-                  </span>
-                  <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-primary-600 transition group-hover:gap-2.5">
-                    Enquire now <FaArrowRight className="h-2.5 w-2.5" />
-                  </span>
-                </>
-              );
-
-              return external ? (
-                <a
-                  key={title}
-                  href={href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={cls}
-                >
-                  {content}
-                </a>
-              ) : (
-                <Link key={title} href={href} className={cls}>
-                  {content}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Categories */}
-        <div className="lg:col-span-2">
-          <SectionLabel>Cloth Range</SectionLabel>
-          <ul className="space-y-1.5">
-            {categories.map((c) => (
-              <li key={c.id}>
-                <Link
-                  href={`/products?category=${c.slug}`}
-                  className="group flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm font-medium text-ink-muted transition hover:bg-primary-50 hover:text-primary-600"
-                >
-                  <FaChevronRight className="h-2.5 w-2.5 shrink-0 text-primary-400 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100" />
-                  {c.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Contact */}
-        <div className="lg:col-span-3">
-          <SectionLabel>Visit Or Contact</SectionLabel>
-          <ul className="space-y-4">
-            <ContactItem Icon={FaMapMarkerAlt} iconColor="text-primary-600" iconBg="bg-primary-50">
-              {siteConfig.address.line2},<br />
-              {siteConfig.address.city}, {siteConfig.address.state} –{" "}
-              {siteConfig.address.pincode}
-            </ContactItem>
-            <ContactItem Icon={FaPhoneAlt} iconColor="text-secondary" iconBg="bg-secondary/10">
-              <a
-                href={`tel:${siteConfig.phone.replace(/\s+/g, "")}`}
-                className="transition hover:text-primary-600"
-              >
-                {siteConfig.phone}
-              </a>
-            </ContactItem>
-            <ContactItem Icon={FaEnvelope} iconColor="text-primary-600" iconBg="bg-primary-50">
-              <a
-                href={`mailto:${siteConfig.email}`}
-                className="transition hover:text-primary-600"
-              >
-                {siteConfig.email}
-              </a>
-            </ContactItem>
-            <ContactItem Icon={FaClock} iconColor="text-ink" iconBg="bg-cream-100">
-              {siteConfig.workingHours}
-            </ContactItem>
-          </ul>
-
-          <div className="mt-7 rounded-xl border border-cream-200 bg-cream-50 p-4">
-            <div className="flex items-center gap-2">
-              <span className="h-4 w-0.5 rounded-full bg-primary-500" />
-              <div className="text-[11px] font-bold uppercase tracking-widest text-ink">
-                Quick Links
+                  </a>
+                ))}
               </div>
             </div>
-            <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2.5">
-              {companyLinks.map(([label, href]) => (
+          </div>
+
+          {/* Buyer cards */}
+          <div className="lg:col-span-3">
+            <SectionLabel icon={<FaStore className="h-3 w-3" />}>Buy From Us</SectionLabel>
+            <div className="grid gap-3">
+              {buyerCards.map(({ title, text, href, Icon, external, iconBg }) => {
+                const cls =
+                  "group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-primary-900/50 p-5 transition hover:-translate-y-1 hover:border-secondary/30 hover:bg-primary-800/50 hover:shadow-[0_20px_50px_-20px_rgba(212,175,55,0.3)]";
+                const content = (
+                  <>
+                    <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-secondary/20 to-transparent" />
+                    <span className={`mb-4 grid h-11 w-11 place-items-center rounded-xl ${iconBg} text-white shadow-lg transition group-hover:scale-105`}>
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <span className="block text-sm font-extrabold text-white">{title}</span>
+                    <span className="mt-1.5 block text-xs leading-5 text-white/50">{text}</span>
+                    <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-secondary transition-all group-hover:gap-3 group-hover:text-secondary-light">
+                      Enquire now <FaArrowRight className="h-2.5 w-2.5" />
+                    </span>
+                  </>
+                );
+
+                return external ? (
+                  <a key={title} href={href} target="_blank" rel="noreferrer" className={cls}>
+                    {content}
+                  </a>
+                ) : (
+                  <Link key={title} href={href} className={cls}>
+                    {content}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Categories */}
+          <div className="lg:col-span-2">
+            <SectionLabel icon={<FaTags className="h-3 w-3" />}>Categories</SectionLabel>
+            <div className="flex flex-col gap-1.5">
+              {categories.slice(-5).map((c) => (
                 <Link
-                  key={href}
-                  href={href}
-                  className="flex items-center gap-1 text-xs font-semibold text-ink-muted transition hover:text-primary-600"
+                  key={c.id}
+                  href={`/products?category=${c.slug}`}
+                  className="group flex items-center justify-between rounded-xl border border-white/[0.06] bg-primary-900/30 px-3.5 py-2.5 text-sm font-medium text-white/60 transition hover:border-secondary/30 hover:bg-secondary/10 hover:text-secondary-light"
                 >
-                  <FaChevronRight className="h-2 w-2 shrink-0 text-primary-400" />
-                  {label}
+                  <span className="flex items-center gap-2">
+                    <FaGem className="h-2.5 w-2.5 text-secondary/50 transition group-hover:text-secondary" />
+                    {c.name}
+                  </span>
+                  <FaChevronRight className="h-2.5 w-2.5 shrink-0 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100" />
                 </Link>
               ))}
+              <Link
+                href="/categories"
+                className="mt-1 inline-flex items-center gap-1.5 px-1 py-1 text-[11px] font-bold uppercase tracking-wide text-secondary/70 transition hover:text-secondary"
+              >
+                All categories <FaArrowRight className="h-2 w-2" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Contact */}
+          <div className="lg:col-span-3">
+            <SectionLabel icon={<FaPhoneAlt className="h-2.5 w-2.5" />}>Visit Or Contact</SectionLabel>
+            <div className="flex flex-col gap-2.5">
+              {contactItems.map(({ Icon, render }, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-3 rounded-xl border border-white/[0.06] bg-primary-900/30 px-4 py-3 transition hover:border-secondary/20 hover:bg-primary-800/40"
+                >
+                  <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-secondary/15 text-secondary">
+                    <Icon className="h-3.5 w-3.5" />
+                  </span>
+                  <span className="text-sm leading-6 text-white/60">{render()}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 overflow-hidden rounded-2xl border border-white/[0.07] bg-primary-900/40">
+              <div className="border-b border-white/[0.07] px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-secondary/70">
+                Quick Links
+              </div>
+              <div className="grid grid-cols-2 gap-px bg-white/[0.04]">
+                {companyLinks.map(([label, href]) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className="flex items-center gap-1.5 bg-primary-950 px-4 py-3 text-xs font-semibold text-white/55 transition hover:bg-primary-900/60 hover:text-secondary-light"
+                  >
+                    <FaChevronRight className="h-2 w-2 shrink-0 text-secondary/50" />
+                    {label}
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Business facts */}
-      <div className="border-y border-cream-200 bg-cream-50/80">
-        <div className="container-x grid gap-3 py-5 sm:grid-cols-2 lg:grid-cols-4">
-          {bizFacts.map(({ label, value }) => (
+      {/* ── Business facts ── */}
+      <div className="relative border-y border-white/[0.07]">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
+        <div className="container-x grid gap-4 py-6 sm:grid-cols-2 lg:grid-cols-4">
+          {bizFacts.map(({ label, value, Icon }) => (
             <div
               key={label}
-              className="rounded-xl border border-cream-200 bg-white px-4 py-3.5 shadow-sm"
+              className="group flex items-center gap-4 rounded-2xl border border-white/[0.07] bg-primary-900/40 px-5 py-4 transition hover:border-secondary/25 hover:bg-primary-800/50"
             >
-              <div className="text-[10px] font-bold uppercase tracking-widest text-primary-500">
-                {label}
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-secondary/15 text-secondary transition group-hover:scale-110 group-hover:bg-secondary/25">
+                <Icon className="h-4 w-4" />
+              </span>
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-white/40">{label}</div>
+                <div className="mt-0.5 text-sm font-extrabold text-white">{value}</div>
               </div>
-              <div className="mt-1 text-sm font-extrabold text-ink">{value}</div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="bg-cream-50/60">
-        <div className="container-x flex flex-col items-center justify-between gap-2 py-5 text-xs text-ink-muted sm:flex-row">
+      {/* ── Bottom bar ── */}
+      <div className="relative bg-primary-950">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary/25 to-transparent" />
+        <div className="container-x flex flex-col items-center justify-between gap-2 py-5 text-xs text-white/40 sm:flex-row">
           <span>
             © {year}{" "}
-            <span className="font-semibold text-ink">{siteConfig.name}</span>.
+            <span className="font-semibold text-white/70">{siteConfig.name}</span>.
             All rights reserved.
           </span>
-          <span className="text-center">
-            Retail and wholesale cloths from{" "}
-            <span className="font-semibold text-ink">
+          <span className="flex items-center gap-1.5">
+            <FaGem className="h-2.5 w-2.5 text-secondary/60" />
+            Retail &amp; wholesale cloths from{" "}
+            <span className="font-semibold text-white/70">
               {siteConfig.address.city}, {siteConfig.address.state}
             </span>
-            .
           </span>
         </div>
       </div>
@@ -361,36 +414,24 @@ export default function Footer() {
   );
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="mb-5 flex items-center gap-2.5">
-      <span className="h-4 w-0.5 rounded-full bg-primary-500" />
-      <span className="text-[10px] font-bold uppercase tracking-widest text-ink">
-        {children}
-      </span>
-    </div>
-  );
-}
-
-function ContactItem({
-  Icon,
+function SectionLabel({
   children,
-  iconColor,
-  iconBg,
+  icon,
 }: {
-  Icon: React.ComponentType<{ className?: string }>;
   children: React.ReactNode;
-  iconColor: string;
-  iconBg: string;
+  icon?: React.ReactNode;
 }) {
   return (
-    <li className="flex items-start gap-3">
-      <span
-        className={`mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg ${iconBg} ${iconColor}`}
-      >
-        <Icon className="h-3.5 w-3.5" />
+    <div className="mb-5 flex items-center gap-2.5">
+      {icon && (
+        <span className="grid h-6 w-6 place-items-center rounded-lg bg-secondary/15 text-secondary">
+          {icon}
+        </span>
+      )}
+      <span className="text-[10px] font-bold uppercase tracking-widest text-white/65">
+        {children}
       </span>
-      <span className="text-sm leading-6 text-ink-muted">{children}</span>
-    </li>
+      <span className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
+    </div>
   );
 }

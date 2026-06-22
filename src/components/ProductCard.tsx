@@ -3,7 +3,13 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { FaHeart, FaRegHeart, FaWhatsapp, FaStar } from "react-icons/fa";
+import {
+  FaArrowRight,
+  FaHeart,
+  FaRegHeart,
+  FaStar,
+  FaWhatsapp,
+} from "react-icons/fa";
 
 import type { Product } from "@/types";
 import { useWishlist } from "@/store";
@@ -18,13 +24,10 @@ export default function ProductCard({ product }: { product: Product }) {
   const [activeImage, setActiveImage] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
-  const galleryImages = useMemo(
-    () => {
-      const images = product.images.filter(Boolean).slice(0, 5);
-      return images.length > 0 ? images : [FALLBACK_IMAGE];
-    },
-    [product.images],
-  );
+  const galleryImages = useMemo(() => {
+    const images = product.images.filter(Boolean).slice(0, 5);
+    return images.length > 0 ? images : [FALLBACK_IMAGE];
+  }, [product.images]);
   const imageCount = galleryImages.length;
 
   const whatsappUrl = buildWhatsAppOrderUrl({
@@ -41,18 +44,14 @@ export default function ProductCard({ product }: { product: Product }) {
     <motion.article
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.4 }}
-      className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-primary-100 bg-white shadow-soft transition duration-300 hover:-translate-y-1 hover:border-primary-200 hover:shadow-warm"
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-[#faf8f5] shadow-[0_2px_12px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.14)]"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => { setIsHovered(false); setActiveImage(0); }}
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-primary-50">
-        <Link
-          href={`/products/${product.slug}`}
-          className="absolute inset-0 z-0"
-          aria-label={product.name}
-        >
+      <div className="relative aspect-square overflow-hidden bg-primary-100">
+        <Link href={`/products/${product.slug}`} className="absolute inset-0 z-0" aria-label={product.name}>
           <span className="sr-only">{product.name}</span>
         </Link>
 
@@ -64,28 +63,28 @@ export default function ProductCard({ product }: { product: Product }) {
             alt={index === 0 ? product.name : ""}
             loading={index === 0 ? "eager" : "lazy"}
             className={[
-              "pointer-events-none absolute inset-0 h-full w-full object-cover transition-all duration-500 ease-out",
+              "pointer-events-none absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-out",
               index === activeImage ? "opacity-100" : "opacity-0",
-              isHovered ? "scale-[1.04]" : "scale-100",
+              isHovered ? "scale-[1.06]" : "scale-100",
             ].join(" ")}
           />
         ))}
 
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-primary-950/45 via-primary-950/10 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
 
-        <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-1.5">
+        <div className="absolute left-0 top-3 z-10 flex flex-col gap-0">
           {product.newArrival && (
-            <span className="rounded-md bg-secondary px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-white shadow">
+            <span className="bg-secondary px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest text-primary-950">
               New
             </span>
           )}
           {discount >= 10 && (
-            <span className="rounded-md bg-rose-500 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-white shadow">
-              -{discount}%
+            <span className="bg-rose-500 px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest text-white">
+              −{discount}%
             </span>
           )}
           {product.stock === 0 && (
-            <span className="rounded-md bg-primary-950/80 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white/90 backdrop-blur-sm">
+            <span className="bg-primary-950/90 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-white/90">
               Sold out
             </span>
           )}
@@ -95,103 +94,121 @@ export default function ProductCard({ product }: { product: Product }) {
           type="button"
           onClick={(e) => { e.stopPropagation(); toggle(product.id); }}
           aria-label={has ? "Remove from wishlist" : "Save"}
-          className="absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-md bg-white/90 text-primary-900 shadow-md backdrop-blur-sm transition duration-200 hover:bg-white hover:text-rose-500"
+          className={[
+            "absolute right-2.5 top-2.5 z-10 grid h-7 w-7 place-items-center rounded-full transition-all duration-200 active:scale-90",
+            has
+              ? "bg-rose-500 text-white shadow-lg shadow-rose-500/40"
+              : "bg-white/80 text-primary-800 shadow-md backdrop-blur-sm hover:bg-white hover:text-rose-500",
+          ].join(" ")}
         >
-          {has
-            ? <FaHeart className="h-4 w-4 text-rose-500" />
-            : <FaRegHeart className="h-4 w-4" />}
+          {has ? <FaHeart className="h-3 w-3" /> : <FaRegHeart className="h-3 w-3" />}
         </button>
 
-        <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between gap-2 text-white">
-          <span className="rounded-md bg-white/90 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-widest text-primary-900 shadow-sm backdrop-blur-sm">
+        {imageCount > 1 && (
+          <div className="absolute bottom-10 left-2.5 z-10 flex items-center gap-1">
+            {galleryImages.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onMouseEnter={() => setActiveImage(i)}
+                aria-label={`Image ${i + 1}`}
+                className={[
+                  "rounded-full transition-all duration-200",
+                  i === activeImage
+                    ? "h-2 w-5 bg-white shadow-md"
+                    : "h-2 w-2 bg-white/50 hover:bg-white/75",
+                ].join(" ")}
+              />
+            ))}
+          </div>
+        )}
+
+        <Link
+          href={`/products/${product.slug}`}
+          className="absolute inset-x-0 bottom-0 z-10 flex translate-y-full items-center justify-center gap-2 bg-primary-950 py-2.5 text-[11px] font-black uppercase tracking-widest text-white transition-transform duration-300 ease-out group-hover:translate-y-0 hover:bg-primary-800"
+        >
+          Shop Now <FaArrowRight className="h-3 w-3" />
+        </Link>
+      </div>
+
+      <div className="flex flex-1 flex-col px-3 pb-3 pt-2.5">
+        <div className="flex items-center justify-between">
+          <span className="text-[9px] font-black uppercase tracking-[0.15em] text-secondary-dark">
             {product.category}
           </span>
-          <span className="inline-flex items-center gap-1 rounded-md bg-primary-950/75 px-2.5 py-1.5 text-[11px] font-bold backdrop-blur-sm">
-            <FaStar className="h-2.5 w-2.5 text-secondary-light" />
+          <span className="flex items-center gap-0.5 text-[10px] font-bold text-primary-700">
+            <FaStar className="h-2 w-2 text-secondary" />
             {product.rating}
           </span>
         </div>
-      </div>
 
-      {imageCount > 1 && (
-        <div className="flex gap-1.5 border-b border-primary-100 bg-primary-50 px-3 py-2">
-          {galleryImages.map((src, index) => (
-            <button
-              key={`${product.id}-thumb-${index}`}
-              type="button"
-              onMouseEnter={() => setActiveImage(index)}
-              className={[
-                "relative h-11 flex-1 overflow-hidden rounded-md transition duration-200",
-                index === activeImage
-                  ? "opacity-100 ring-2 ring-secondary ring-offset-1"
-                  : "opacity-60 ring-1 ring-primary-100 hover:opacity-90",
-              ].join(" ")}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt="" className="h-full w-full object-cover" />
-            </button>
-          ))}
-        </div>
-      )}
-
-      <div className="flex flex-1 flex-col p-4">
-        <Link href={`/products/${product.slug}`} className="group/title">
-          <h3 className="line-clamp-2 min-h-[2.75rem] text-[15px] font-extrabold leading-snug text-primary-950 transition-colors group-hover/title:text-primary-700">
+        <Link href={`/products/${product.slug}`}>
+          <h3 className="mt-1 line-clamp-1 text-[13px] font-extrabold leading-snug tracking-tight text-primary-950 transition-colors hover:text-primary-600">
             {product.name}
           </h3>
         </Link>
 
-        <div className="mt-3 flex items-start justify-between gap-3">
+        <div className="mt-1.5 flex items-baseline gap-1.5">
           {product.offerPrice ? (
-            <div className="min-w-0">
-              <span className="block text-lg font-black leading-none text-primary-700">
-                ₹{product.offerPrice}
+            <>
+              <span className="text-base font-black leading-none text-primary-900">
+                ₹{product.offerPrice.toLocaleString("en-IN")}
               </span>
               {product.originalPrice && product.originalPrice !== product.offerPrice && (
-                <span className="mt-1 block text-xs font-medium text-ink-muted line-through">
-                  ₹{product.originalPrice}
+                <span className="text-[10px] text-ink-muted line-through">
+                  ₹{product.originalPrice.toLocaleString("en-IN")}
                 </span>
               )}
-            </div>
+              {discount >= 10 && (
+                <span className="rounded bg-rose-50 px-1 py-0.5 text-[9px] font-black text-rose-500">
+                  −{discount}%
+                </span>
+              )}
+            </>
           ) : (
-            <div className="text-xs font-bold uppercase tracking-wide text-ink-muted">
-              Price on request
-            </div>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-ink-muted">Price on request</span>
           )}
+        </div>
 
-          {product.colors.length > 0 && (
-            <div className="flex shrink-0 items-center gap-1 pt-0.5">
-              {product.colors.slice(0, 4).map((c, i) => (
+        <div className="mt-2 flex items-center justify-between gap-2">
+          {product.colors.length > 0 ? (
+            <div className="flex items-center gap-1">
+              {product.colors.slice(0, 5).map((c, i) => (
                 <span
                   key={i}
                   title={c}
-                  className={`${colorSwatch(c)} h-3.5 w-3.5 rounded-full ring-1 ring-black/10`}
+                  className={`${colorSwatch(c)} h-3 w-3 rounded-full ring-1 ring-black/10 ring-offset-1 ring-offset-[#faf8f5]`}
                 />
               ))}
-              {product.colors.length > 4 && (
-                <span className="text-[10px] text-ink-muted">+{product.colors.length - 4}</span>
+              {product.colors.length > 5 && (
+                <span className="text-[9px] font-semibold text-ink-muted">+{product.colors.length - 5}</span>
               )}
             </div>
-          )}
+          ) : <span />}
+          <span className="shrink-0 text-[9px] font-semibold uppercase tracking-wide text-ink-muted">
+            {product.material}
+          </span>
         </div>
 
-        <div className="mt-4 flex items-center justify-between gap-2 border-t border-primary-100 pt-3 text-[11px] font-bold uppercase tracking-wide text-ink-muted">
-          <span>{product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}</span>
-          {(product.wholesaleEnabled ?? true) && (
-            <span className="text-primary-700">Wholesale</span>
-          )}
+        <div className="mt-2.5 grid grid-cols-2 gap-1.5">
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center justify-center gap-1 rounded-lg bg-[#25D366] py-2 text-[11px] font-black text-white shadow-sm shadow-[#25D366]/30 transition-all duration-200 hover:bg-[#1ebe5d] active:scale-95"
+          >
+            <FaWhatsapp className="h-3 w-3" />
+            Enquire
+          </a>
+          <Link
+            href={`/products/${product.slug}`}
+            className="flex items-center justify-center gap-1 rounded-lg border-2 border-primary-950 py-2 text-[11px] font-black text-primary-950 transition-all duration-200 hover:bg-primary-950 hover:text-white active:scale-95"
+          >
+            View
+            <FaArrowRight className="h-2.5 w-2.5" />
+          </Link>
         </div>
-
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          className="mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-[#25D366] py-2.5 text-sm font-bold text-white transition hover:bg-[#1ebe5d]"
-        >
-          <FaWhatsapp className="h-4 w-4" />
-          Enquire
-        </a>
       </div>
     </motion.article>
   );

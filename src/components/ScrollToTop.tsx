@@ -25,15 +25,12 @@ export default function ScrollToTop() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 12 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
-          whileHover={{ y: -3 }}
           whileTap={{ scale: 0.92 }}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           aria-label="Scroll to top"
-          className="fixed bottom-[6.5rem] right-6 z-40 grid h-12 w-12 place-items-center rounded bg-gradient-to-br from-primary-500 to-primary-700 shadow-[0_6px_24px_-4px_rgba(79,70,229,0.5)] transition"
+          className="fixed bottom-[6.5rem] right-6 z-40 grid h-11 w-11 place-items-center rounded-full border border-primary-100 bg-white text-primary-600 transition hover:border-primary-300"
         >
-          <FaChevronUp className="h-4 w-4 text-white" />
-          {/* subtle shimmer line */}
-          <span className="absolute inset-x-2 top-1.5 h-px rounded-full bg-white/30" />
+          <FaChevronUp className="h-4 w-4" />
         </motion.button>
       )}
     </AnimatePresence>

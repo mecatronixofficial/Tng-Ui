@@ -5,6 +5,9 @@ const backendUrl =
 
 const nextConfig = {
   reactStrictMode: true,
+  experimental: {
+    devtoolSegmentExplorer: false,
+  },
 
   images: {
     remotePatterns: [
