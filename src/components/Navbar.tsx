@@ -60,33 +60,40 @@ export default function Navbar() {
         <div className="hidden h-[4.5rem] items-center gap-4 px-6 lg:flex">
 
           {/* Logo */}
-          <Link href="/" className="group flex shrink-0 items-center gap-3 mr-3">
-            <span className="relative shrink-0">
-              {siteConfig.logo ? (
-                <img
-                  src={siteConfig.logo}
-                  alt={siteConfig.name}
-                  className="h-10 w-10 rounded-xl object-cover ring-2 ring-primary-100 transition-all duration-300 group-hover:ring-secondary/70 group-hover:shadow-[0_0_16px_rgba(234,179,8,0.2)]"
-                />
-              ) : (
-                <div className="grid h-10 w-10 rounded-xl place-items-center bg-gradient-to-br from-secondary to-secondary-dark text-primary-950 shadow-[0_2px_12px_rgba(234,179,8,0.25)] transition-all duration-300 group-hover:shadow-[0_4px_20px_rgba(234,179,8,0.4)]">
-                  <span className="font-display text-sm font-black">T</span>
-                </div>
-              )}
-              <span className="absolute -bottom-1 -right-1 grid h-4 w-4 place-items-center rounded-md border border-primary-200 bg-white shadow-sm">
-                <FaStore className="h-2 w-2 text-secondary-dark" />
-              </span>
-            </span>
-            <span className="min-w-0">
-              <span className="block truncate font-display text-[1.1rem] font-extrabold tracking-tight text-primary-950 transition-colors duration-200 group-hover:text-secondary-dark">
-                {siteConfig.name}
-              </span>
-              <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest text-primary-400">
-                <span className="h-px w-4 bg-gradient-to-r from-secondary/80 to-transparent" />
-                Textile manufacturer
-              </span>
-            </span>
-          </Link>
+         <Link href="/" className="group flex shrink-0 items-center gap-3 mr-3">
+<span
+  className="
+    relative grid h-16 w-16 shrink-0 place-items-center
+    overflow-hidden rounded-full bg-white
+    ring-2 ring-red-100
+    shadow-[0_4px_18px_rgba(220,38,38,0.18)]
+    transition-all duration-300
+    group-hover:bg-red-500
+    group-hover:shadow-[0_6px_24px_rgba(220,38,38,0.35)]
+  "
+>
+  <img
+    src="https://res.cloudinary.com/ddpfxvydm/image/upload/v1782198017/101b65a0-c9c8-4cb8-bf78-4470b446f7e7_kpcr9z.png"
+    alt={siteConfig.name}
+    className="
+      h-full w-full
+      scale-[1.28]
+      object-contain
+    "
+  />
+</span>
+
+  <span className="min-w-0">
+    <span className="block truncate font-display text-[1.1rem] font-extrabold tracking-tight text-red-950 transition-colors duration-200 group-hover:text-red-700">
+      {siteConfig.name}
+    </span>
+
+    <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest text-red-500">
+      <span className="h-px w-4 bg-gradient-to-r from-red-600/80 to-transparent" />
+      Textile manufacturer
+    </span>
+  </span>
+</Link>
 
           <div className="h-6 w-px bg-gradient-to-b from-transparent via-primary-200 to-transparent" />
 

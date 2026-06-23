@@ -223,49 +223,40 @@ export default async function AboutPage() {
 
       {/* Founder and flow */}
       <section className="section-y bg-white">
-        <div className="container-x grid gap-8 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <div className="rounded-2xl border border-primary-100 p-7 md:p-10">
-              <div className="mb-5 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary-500">
-                <FaHandshake className="h-3 w-3" />
-                From the founder
-              </div>
-              <blockquote className="text-xl font-bold leading-snug text-primary-950 md:text-2xl">
-                &ldquo;We believe cloth buying should be simple. Retail customers
-                need dependable everyday products, and wholesale buyers need
-                clear details, repeat stock and honest despatch timelines.&rdquo;
-              </blockquote>
-              <div className="mt-6 border-t border-primary-100 pt-5">
-                <div className="font-bold text-ink">{siteConfig.ceo}</div>
-                <div className="mt-1 text-xs font-bold uppercase tracking-widest text-primary-500">
-                  Founder, {siteConfig.name}
-                </div>
-              </div>
-            </div>
-          </div>
+  <div className="container-x grid min-h-[200px] items-stretch gap-8 lg:grid-cols-12">
+    <div className="lg:col-span-7">
+      <div className="flex h-full flex-col justify-center rounded-2xl border border-primary-100 p-7 md:p-10">
+        <div className="mb-5 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary-500">
+          <FaHandshake className="h-3 w-3" />
+          From the founder
+        </div>
 
-          <div className="lg:col-span-5">
-            <div className="rounded-2xl border border-primary-100 p-7 md:p-8">
-              <div className="mb-5 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary-500">
-                <FaTruckMoving className="h-3 w-3" />
-                Wholesale flow
-              </div>
-              <div className="space-y-4">
-                {tradeFlow.map((step, index) => (
-                  <div key={step} className="flex gap-3">
-                    <span className="text-sm font-bold text-secondary-dark">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <div className="text-sm font-semibold leading-6 text-primary-950">
-                      {step}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+        <blockquote className="text-xl font-bold leading-snug text-primary-950 md:text-2xl">
+          &ldquo;We believe cloth buying should be simple. Retail customers need
+          dependable everyday products, and wholesale buyers need clear details,
+          repeat stock and honest despatch timelines.&rdquo;
+        </blockquote>
+
+        <div className="mt-6 border-t border-primary-100 pt-5">
+          <div className="font-bold text-ink">{siteConfig.ceo}</div>
+          <div className="mt-1 text-xs font-bold uppercase tracking-widest text-primary-500">
+            Founder, {siteConfig.name}
           </div>
         </div>
-      </section>
+      </div>
+    </div>
+
+    <div className="lg:col-span-5">
+      <div className="h-full overflow-hidden rounded-2xl border border-primary-100 shadow-md">
+        <img
+          src={siteConfig.ownerPhoto}
+          alt={`${siteConfig.ceo} - Founder of ${siteConfig.name}`}
+          className="h-full w-full object-cover"
+        />
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* Business info */}
       <section className="section-y bg-white">
