@@ -111,7 +111,12 @@ export default function ContactPage() {
               );
 
               return href ? (
-                <a key={label} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noreferrer" : undefined}>
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel={href.startsWith("http") ? "noreferrer" : undefined}
+                >
                   {inner}
                 </a>
               ) : (
@@ -128,7 +133,7 @@ export default function ContactPage() {
           <SectionTitle
             eyebrow="Send enquiry"
             title="Tell us your cloth requirement."
-            description="Share whether you need retail pieces or wholesale supply. Add product type, quantity, city and any packing or colour details."
+            description="Let us know if your requirement is for retail or wholesale supply. Please include the product type, quantity, delivery location, and any color, size, or packaging preferences."
             align="center"
           />
 
@@ -201,7 +206,10 @@ export default function ContactPage() {
                 </div>
                 <div className="space-y-3">
                   {enquiryHelp.map((item) => (
-                    <div key={item} className="flex gap-3 rounded-lg bg-white p-3 text-sm font-semibold leading-6 text-ink-soft shadow-soft">
+                    <div
+                      key={item}
+                      className="flex gap-3 rounded-lg bg-white p-3 text-sm font-semibold leading-6 text-ink-soft shadow-soft"
+                    >
                       <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-secondary" />
                       {item}
                     </div>
@@ -215,9 +223,21 @@ export default function ContactPage() {
                 </h3>
                 <div className="mt-5 flex items-center gap-3">
                   {[
-                    { href: siteConfig.socials.facebook, Icon: FaFacebookF, label: "Facebook" },
-                    { href: siteConfig.socials.instagram, Icon: FaInstagram, label: "Instagram" },
-                    { href: siteConfig.socials.youtube, Icon: FaYoutube, label: "YouTube" },
+                    {
+                      href: siteConfig.socials.facebook,
+                      Icon: FaFacebookF,
+                      label: "Facebook",
+                    },
+                    {
+                      href: siteConfig.socials.instagram,
+                      Icon: FaInstagram,
+                      label: "Instagram",
+                    },
+                    {
+                      href: siteConfig.socials.youtube,
+                      Icon: FaYoutube,
+                      label: "YouTube",
+                    },
                   ].map(({ href, Icon, label }) => (
                     <a
                       key={label}
@@ -244,7 +264,7 @@ export default function ContactPage() {
             <SectionTitle
               eyebrow="Find us"
               title={`Visit our cloth business in ${siteConfig.address.city}.`}
-              description="Located in Tamil Nadu's textile belt. Call before visiting for retail shopping, wholesale discussion or stock confirmation."
+              description="Conveniently located in the heart of Erode's textile market, our showroom serves both retail and wholesale customers. Please contact us before visiting to confirm product availability, discuss bulk orders, or schedule a business meeting."
             />
             <div className="grid gap-2 rounded-lg border border-primary-100 bg-white p-4 shadow-soft sm:min-w-[280px]">
               <div className="flex items-center gap-3 text-sm font-bold text-primary-950">
@@ -264,16 +284,15 @@ export default function ContactPage() {
 
           <div className="overflow-hidden rounded-lg border border-primary-100 bg-white p-2 shadow-warm">
             <iframe
-              title={`${siteConfig.name} - ${siteConfig.address.city}`}
+              title="S. Thangavel Textiles Location"
               src={siteConfig.locationlink}
               width="100%"
-              height="480"
+              height="450"
               style={{ border: 0 }}
+              allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
-              className="w-full rounded-lg"
-            ></iframe>
+            />
           </div>
         </div>
       </section>

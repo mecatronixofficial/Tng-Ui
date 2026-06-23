@@ -211,67 +211,79 @@ export default function Footer() {
         <div className="container-x grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-12">
 
           {/* Brand */}
-          <div className="lg:col-span-4">
-            <Link href="/" className="group inline-flex items-center gap-3">
-              {siteConfig.logo ? (
-                <img
-                  src={siteConfig.logo}
-                  alt={siteConfig.name}
-                  className="h-14 w-14 rounded-2xl object-cover ring-2 ring-secondary/30 shadow-[0_0_28px_-6px_rgba(212,175,55,0.45)] transition group-hover:ring-secondary/60"
-                />
-              ) : (
-                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-secondary-light to-secondary text-primary-950 shadow-[0_0_28px_-6px_rgba(212,175,55,0.55)] transition group-hover:shadow-[0_0_40px_-4px_rgba(212,175,55,0.8)]">
-                  <FaStore className="h-6 w-6" />
-                </span>
-              )}
-              <span>
-                <span className="block text-xl font-extrabold tracking-tight text-white transition group-hover:text-secondary-light">
-                  {siteConfig.name}
-                </span>
-                <span className="mt-0.5 block text-[10px] font-bold uppercase tracking-widest text-secondary/70">
-                  Retail · Wholesale · Cloths
-                </span>
-              </span>
-            </Link>
+         <div className="lg:col-span-4">
+  <Link href="/" className="group flex shrink-0 items-center gap-3 mr-3">
+<span
+  className="
+    relative grid h-16 w-16 shrink-0 place-items-center
+    overflow-hidden rounded-full bg-white
+    ring-2 ring-red-100
+    shadow-[0_4px_18px_rgba(220,38,38,0.18)]
+    transition-all duration-300
+    group-hover:bg-red-500
+    group-hover:shadow-[0_6px_24px_rgba(220,38,38,0.35)]
+  "
+>
+  <img
+    src="https://res.cloudinary.com/ddpfxvydm/image/upload/v1782198017/101b65a0-c9c8-4cb8-bf78-4470b446f7e7_kpcr9z.png"
+    alt={siteConfig.name}
+    className="
+      h-full w-full
+      scale-[1.28]
+      object-contain
+    "
+  />
+</span>
 
-            <p className="mt-5 text-sm leading-7 text-white/55">
-              {siteConfig.description}
-            </p>
+    <span>
+      <span className="block text-xl font-extrabold tracking-tight text-white transition group-hover:text-secondary-light">
+        {siteConfig.name}
+      </span>
+      <span className="mt-0.5 block text-[10px] font-bold uppercase tracking-widest text-secondary/70">
+        Retail · Wholesale · Cloths
+      </span>
+    </span>
+  </Link>
 
-            <div className="mt-6 flex flex-col gap-2">
-              {servicePoints.map(({ label, Icon }) => (
-                <div
-                  key={label}
-                  className="group flex items-center gap-3 rounded-xl border border-white/[0.07] bg-primary-900/40 px-4 py-2.5 text-sm font-semibold text-white/70 transition hover:border-secondary/25 hover:bg-primary-800/40 hover:text-secondary-light"
-                >
-                  <span className="shrink-0 text-secondary transition group-hover:scale-110">
-                    <Icon className="h-3.5 w-3.5" />
-                  </span>
-                  {label}
-                </div>
-              ))}
-            </div>
+  <p className="mt-5 text-sm leading-7 text-white/55">
+    {siteConfig.description}
+  </p>
 
-            <div className="mt-7">
-              <div className="mb-3 text-[10px] font-bold uppercase tracking-widest text-white/35">
-                Follow us
-              </div>
-              <div className="flex items-center gap-2.5">
-                {socials.map(({ href, Icon, label, bg, shadow }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={label}
-                    className={`grid h-11 w-11 place-items-center rounded-xl text-white transition hover:-translate-y-1 hover:scale-105 active:scale-95 ${bg} ${shadow}`}
-                  >
-                    <Icon className="h-4 w-4" />
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
+  <div className="mt-6 flex flex-col gap-2">
+    {servicePoints.map(({ label, Icon }) => (
+      <div
+        key={label}
+        className="group flex items-center gap-3 rounded-xl border border-white/[0.07] bg-primary-900/40 px-4 py-2.5 text-sm font-semibold text-white/70 transition hover:border-secondary/25 hover:bg-primary-800/40 hover:text-secondary-light"
+      >
+        <span className="shrink-0 text-secondary transition group-hover:scale-110">
+          <Icon className="h-3.5 w-3.5" />
+        </span>
+        {label}
+      </div>
+    ))}
+  </div>
+
+  <div className="mt-7">
+    <div className="mb-3 text-[10px] font-bold uppercase tracking-widest text-white/35">
+      Follow us
+    </div>
+
+    <div className="flex items-center gap-2.5">
+      {socials.map(({ href, Icon, label, bg, shadow }) => (
+        <a
+          key={label}
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={label}
+          className={`grid h-11 w-11 place-items-center rounded-xl text-white transition hover:-translate-y-1 hover:scale-105 active:scale-95 ${bg} ${shadow}`}
+        >
+          <Icon className="h-4 w-4" />
+        </a>
+      ))}
+    </div>
+  </div>
+</div>
 
           {/* Buyer cards */}
           <div className="lg:col-span-3">
