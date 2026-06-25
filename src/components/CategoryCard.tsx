@@ -39,7 +39,7 @@ export default function CategoryCard({
         <div className="pointer-events-none absolute inset-0 z-10 -translate-x-full skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
 
         {/* ── Image area ── */}
-        <div className="relative aspect-[4/3] overflow-hidden">
+        <div className="relative aspect-[4/3] min-h-[260px] overflow-hidden sm:min-h-[300px] lg:min-h-[340px]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={category.image}

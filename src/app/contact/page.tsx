@@ -24,6 +24,24 @@ export const metadata: Metadata = {
   description: `Contact ${siteConfig.name} for retail cloth shopping, wholesale textile supply, bulk orders and store enquiries in ${siteConfig.address.city}.`,
 };
 
+const whatsappNumber = siteConfig.whatsapp.replace(/\D/g, "");
+const contactWhatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+  [
+    `Hello ${siteConfig.name},`,
+    "",
+    "I want to enquire about your textile products.",
+    "",
+    "Requirement:",
+    "Product:",
+    "Quantity:",
+    "Size:",
+    "Color:",
+    "City:",
+    "",
+    "Please share availability and price details.",
+  ].join("\n"),
+)}`;
+
 const contactTiles = [
   {
     Icon: FaMapMarkerAlt,
@@ -36,7 +54,7 @@ const contactTiles = [
     label: "Wholesale WhatsApp",
     title: "Send bulk enquiry",
     text: siteConfig.phone,
-    href: siteConfig.socials.whatsapp,
+    href: contactWhatsappHref,
   },
   {
     Icon: FaPhoneAlt,
@@ -55,9 +73,10 @@ const contactTiles = [
 
 const enquiryHelp = [
   "Product type: petticoat, lungi, towel, bed sheet, dhoti, gamcha or handloom",
-  "Quantity needed for retail or wholesale",
-  "Colour, size, packing and delivery city",
-  "GST invoice or repeat shop stock requirement",
+  "Size or fit: free size, S-XXL, bed size, dhoti length or mixed sizes",
+  "Color or design: plain, printed, checked, border color or mixed colors",
+  "Quantity, packing, bundle count and delivery city",
+  "Fabric, GSM, GST invoice or repeat shop stock requirement",
 ];
 
 export default function ContactPage() {
@@ -81,7 +100,7 @@ export default function ContactPage() {
               description="For wholesale enquiries, WhatsApp is quickest. For retail visits or product questions, call or send the form below."
             />
             <a
-              href={siteConfig.socials.whatsapp}
+              href={contactWhatsappHref}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-5 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-secondary-dark"
@@ -133,7 +152,7 @@ export default function ContactPage() {
           <SectionTitle
             eyebrow="Send enquiry"
             title="Tell us your cloth requirement."
-            description="Let us know if your requirement is for retail or wholesale supply. Please include the product type, quantity, delivery location, and any color, size, or packaging preferences."
+            description="Let us know if your requirement is for retail or wholesale supply. Please include product type, size, color, quantity, packing, delivery location and any fabric or GSM preferences."
             align="center"
           />
 
@@ -152,14 +171,14 @@ export default function ContactPage() {
                     WhatsApp us for retail and wholesale support.
                   </h3>
                   <p className="mt-2 text-sm leading-6 text-white/65">
-                    Send product name, quantity and city. We will reply with
-                    availability details.
+                    Send product name, size, color, quantity and city. We will
+                    reply with availability details.
                   </p>
                 </div>
 
                 <div className="grid gap-3 p-5">
                   <a
-                    href={siteConfig.socials.whatsapp}
+                    href={contactWhatsappHref}
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center gap-4 rounded-lg bg-secondary px-5 py-4 text-white transition hover:bg-secondary-dark"

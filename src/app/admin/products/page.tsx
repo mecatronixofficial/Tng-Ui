@@ -9,6 +9,8 @@ import {
   FaSpinner,
   FaStar,
   FaEyeSlash,
+  FaFileImport,
+  FaDownload,
 } from "react-icons/fa";
 
 import {
@@ -17,6 +19,7 @@ import {
   CategoryApi,
   SubcategoryApi,
   Paginated,
+  BulkProductImportResult,
 } from "@/lib/api";
 import {
   AdminButton,
@@ -76,6 +79,133 @@ const emptyForm: FormState = {
   rating: 4.5, reviews: 0,
 };
 
+const bulkTemplate = [
+  [
+    "name", "slug", "category", "subcategory", "images", "description",
+    "clothType", "colors", "sizes", "stock", "offerPrice", "originalPrice",
+    "material", "gsm", "pattern", "tags", "retailEnabled",
+    "wholesaleEnabled", "bundleSize", "allowMixedColors", "allowMixedSizes",
+    "featured", "newArrival", "active",
+  ],
+  [
+    "Premium Cotton Petticoat", "premium-cotton-petticoat", "petticoats", "",
+    "https://example.com/image-1.jpg | https://example.com/image-2.jpg",
+    "Soft cotton petticoat for daily wear", "Cotton", "White | Maroon | Black",
+    "S | M | L | XL", "100", "199", "249", "100% Pure Cotton", "150 GSM",
+    "Solid", "cotton | daily-wear", "true", "true", "12", "false", "false",
+    "false", "true", "true",
+  ],
+]
+  .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+  .join("\n");
+
+const bulkTemplateHref = `data:text/csv;charset=utf-8,${encodeURIComponent(bulkTemplate)}`;
+
+function normalizeHeader(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function parseCsv(text: string): Record<string, string>[] {
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let cell = "";
+  let quoted = false;
+
+  for (let i = 0; i < text.length; i += 1) {
+    const char = text[i];
+    const next = text[i + 1];
+
+    if (char === '"' && quoted && next === '"') {
+      cell += '"';
+      i += 1;
+    } else if (char === '"') {
+      quoted = !quoted;
+    } else if (char === "," && !quoted) {
+      row.push(cell.trim());
+      cell = "";
+    } else if ((char === "\n" || char === "\r") && !quoted) {
+      if (char === "\r" && next === "\n") i += 1;
+      row.push(cell.trim());
+      if (row.some(Boolean)) rows.push(row);
+      row = [];
+      cell = "";
+    } else {
+      cell += char;
+    }
+  }
+
+  row.push(cell.trim());
+  if (row.some(Boolean)) rows.push(row);
+  if (rows.length < 2) return [];
+
+  const headers = rows[0].map(normalizeHeader);
+  return rows.slice(1).map((values) =>
+    Object.fromEntries(headers.map((header, i) => [header, values[i]?.trim() || ""])),
+  );
+}
+
+function getCell(row: Record<string, string>, names: string[]) {
+  for (const name of names) {
+    const value = row[normalizeHeader(name)];
+    if (value) return value;
+  }
+  return "";
+}
+
+function splitList(value: string) {
+  return value
+    .split(/[|;,]/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function toBool(value: string, fallback = false) {
+  if (!value) return fallback;
+  return ["1", "true", "yes", "y", "active"].includes(value.trim().toLowerCase());
+}
+
+function toNumber(value: string, fallback = 0) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function buildBulkProducts(csvText: string) {
+  return parseCsv(csvText).map((row) => {
+    const name = getCell(row, ["name", "product name", "product"]);
+    const offerPrice = toNumber(getCell(row, ["offerPrice", "offer price", "price", "sale price"]));
+    return {
+      name,
+      slug: getCell(row, ["slug"]),
+      category: getCell(row, ["category", "category slug"]),
+      subcategory: getCell(row, ["subcategory", "sub category", "subcategory slug"]),
+      images: splitList(getCell(row, ["images", "image", "image url", "image urls"])),
+      description: getCell(row, ["description", "details"]) || name,
+      clothType: getCell(row, ["clothType", "cloth type", "type"]) || "Cotton",
+      colors: splitList(getCell(row, ["colors", "colour", "color"])),
+      sizes: splitList(getCell(row, ["sizes", "size"])),
+      stock: toNumber(getCell(row, ["stock", "qty", "quantity"])),
+      offerPrice,
+      originalPrice:
+        toNumber(getCell(row, ["originalPrice", "original price", "mrp"]), offerPrice) || offerPrice,
+      material: getCell(row, ["material", "fabric"]) || "Cotton",
+      gsm: getCell(row, ["gsm"]),
+      pattern: getCell(row, ["pattern", "design"]),
+      tags: splitList(getCell(row, ["tags", "tag"])),
+      retailEnabled: toBool(getCell(row, ["retailEnabled", "retail"]), true),
+      wholesaleEnabled: toBool(getCell(row, ["wholesaleEnabled", "wholesale", "bulk"]), true),
+      bundleSize: toNumber(getCell(row, ["bundleSize", "bundle size", "bundle qty"]), 12),
+      allowMixedColors: toBool(getCell(row, ["allowMixedColors", "mixed colors"])),
+      allowMixedSizes: toBool(getCell(row, ["allowMixedSizes", "mixed sizes"])),
+      washable: toBool(getCell(row, ["washable"]), true),
+      featured: toBool(getCell(row, ["featured"])),
+      newArrival: toBool(getCell(row, ["newArrival", "new arrival", "new"])),
+      active: toBool(getCell(row, ["active", "status"]), true),
+      rating: toNumber(getCell(row, ["rating"]), 4.5),
+      reviews: toNumber(getCell(row, ["reviews", "review count"])),
+    };
+  });
+}
+
 export default function AdminProductsPage() {
   const [list, setList] = useState<Paginated<ProductApi> | null>(null);
   const [categories, setCategories] = useState<CategoryApi[]>([]);
@@ -86,6 +216,11 @@ export default function AdminProductsPage() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [bulkOpen, setBulkOpen] = useState(false);
+  const [bulkCsv, setBulkCsv] = useState("");
+  const [bulkUpdating, setBulkUpdating] = useState(true);
+  const [bulkImporting, setBulkImporting] = useState(false);
+  const [bulkResult, setBulkResult] = useState<BulkProductImportResult | null>(null);
   const { confirm, dialog } = useConfirm();
 
   const load = useCallback(async () => {
@@ -117,6 +252,13 @@ export default function AdminProductsPage() {
     setEditing(null);
     setForm({ ...emptyForm, category: categories[0]?.slug || "", subcategory: "" });
     setOpen(true);
+  }
+
+  function openBulkUpload() {
+    setBulkCsv("");
+    setBulkResult(null);
+    setBulkUpdating(true);
+    setBulkOpen(true);
   }
 
   function openEdit(p: ProductApi) {
@@ -231,6 +373,45 @@ export default function AdminProductsPage() {
     });
   }
 
+  async function handleBulkFile(file?: File) {
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith(".csv")) {
+      toast("Please export your Excel sheet as CSV, then upload the CSV file.", "error");
+      return;
+    }
+    setBulkCsv(await file.text());
+    setBulkResult(null);
+  }
+
+  async function handleBulkImport() {
+    const products = buildBulkProducts(bulkCsv);
+    if (products.length === 0) {
+      toast("No product rows found in the CSV file.", "error");
+      return;
+    }
+
+    const missing = products.findIndex((p) => !p.name || !p.category);
+    if (missing >= 0) {
+      toast(`Row ${missing + 2} needs at least product name and category.`, "error");
+      return;
+    }
+
+    setBulkImporting(true);
+    try {
+      const result = await api.bulkProducts({
+        products,
+        updateExisting: bulkUpdating,
+      });
+      setBulkResult(result);
+      toast(`Bulk import complete: ${result.created} created, ${result.updated} updated.`);
+      await load();
+    } catch (e) {
+      toast((e as Error).message, "error");
+    } finally {
+      setBulkImporting(false);
+    }
+  }
+
   const availableSubcategories = subcategories.filter((s) => s.category === form.category);
   const subcategoryNameByValue = new Map(
     subcategories.flatMap((s) => [
@@ -253,9 +434,14 @@ export default function AdminProductsPage() {
             className="!pl-9"
           />
         </div>
-        <AdminButton onClick={openCreate}>
-          <FaPlus className="h-3 w-3" /> Add Product
-        </AdminButton>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <AdminButton variant="outline" onClick={openBulkUpload}>
+            <FaFileImport className="h-3 w-3" /> Bulk Upload
+          </AdminButton>
+          <AdminButton onClick={openCreate}>
+            <FaPlus className="h-3 w-3" /> Add Product
+          </AdminButton>
+        </div>
       </div>
 
       {/* List */}
@@ -597,6 +783,99 @@ export default function AdminProductsPage() {
             </AdminButton>
             <AdminButton onClick={handleSave} loading={saving}>
               {editing ? "Save Changes" : "Create Product"}
+            </AdminButton>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        open={bulkOpen}
+        onClose={() => setBulkOpen(false)}
+        title="Bulk Upload Products"
+        maxWidth="max-w-3xl"
+      >
+        <div className="space-y-5">
+          <div className="rounded-lg border border-primary-100 bg-primary-50 p-4 text-sm leading-6 text-ink-soft">
+            Upload products from a CSV file exported from Excel. Keep the first row as column
+            names. Required columns: <strong>name</strong> and <strong>category</strong>.
+            Recommended columns: images, description, clothType, colors, sizes, stock,
+            offerPrice, originalPrice and material.
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <a
+              href={bulkTemplateHref}
+              download="product-bulk-template.csv"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary-200 bg-white px-4 py-3 text-sm font-bold text-primary-800 transition hover:border-secondary hover:text-secondary"
+            >
+              <FaDownload className="h-3.5 w-3.5" />
+              Download CSV Template
+            </a>
+            <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-secondary">
+              <FaFileImport className="h-3.5 w-3.5" />
+              Choose CSV File
+              <input
+                type="file"
+                accept=".csv,text/csv"
+                className="hidden"
+                onChange={(e) => handleBulkFile(e.target.files?.[0])}
+              />
+            </label>
+          </div>
+
+          <Field
+            label="CSV Preview / Paste CSV"
+            hint="List values can use |, ;, or comma inside a cell. Example: White | Maroon | Black"
+          >
+            <TextArea
+              rows={9}
+              value={bulkCsv}
+              onChange={(e) => {
+                setBulkCsv(e.target.value);
+                setBulkResult(null);
+              }}
+              placeholder="Paste CSV here or choose a CSV file..."
+              className="font-mono text-xs"
+            />
+          </Field>
+
+          <div className="grid gap-3 rounded-lg border border-cream-200 bg-cream-50 p-4 sm:grid-cols-[1fr_auto] sm:items-center">
+            <Toggle
+              checked={bulkUpdating}
+              onChange={setBulkUpdating}
+              label="Update existing products with same slug"
+            />
+            <div className="text-xs font-semibold text-ink-muted">
+              {buildBulkProducts(bulkCsv).length} rows ready
+            </div>
+          </div>
+
+          {bulkResult && (
+            <div className="rounded-lg border border-secondary/30 bg-white p-4">
+              <div className="grid gap-3 text-sm sm:grid-cols-4">
+                <div><strong>{bulkResult.created}</strong><br />Created</div>
+                <div><strong>{bulkResult.updated}</strong><br />Updated</div>
+                <div><strong>{bulkResult.skipped}</strong><br />Skipped</div>
+                <div><strong>{bulkResult.errors.length}</strong><br />Errors</div>
+              </div>
+              {bulkResult.errors.length > 0 && (
+                <div className="mt-4 max-h-40 overflow-auto rounded-lg bg-red-50 p-3 text-xs text-red-700">
+                  {bulkResult.errors.slice(0, 20).map((error) => (
+                    <div key={`${error.row}-${error.message}`}>
+                      Row {error.row}: {error.name ? `${error.name} - ` : ""}{error.message}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="flex justify-end gap-3 border-t border-cream-200 pt-4">
+            <AdminButton variant="ghost" onClick={() => setBulkOpen(false)}>
+              Close
+            </AdminButton>
+            <AdminButton onClick={handleBulkImport} loading={bulkImporting}>
+              Import Products
             </AdminButton>
           </div>
         </div>

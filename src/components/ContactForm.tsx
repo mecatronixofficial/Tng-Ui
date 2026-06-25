@@ -45,20 +45,90 @@ const clothOptions = [
   "Handloom",
 ];
 
+const sizeOptions = [
+  "Free Size",
+  "S",
+  "M",
+  "L",
+  "XL",
+  "XXL",
+  "36",
+  "38",
+  "40",
+  "42",
+  "44",
+  "Single",
+  "Double",
+  "King",
+  "Mixed Sizes",
+];
+
+const colorOptions = [
+  "White",
+  "Black",
+  "Red",
+  "Blue",
+  "Green",
+  "Yellow",
+  "Pink",
+  "Maroon",
+  "Cream",
+  "Checked",
+  "Printed",
+  "Mixed Colors",
+];
+
+const whatsappNumber = siteConfig.whatsapp.replace(/\D/g, "");
+
 export default function ContactForm({ defaultProduct = "" }: Props) {
   const [state, setState] = useState({
     name: "",
     email: "",
     phone: "",
     product: defaultProduct,
+    color: "",
+    size: "",
     enquiryType: "wholesale",
     quantity: "",
     city: "",
+    packing: "",
     message: "",
   });
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  const enquiryDetails = [
+    `Enquiry type: ${state.enquiryType}`,
+    state.product ? `Product: ${state.product}` : "",
+    state.quantity ? `Quantity: ${state.quantity}` : "",
+    state.color ? `Color: ${state.color}` : "",
+    state.size ? `Size: ${state.size}` : "",
+    state.packing ? `Packing: ${state.packing}` : "",
+    state.city ? `City: ${state.city}` : "",
+    state.message,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const whatsappMessage = [
+    `Hello ${siteConfig.name},`,
+    "",
+    "I want to send a cloth enquiry.",
+    "",
+    state.name ? `Name: ${state.name}` : "",
+    state.phone ? `Phone: ${state.phone}` : "",
+    state.email ? `Email: ${state.email}` : "",
+    enquiryDetails,
+    "",
+    "Please share availability and price details.",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+    whatsappMessage,
+  )}`;
 
   async function handle(e: FormEvent) {
     e.preventDefault();
@@ -68,15 +138,6 @@ export default function ContactForm({ defaultProduct = "" }: Props) {
       return;
     }
 
-    const details = [
-      `Enquiry type: ${state.enquiryType}`,
-      state.quantity ? `Quantity: ${state.quantity}` : "",
-      state.city ? `City: ${state.city}` : "",
-      state.message,
-    ]
-      .filter(Boolean)
-      .join("\n");
-
     setSubmitting(true);
     try {
       await api.submitOrder({
@@ -84,15 +145,17 @@ export default function ContactForm({ defaultProduct = "" }: Props) {
         phone: state.phone,
         email: state.email || undefined,
         productName: state.product || undefined,
+        color: state.color || undefined,
+        size: state.size || undefined,
         quantity: Number(state.quantity) || 1,
         message:
-          details || `Enquiry about ${state.product || "your cloth products"}.`,
+          enquiryDetails || `Enquiry about ${state.product || "your cloth products"}.`,
         source: state.enquiryType === "wholesale" ? "wholesale" : "contact_form",
       });
       setSent(true);
     } catch (err) {
       console.error(err);
-      setSent(true);
+      setError("Sorry, we couldn't send your enquiry. Please try again or contact us on WhatsApp.");
     } finally {
       setSubmitting(false);
     }
@@ -117,7 +180,7 @@ export default function ContactForm({ defaultProduct = "" }: Props) {
         </p>
         <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
           <a
-            href={siteConfig.socials.whatsapp}
+            href={whatsappHref}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-5 py-3 text-sm font-bold text-white transition hover:bg-secondary-dark"
@@ -134,9 +197,12 @@ export default function ContactForm({ defaultProduct = "" }: Props) {
                 email: "",
                 phone: "",
                 product: "",
+                color: "",
+                size: "",
                 enquiryType: "wholesale",
                 quantity: "",
                 city: "",
+                packing: "",
                 message: "",
               });
             }}
@@ -273,12 +339,54 @@ export default function ContactForm({ defaultProduct = "" }: Props) {
         </FormField>
       </div>
 
+      <div className="grid gap-5 sm:grid-cols-3">
+        <FormField label="Color / Design">
+          <select
+            value={state.color}
+            onChange={(e) => setState({ ...state, color: e.target.value })}
+            className="field rounded-lg"
+          >
+            <option value="">Select color</option>
+            {colorOptions.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </FormField>
+
+        <FormField label="Size">
+          <select
+            value={state.size}
+            onChange={(e) => setState({ ...state, size: e.target.value })}
+            className="field rounded-lg"
+          >
+            <option value="">Select size</option>
+            {sizeOptions.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </FormField>
+
+        <FormField label="Packing / Bundle">
+          <input
+            type="text"
+            value={state.packing}
+            onChange={(e) => setState({ ...state, packing: e.target.value })}
+            placeholder="12 pcs / bundle"
+            className="field rounded-lg"
+          />
+        </FormField>
+      </div>
+
       <FormField label="Requirement Details">
         <textarea
           rows={5}
           value={state.message}
           onChange={(e) => setState({ ...state, message: e.target.value })}
-          placeholder="Tell us cloth type, colour, size, quantity, packing or wholesale requirement..."
+          placeholder="Tell us GSM, fabric, border type, delivery timing, GST billing, wholesale stock requirement..."
           className="field resize-none rounded-lg"
         />
       </FormField>
@@ -300,7 +408,7 @@ export default function ContactForm({ defaultProduct = "" }: Props) {
         </button>
 
         <a
-          href={siteConfig.socials.whatsapp}
+          href={whatsappHref}
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center justify-center gap-2 rounded-lg border border-secondary/30 bg-white px-6 py-3 text-sm font-bold text-secondary transition hover:bg-secondary hover:text-white"

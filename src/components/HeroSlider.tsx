@@ -71,12 +71,12 @@ export default function HeroSlider() {
 
   if (!slide) {
     return (
-      <section className="relative mx-auto min-h-[calc(100svh-6.75rem)] overflow-hidden bg-primary-950" />
+      <section className="relative mx-auto min-h-[560px] overflow-hidden bg-primary-950 sm:min-h-[calc(100svh-6.75rem)]" />
     );
   }
 
   return (
-    <section className="relative mx-auto min-h-[calc(100svh-6.75rem)] overflow-hidden bg-primary-950">
+    <section className="relative mx-auto min-h-[560px] overflow-hidden bg-primary-950 sm:min-h-[calc(100svh-6.75rem)]">
       {/* ── Background image ── */}
       <AnimatePresence mode="wait">
         <motion.div
@@ -97,11 +97,11 @@ export default function HeroSlider() {
       </AnimatePresence>
 
       {/* Gradient overlay */}
-      <div className="pointer-events-none absolute inset-0 z-[11] bg-gradient-to-t from-primary-950/70 via-transparent to-transparent" />
+      <div className="pointer-events-none absolute inset-0 z-[11] bg-gradient-to-t from-primary-950/85 via-primary-950/25 to-primary-950/20 sm:from-primary-950/70 sm:via-transparent sm:to-transparent" />
 
       {/* ── Content ── */}
-      <div className="relative z-20 flex min-h-[calc(100svh-6.75rem)] items-center px-5 py-20 sm:px-10 lg:px-16 xl:px-24">
-        <div className="w-full max-w-xl xl:max-w-2xl">
+      <div className="relative z-20 flex min-h-[560px] items-end px-4 pb-28 pt-20 sm:min-h-[calc(100svh-6.75rem)] sm:items-center sm:px-10 sm:py-20 lg:px-16 xl:px-24">
+        <div className="w-full max-w-lg sm:max-w-xl xl:max-w-2xl">
           <AnimatePresence mode="wait">
             <motion.div
               key={slide.id + "-content"}
@@ -112,15 +112,17 @@ export default function HeroSlider() {
               className="drop-shadow-[0_2px_16px_rgba(0,0,0,0.95)]"
             >
               <motion.div variants={stagger.item}>
-                <span className="inline-flex items-center gap-2.5 rounded-full border border-secondary/40 bg-secondary/10 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-secondary backdrop-blur-sm">
+                <span className="inline-flex max-w-full items-center gap-2 rounded-full border border-secondary/40 bg-secondary/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-secondary backdrop-blur-sm sm:gap-2.5 sm:px-4 sm:text-[11px] sm:tracking-[0.18em]">
                   <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-secondary" />
-                  {slide.eyebrow || "Retail & Wholesale Cloths"}
+                  <span className="truncate">
+                    {slide.eyebrow || "Retail & Wholesale Cloths"}
+                  </span>
                 </span>
               </motion.div>
 
               <motion.h1
                 variants={stagger.item}
-                className="mt-5 max-w-3xl font-display text-4xl font-black leading-[1.04] tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl"
+                className="mt-4 max-w-3xl font-display text-3xl font-black leading-[1.06] tracking-tight text-white sm:mt-5 sm:text-5xl lg:text-6xl xl:text-7xl"
               >
                 {slide.title}
                 {slide.highlight && (
@@ -135,14 +137,14 @@ export default function HeroSlider() {
 
               <motion.div
                 variants={stagger.item}
-                className="mt-8 flex flex-wrap gap-3"
+                className="mt-6 grid gap-3 sm:mt-8 sm:flex sm:flex-wrap"
               >
                 {slide.ctaHref.startsWith("http") ? (
                   <a
                     href={slide.ctaHref}
                     target="_blank"
                     rel="noreferrer"
-                    className="group inline-flex items-center justify-center gap-2.5 rounded-lg bg-secondary px-6 py-3.5 text-sm font-bold text-white shadow-warm transition-all duration-300 hover:scale-[1.02] hover:bg-secondary-dark active:scale-[0.98]"
+                    className="group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-lg bg-secondary px-5 py-3 text-sm font-bold text-white shadow-warm transition-all duration-300 hover:scale-[1.02] hover:bg-secondary-dark active:scale-[0.98] sm:px-6 sm:py-3.5"
                   >
                     <FaWhatsapp className="h-4 w-4" />
                     {slide.ctaLabel}
@@ -151,7 +153,7 @@ export default function HeroSlider() {
                 ) : (
                   <Link
                     href={slide.ctaHref}
-                    className="group inline-flex items-center justify-center gap-2.5 rounded-lg bg-white px-6 py-3.5 text-sm font-bold text-primary-900 shadow-soft transition-all duration-300 hover:scale-[1.02] hover:bg-primary-50 active:scale-[0.98]"
+                    className="group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-lg bg-white px-5 py-3 text-sm font-bold text-primary-900 shadow-soft transition-all duration-300 hover:scale-[1.02] hover:bg-primary-50 active:scale-[0.98] sm:px-6 sm:py-3.5"
                   >
                     {slide.ctaLabel}
                     <FaArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
@@ -161,7 +163,7 @@ export default function HeroSlider() {
                 {slide.secondaryHref && (
                   <Link
                     href={slide.secondaryHref}
-                    className="group inline-flex items-center justify-center gap-2.5 rounded-lg border border-white/25 bg-white/10 px-6 py-3.5 text-sm font-bold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:bg-white/20"
+                    className="group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-lg border border-white/25 bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:bg-white/20 sm:px-6 sm:py-3.5"
                   >
                     {slide.secondaryLabel || "View Products"}
                     <FaArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
@@ -171,19 +173,19 @@ export default function HeroSlider() {
 
               <motion.div
                 variants={stagger.item}
-                className="mt-10 flex flex-wrap gap-2"
+                className="mt-6 grid grid-cols-3 gap-2 sm:mt-10 sm:flex sm:flex-wrap"
               >
                 {heroStats.map((item) => (
                   <div
                     key={item.value}
-                    className="flex items-center gap-2.5 rounded-2xl border border-white/[0.12] bg-white/[0.07] px-4 py-2.5 backdrop-blur-md"
+                    className="min-w-0 rounded-xl border border-white/[0.12] bg-white/[0.07] px-2.5 py-2 backdrop-blur-md sm:flex sm:items-center sm:gap-2.5 sm:rounded-2xl sm:px-4 sm:py-2.5"
                   >
-                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
-                    <span>
-                      <span className="block text-sm font-black text-white">
+                    <span className="hidden h-1.5 w-1.5 shrink-0 rounded-full bg-secondary sm:block" />
+                    <span className="block min-w-0">
+                      <span className="block truncate text-xs font-black text-white sm:text-sm">
                         {item.value}
                       </span>
-                      <span className="block text-[10px] font-semibold uppercase tracking-wider text-white/45">
+                      <span className="block truncate text-[9px] font-semibold uppercase tracking-wider text-white/45 sm:text-[10px]">
                         {item.label}
                       </span>
                     </span>
@@ -195,7 +197,7 @@ export default function HeroSlider() {
         </div>
 
         {/* ── Bottom bar: dots + counter + nav ── */}
-        <div className="absolute inset-x-0 bottom-0 z-30 flex items-end justify-between px-6 pb-8 sm:px-10 lg:px-16 xl:px-24">
+        <div className="absolute inset-x-0 bottom-0 z-30 flex items-center justify-between px-4 pb-5 sm:items-end sm:px-10 sm:pb-8 lg:px-16 xl:px-24">
           <div className="flex items-center gap-1.5">
             {displaySlides.map((s, i) => (
               <button
@@ -205,7 +207,7 @@ export default function HeroSlider() {
                 aria-label={`Slide ${i + 1}`}
                 className={cn(
                   "relative overflow-hidden rounded-full bg-white/25 transition-all duration-500",
-                  i === idx ? "h-[3px] w-10" : "h-[3px] w-[6px]",
+                  i === idx ? "h-[3px] w-8 sm:w-10" : "h-[3px] w-[6px]",
                 )}
               >
                 {i === idx && (
@@ -221,8 +223,8 @@ export default function HeroSlider() {
             ))}
           </div>
 
-          <div className="flex items-center gap-4">
-            <span className="font-mono text-[11px] tabular-nums">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <span className="hidden font-mono text-[11px] tabular-nums min-[380px]:inline">
               <span className="font-bold text-white/80">
                 {String(idx + 1).padStart(2, "0")}
               </span>
@@ -241,7 +243,7 @@ export default function HeroSlider() {
                   type="button"
                   onClick={fn}
                   aria-label={label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/70 backdrop-blur-sm transition-all duration-300 hover:border-white/45 hover:bg-white/20 hover:text-white active:scale-95"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/70 backdrop-blur-sm transition-all duration-300 hover:border-white/45 hover:bg-white/20 hover:text-white active:scale-95 sm:h-10 sm:w-10"
                 >
                   <Icon className="h-3 w-3" />
                 </button>

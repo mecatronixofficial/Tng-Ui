@@ -161,6 +161,11 @@ export const api = {
   adminProductById: (id: string) => request<ProductApi>(`/admin/products/${id}`),
   createProduct: (body: any) =>
     request<ProductApi>("/admin/products", { method: "POST", body }),
+  bulkProducts: (body: { products: any[]; updateExisting?: boolean }) =>
+    request<BulkProductImportResult>("/admin/products/bulk", {
+      method: "POST",
+      body,
+    }),
   updateProduct: (id: string, body: any) =>
     request<ProductApi>(`/admin/products/${id}`, { method: "PATCH", body }),
   deleteProduct: (id: string) =>
@@ -307,6 +312,14 @@ export interface ProductApi {
   active: boolean;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface BulkProductImportResult {
+  total: number;
+  created: number;
+  updated: number;
+  skipped: number;
+  errors: { row: number; name?: string; message: string }[];
 }
 
 export interface CategoryApi {
