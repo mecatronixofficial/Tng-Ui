@@ -1,3 +1,11 @@
+const rawWhatsappNumber = (
+  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "94862 73862"
+).replace(/\D/g, "");
+const whatsappNumber =
+  rawWhatsappNumber.length === 10
+    ? `91${rawWhatsappNumber}`
+    : rawWhatsappNumber;
+
 export const siteConfig = {
   logo: "",
   name: "Thangavel Textile",
@@ -14,26 +22,27 @@ export const siteConfig = {
     "Retail Business",
     "Factory / Manufacturing",
   ],
- address: {
-  line1: "Thangavel Textile",
-  line2: "53, Sengoda Street, Erode Fort",
-  city: "Erode",
-  state: "Tamil Nadu",
-  country: "India",
-  pincode: "638001",
-},
-ownerPhoto: "https://res.cloudinary.com/ddpfxvydm/image/upload/v1781763445/67534d0a-b239-4a52-827b-1674741cc2ed_rg5xqx.png",
- locationlink:
+  address: {
+    line1: "Thangavel Textile",
+    line2: "53, Sengoda Street, Erode Fort",
+    city: "Erode",
+    state: "Tamil Nadu",
+    country: "India",
+    pincode: "638001",
+  },
+  ownerPhoto:
+    "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1782368406/c6b31125-7a39-4fdd-aba4-fb114116034b_beh2tp.png",
+  locationlink:
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d500719.3869732372!2d77.11703358906247!3d11.344189399999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba96f76701221ad%3A0xdd9e9ade36b41375!2sThangavel%20Textile%20-%20Inskirts%20Wholesaler!5e0!3m2!1sen!2sin!4v1782230759309!5m2!1sen!2sin",
- phone: "+91 9443454628",
-  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "94862 73862",
-  email: "info@thangaveltextile.in",
+  phone: "+91 9443454628",
+  whatsapp: whatsappNumber,
+  email: "thangaveltextile99@gmail.com",
   workingHours: "Mon – Sat: 9:00 AM – 8:00 PM",
   socials: {
     facebook: "https://facebook.com",
     instagram: "https://instagram.com",
     youtube: "https://youtube.com",
-    whatsapp: `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "94862 73862"}`,
+    whatsapp: `https://wa.me/${whatsappNumber}`,
   },
 };
 

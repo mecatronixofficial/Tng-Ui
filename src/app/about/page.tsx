@@ -222,41 +222,98 @@ export default async function AboutPage() {
       </section>
 
       {/* Founder and flow */}
-      <section className="section-y bg-white">
-  <div className="container-x grid min-h-[200px] items-stretch gap-8 lg:grid-cols-12">
-    <div className="lg:col-span-7">
-      <div className="flex h-full flex-col justify-center rounded-2xl border border-primary-100 p-7 md:p-10">
-        <div className="mb-5 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary-500">
-          <FaHandshake className="h-3 w-3" />
-          From the founder
-        </div>
+      <section className="section-y bg-cream-50">
+        <div className="container-x grid items-stretch gap-5 lg:grid-cols-12">
+          <div className="relative overflow-hidden rounded-2xl bg-primary-950 p-7 text-white shadow-warm md:p-10 lg:col-span-7">
+            <div className="absolute right-6 top-6 hidden text-secondary/15 md:block">
+              <FaQuoteRight className="h-24 w-24" />
+            </div>
 
-        <blockquote className="text-xl font-bold leading-snug text-primary-950 md:text-2xl">
-          &ldquo;We believe cloth buying should be simple. Retail customers need
-          dependable everyday products, and wholesale buyers need clear details,
-          repeat stock and honest despatch timelines.&rdquo;
-        </blockquote>
+            <div className="relative">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-secondary-light">
+                <FaHandshake className="h-3 w-3" />
+                From the founder
+              </div>
 
-        <div className="mt-6 border-t border-primary-100 pt-5">
-          <div className="font-bold text-ink">{siteConfig.ceo}</div>
-          <div className="mt-1 text-xs font-bold uppercase tracking-widest text-primary-500">
-            Founder, {siteConfig.name}
+              <blockquote className="max-w-3xl text-2xl font-extrabold leading-tight text-white md:text-4xl">
+                &ldquo;We believe cloth buying should be simple, clear and dependable
+                for every retail customer and wholesale buyer.&rdquo;
+              </blockquote>
+
+              <p className="mt-5 max-w-2xl text-sm font-semibold leading-7 text-white/70 md:text-base">
+                Everyday products, repeat stock details and honest despatch
+                timelines help buyers place orders with confidence.
+              </p>
+
+              <div className="mt-8 flex flex-col gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="text-lg font-extrabold text-white">
+                    {siteConfig.ceo}
+                  </div>
+                  <div className="mt-1 text-[10px] font-bold uppercase tracking-widest text-secondary-light">
+                    Founder, {siteConfig.name}
+                  </div>
+                </div>
+                <a
+                  href={siteConfig.socials.whatsapp}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-5 py-3 text-sm font-extrabold text-primary-950 transition hover:bg-secondary-light"
+                >
+                  <FaWhatsapp className="h-4 w-4" />
+                  Discuss Order
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-5">
+            <div className="relative h-full min-h-[430px] rounded-2xl bg-red-200 p-1 shadow-warm">
+              <div className="h-full rounded-xl border border-secondary/40 bg-white p-3">
+                <div className="relative flex h-full min-h-[400px] flex-col overflow-hidden rounded-lg bg-primary-50">
+                  <div className="relative mt-auto flex min-h-[360px] items-end justify-center px-6 ">
+                    <img
+                      src={siteConfig.ownerPhoto}
+                      alt={`${siteConfig.ceo} - Founder of ${siteConfig.name}`}
+                      className="w-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-primary-100 bg-white p-6 shadow-soft md:p-7 lg:col-span-12">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-primary-500">
+              Simple order flow
+            </div>
+            <div className="mt-3 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+              <h3 className="max-w-xl text-2xl font-extrabold leading-tight text-primary-950">
+                From cloth selection to despatch, every step stays clear.
+              </h3>
+              <p className="max-w-md text-sm font-semibold leading-6 text-ink-muted">
+                A practical buying process for retail customers, shop owners
+                and wholesale partners.
+              </p>
+            </div>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {tradeFlow.map((item, index) => (
+                <div
+                  key={item}
+                  className="flex items-start gap-3 rounded-lg border border-primary-100 bg-primary-50 p-4"
+                >
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-white text-xs font-extrabold text-primary-800 shadow-soft">
+                    {index + 1}
+                  </span>
+                  <span className="pt-1 text-sm font-bold leading-6 text-ink">
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div className="lg:col-span-5">
-      <div className="h-full overflow-hidden rounded-2xl border border-primary-100 shadow-md">
-        <img
-          src={siteConfig.ownerPhoto}
-          alt={`${siteConfig.ceo} - Founder of ${siteConfig.name}`}
-          className="h-full w-full object-cover"
-        />
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* Business info */}
       <section className="section-y bg-white">

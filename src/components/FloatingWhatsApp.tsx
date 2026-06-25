@@ -22,7 +22,7 @@ export default function FloatingWhatsApp() {
   if (pathname.startsWith("/admin")) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 flex items-end gap-3">
+    <div className="fixed bottom-[calc(env(safe-area-inset-bottom)+1rem)] right-4 z-40 flex items-end gap-3 sm:bottom-6 sm:right-6">
       {/* Popup card */}
       <AnimatePresence>
         {tooltipOpen && (
@@ -106,13 +106,13 @@ export default function FloatingWhatsApp() {
         aria-label="Chat on WhatsApp"
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
-        className="relative grid h-16 w-16 place-items-center rounded-full bg-[#25D366] shadow-[0_8px_32px_-4px_rgba(37,211,102,0.55)] transition"
+        className="relative grid h-[52px] w-[52px] place-items-center rounded-full bg-[#25D366] shadow-[0_8px_32px_-4px_rgba(37,211,102,0.55)] transition sm:h-16 sm:w-16"
         onClick={() => setTooltipOpen((v) => !v)}
       >
         {/* Ripple rings */}
         <span className="absolute inset-0 rounded-full bg-[#25D366] opacity-40 animate-ping [animation-duration:1.4s]" />
         <span className="absolute -inset-2 rounded-full border-2 border-[#25D366] opacity-20 animate-ping [animation-duration:1.9s]" />
-        <FaWhatsapp className="relative h-8 w-8 text-white" />
+        <FaWhatsapp className="relative h-6 w-6 text-white sm:h-8 sm:w-8" />
       </motion.a>
     </div>
   );

@@ -27,18 +27,25 @@ import {
 import { siteConfig } from "@/data/site";
 import { api, type CategoryApi } from "@/lib/api";
 
+const logoSrc =
+  siteConfig.logo ||
+  "https://res.cloudinary.com/ddpfxvydm/image/upload/v1782198017/101b65a0-c9c8-4cb8-bf78-4470b446f7e7_kpcr9z.png";
+
+const whatsappHref = `https://wa.me/${siteConfig.whatsapp.replace(/\D/g, "")}`;
+
 const companyLinks = [
   ["Our Store", "/about"],
-  ["All Cloths", "/products"],
+  ["All Products", "/products"],
   ["Categories", "/categories"],
   ["Reviews", "/testimonials"],
+  ["Blog", "/blog"],
   ["Contact", "/contact"],
 ] as const;
 
 const buyerCards = [
   {
-    title: "Retail Cloths",
-    text: "Daily wear, family shopping and festival cloth selections.",
+    title: "Retail Textiles",
+    text: "Daily wear, family shopping and festival textile selections.",
     href: "/products",
     Icon: FaStore,
     external: false,
@@ -46,8 +53,8 @@ const buyerCards = [
   },
   {
     title: "Wholesale Supply",
-    text: "Bulk cloth orders for shops, resellers and traders.",
-    href: siteConfig.socials.whatsapp,
+    text: "Bulk textile orders for shops, resellers and traders.",
+    href: whatsappHref,
     Icon: FaBoxes,
     external: true,
     iconBg: "bg-secondary",
@@ -83,7 +90,7 @@ const socials = [
     shadow: "shadow-[0_8px_24px_-8px_rgba(255,0,0,0.65)]",
   },
   {
-    href: siteConfig.socials.whatsapp,
+    href: whatsappHref,
     Icon: FaWhatsapp,
     label: "WhatsApp",
     bg: "bg-[#25D366]",
@@ -171,33 +178,33 @@ export default function Footer() {
           <div>
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-secondary shadow-[0_0_20px_-6px_rgba(212,175,55,0.5)]">
               <FaTags className="h-2.5 w-2.5" />
-              Retail &amp; wholesale cloth store
+              Retail &amp; wholesale textile store
             </div>
             <h2 className="max-w-2xl text-3xl font-extrabold leading-tight tracking-tight text-white md:text-[2rem]">
-              Need cloths for your home,{" "}
+              Need textiles for your home,{" "}
               <span className="bg-gradient-to-r from-secondary-light to-secondary bg-clip-text text-transparent">
-                shop, or bulk resale?
+                shop or bulk resale?
               </span>
             </h2>
             <p className="mt-4 max-w-xl text-sm leading-7 text-white/55">
               Share your requirement on WhatsApp for petticoats, lungis, towels,
-              gamcha, bed sheets, dhotis and handloom cloths.
+              gamcha, bed sheets, dhotis and handloom textiles.
             </p>
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
             <a
-              href={siteConfig.socials.whatsapp}
+              href={whatsappHref}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] px-7 py-3.5 text-sm font-black text-white shadow-[0_16px_40px_-16px_rgba(37,211,102,0.75)] transition hover:-translate-y-0.5 hover:bg-[#1ebe5d] active:scale-95"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#25D366] px-7 py-3.5 text-sm font-black text-white shadow-[0_16px_40px_-16px_rgba(37,211,102,0.75)] transition hover:-translate-y-0.5 hover:bg-[#1ebe5d] active:scale-95"
             >
               <FaWhatsapp className="h-4 w-4" />
               Ask on WhatsApp
             </a>
             <a
               href={`tel:${siteConfig.phone.replace(/\s+/g, "")}`}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-secondary/25 bg-secondary/8 px-7 py-3.5 text-sm font-bold text-white/85 transition hover:-translate-y-0.5 hover:border-secondary/50 hover:bg-secondary/15 active:scale-95"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-secondary/25 bg-secondary/8 px-7 py-3.5 text-sm font-bold text-white/85 transition hover:-translate-y-0.5 hover:border-secondary/50 hover:bg-secondary/15 active:scale-95"
             >
               <FaPhoneAlt className="h-4 w-4" />
               Call store
@@ -211,79 +218,75 @@ export default function Footer() {
         <div className="container-x grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-12">
 
           {/* Brand */}
-         <div className="lg:col-span-4">
-  <Link href="/" className="group flex shrink-0 items-center gap-3 mr-3">
-<span
-  className="
-    relative grid h-16 w-16 shrink-0 place-items-center
-    overflow-hidden rounded-full bg-white
-    ring-2 ring-red-100
-    shadow-[0_4px_18px_rgba(220,38,38,0.18)]
-    transition-all duration-300
-    group-hover:bg-red-500
-    group-hover:shadow-[0_6px_24px_rgba(220,38,38,0.35)]
-  "
->
-  <img
-    src="https://res.cloudinary.com/ddpfxvydm/image/upload/v1782198017/101b65a0-c9c8-4cb8-bf78-4470b446f7e7_kpcr9z.png"
-    alt={siteConfig.name}
-    className="
-      h-full w-full
-      scale-[1.28]
-      object-contain
-    "
-  />
-</span>
+          <div className="lg:col-span-4">
+            <Link href="/" className="group mr-3 flex shrink-0 items-center gap-3">
+              <span
+                className="
+                  relative grid h-16 w-16 shrink-0 place-items-center
+                  overflow-hidden rounded-xl bg-white
+                  ring-1 ring-white/20
+                  shadow-[0_4px_18px_rgba(220,38,38,0.18)]
+                  transition-all duration-300
+                  group-hover:ring-secondary/40
+                  group-hover:shadow-[0_6px_24px_rgba(220,38,38,0.28)]
+                "
+              >
+                <img
+                  src={logoSrc}
+                  alt={siteConfig.name}
+                  className="h-full w-full scale-[1.22] object-contain"
+                />
+              </span>
 
-    <span>
-      <span className="block text-xl font-extrabold tracking-tight text-white transition group-hover:text-secondary-light">
-        {siteConfig.name}
-      </span>
-      <span className="mt-0.5 block text-[10px] font-bold uppercase tracking-widest text-secondary/70">
-        Retail · Wholesale · Cloths
-      </span>
-    </span>
-  </Link>
+              <span>
+                <span className="block text-xl font-extrabold tracking-tight text-white transition group-hover:text-secondary-light">
+                  {siteConfig.name}
+                </span>
+                <span className="mt-0.5 block text-[10px] font-bold uppercase tracking-widest text-secondary/70">
+                  Retail | Wholesale | Textiles
+                </span>
+              </span>
+            </Link>
 
-  <p className="mt-5 text-sm leading-7 text-white/55">
-    {siteConfig.description}
-  </p>
+            <p className="mt-5 text-sm leading-7 text-white/55">
+              {siteConfig.description}
+            </p>
 
-  <div className="mt-6 flex flex-col gap-2">
-    {servicePoints.map(({ label, Icon }) => (
-      <div
-        key={label}
-        className="group flex items-center gap-3 rounded-xl border border-white/[0.07] bg-primary-900/40 px-4 py-2.5 text-sm font-semibold text-white/70 transition hover:border-secondary/25 hover:bg-primary-800/40 hover:text-secondary-light"
-      >
-        <span className="shrink-0 text-secondary transition group-hover:scale-110">
-          <Icon className="h-3.5 w-3.5" />
-        </span>
-        {label}
-      </div>
-    ))}
-  </div>
+            <div className="mt-6 flex flex-col gap-2">
+              {servicePoints.map(({ label, Icon }) => (
+                <div
+                  key={label}
+                  className="group flex items-center gap-3 rounded-lg border border-white/[0.07] bg-primary-900/40 px-4 py-2.5 text-sm font-semibold text-white/70 transition hover:border-secondary/25 hover:bg-primary-800/40 hover:text-secondary-light"
+                >
+                  <span className="shrink-0 text-secondary transition group-hover:scale-110">
+                    <Icon className="h-3.5 w-3.5" />
+                  </span>
+                  {label}
+                </div>
+              ))}
+            </div>
 
-  <div className="mt-7">
-    <div className="mb-3 text-[10px] font-bold uppercase tracking-widest text-white/35">
-      Follow us
-    </div>
+            <div className="mt-7">
+              <div className="mb-3 text-[10px] font-bold uppercase tracking-widest text-white/35">
+                Follow us
+              </div>
 
-    <div className="flex items-center gap-2.5">
-      {socials.map(({ href, Icon, label, bg, shadow }) => (
-        <a
-          key={label}
-          href={href}
-          target="_blank"
-          rel="noreferrer"
-          aria-label={label}
-          className={`grid h-11 w-11 place-items-center rounded-xl text-white transition hover:-translate-y-1 hover:scale-105 active:scale-95 ${bg} ${shadow}`}
-        >
-          <Icon className="h-4 w-4" />
-        </a>
-      ))}
-    </div>
-  </div>
-</div>
+              <div className="flex items-center gap-2.5">
+                {socials.map(({ href, Icon, label, bg, shadow }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={label}
+                    className={`grid h-11 w-11 place-items-center rounded-lg text-white transition hover:-translate-y-1 hover:scale-105 active:scale-95 ${bg} ${shadow}`}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
 
           {/* Buyer cards */}
           <div className="lg:col-span-3">
@@ -291,11 +294,11 @@ export default function Footer() {
             <div className="grid gap-3">
               {buyerCards.map(({ title, text, href, Icon, external, iconBg }) => {
                 const cls =
-                  "group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-primary-900/50 p-5 transition hover:-translate-y-1 hover:border-secondary/30 hover:bg-primary-800/50 hover:shadow-[0_20px_50px_-20px_rgba(212,175,55,0.3)]";
+                  "group relative overflow-hidden rounded-lg border border-white/[0.07] bg-primary-900/50 p-5 transition hover:-translate-y-1 hover:border-secondary/30 hover:bg-primary-800/50 hover:shadow-[0_20px_50px_-20px_rgba(212,175,55,0.3)]";
                 const content = (
                   <>
                     <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-secondary/20 to-transparent" />
-                    <span className={`mb-4 grid h-11 w-11 place-items-center rounded-xl ${iconBg} text-white shadow-lg transition group-hover:scale-105`}>
+                    <span className={`mb-4 grid h-11 w-11 place-items-center rounded-lg ${iconBg} text-white shadow-lg transition group-hover:scale-105`}>
                       <Icon className="h-5 w-5" />
                     </span>
                     <span className="block text-sm font-extrabold text-white">{title}</span>
@@ -327,7 +330,7 @@ export default function Footer() {
                 <Link
                   key={c.id}
                   href={`/products?category=${c.slug}`}
-                  className="group flex items-center justify-between rounded-xl border border-white/[0.06] bg-primary-900/30 px-3.5 py-2.5 text-sm font-medium text-white/60 transition hover:border-secondary/30 hover:bg-secondary/10 hover:text-secondary-light"
+                  className="group flex items-center justify-between rounded-lg border border-white/[0.06] bg-primary-900/30 px-3.5 py-2.5 text-sm font-medium text-white/60 transition hover:border-secondary/30 hover:bg-secondary/10 hover:text-secondary-light"
                 >
                   <span className="flex items-center gap-2">
                     <FaGem className="h-2.5 w-2.5 text-secondary/50 transition group-hover:text-secondary" />
@@ -352,7 +355,7 @@ export default function Footer() {
               {contactItems.map(({ Icon, render }, i) => (
                 <div
                   key={i}
-                  className="flex items-start gap-3 rounded-xl border border-white/[0.06] bg-primary-900/30 px-4 py-3 transition hover:border-secondary/20 hover:bg-primary-800/40"
+                  className="flex items-start gap-3 rounded-lg border border-white/[0.06] bg-primary-900/30 px-4 py-3 transition hover:border-secondary/20 hover:bg-primary-800/40"
                 >
                   <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-secondary/15 text-secondary">
                     <Icon className="h-3.5 w-3.5" />
@@ -362,7 +365,7 @@ export default function Footer() {
               ))}
             </div>
 
-            <div className="mt-4 overflow-hidden rounded-2xl border border-white/[0.07] bg-primary-900/40">
+            <div className="mt-4 overflow-hidden rounded-lg border border-white/[0.07] bg-primary-900/40">
               <div className="border-b border-white/[0.07] px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-secondary/70">
                 Quick Links
               </div>
@@ -390,9 +393,9 @@ export default function Footer() {
           {bizFacts.map(({ label, value, Icon }) => (
             <div
               key={label}
-              className="group flex items-center gap-4 rounded-2xl border border-white/[0.07] bg-primary-900/40 px-5 py-4 transition hover:border-secondary/25 hover:bg-primary-800/50"
+              className="group flex items-center gap-4 rounded-lg border border-white/[0.07] bg-primary-900/40 px-5 py-4 transition hover:border-secondary/25 hover:bg-primary-800/50"
             >
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-secondary/15 text-secondary transition group-hover:scale-110 group-hover:bg-secondary/25">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-secondary/15 text-secondary transition group-hover:scale-110 group-hover:bg-secondary/25">
                 <Icon className="h-4 w-4" />
               </span>
               <div>
@@ -414,11 +417,24 @@ export default function Footer() {
             All rights reserved.
           </span>
           <span className="flex items-center gap-1.5">
-            <FaGem className="h-2.5 w-2.5 text-secondary/60" />
-            Retail &amp; wholesale cloths from{" "}
-            <span className="font-semibold text-white/70">
-              {siteConfig.address.city}, {siteConfig.address.state}
-            </span>
+            Designed by{" "}
+            <a
+              href="https://www.mecatronix.one"
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-secondary-light transition hover:text-secondary"
+            >
+              Mecatronix
+            </a>
+            <span className="text-white/25">|</span>
+            <a
+              href="https://www.mecatronix.one"
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-white/70 transition hover:text-secondary-light"
+            >
+              www.mecatronix.one
+            </a>
           </span>
         </div>
       </div>
