@@ -207,8 +207,8 @@ export default async function HomePage() {
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               {[
-                "Petticoats & Lungis",
-                "Towels, Gamcha & Dhotis",
+                "Inskirt, Nighty, Lungi",
+                "Dhotis & Towels",
                 `GST registered since ${siteConfig.gstSince}`,
                 "Pan-India despatch",
               ].map((item) => (

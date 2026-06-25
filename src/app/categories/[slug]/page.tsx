@@ -140,39 +140,60 @@ export default async function CategoryDetail({
 
           {/* Subcategory filter tabs */}
           {subcategories.length > 0 && (
-            <div className="mb-8 flex flex-wrap gap-2">
+            <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               <Link
                 href={`/categories/${slug}`}
-                className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-bold transition ${
+                className={`group flex min-h-[92px] items-center gap-3 overflow-hidden rounded-lg border p-3 text-sm font-bold transition ${
                   !activeSub
                     ? "border-primary-900 bg-primary-900 text-white shadow-soft"
                     : "border-primary-200 bg-white text-primary-800 hover:border-primary-900 hover:text-primary-900"
                 }`}
               >
-                All
+                <span className="h-16 w-16 shrink-0 overflow-hidden rounded-md bg-primary-50">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={cat.image}
+                    alt=""
+                    className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                  />
+                </span>
+                <span className="min-w-0">
+                  <span className="block truncate">All {cat.name}</span>
+                  <span className="mt-1 block text-xs font-semibold opacity-75">
+                    {allProducts.filter((p) => p.category === slug).length} products
+                  </span>
+                </span>
               </Link>
               {subcategories.map((s) => (
                 <Link
                   key={s.id}
                   href={`/categories/${slug}?sub=${s.slug}`}
-                  className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-bold transition ${
+                  className={`group flex min-h-[92px] items-center gap-3 overflow-hidden rounded-lg border p-3 text-sm font-bold transition ${
                     activeSub?.slug === s.slug
                       ? "border-secondary bg-secondary text-white shadow-soft"
                       : "border-primary-200 bg-white text-primary-800 hover:border-secondary hover:text-secondary"
                   }`}
                 >
-                  {s.name}
-                  {s.productCount > 0 && (
-                    <span
-                      className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
-                        activeSub?.slug === s.slug
-                          ? "bg-white/20 text-white"
-                          : "bg-primary-100 text-primary-700"
-                      }`}
-                    >
-                      {s.productCount}
+                  <span className="h-16 w-16 shrink-0 overflow-hidden rounded-md bg-primary-50">
+                    {s.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={s.image}
+                        alt=""
+                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                      />
+                    ) : (
+                      <span className="grid h-full w-full place-items-center text-xs font-black uppercase tracking-widest text-primary-300">
+                        {s.name.slice(0, 2)}
+                      </span>
+                    )}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block truncate">{s.name}</span>
+                    <span className="mt-1 block text-xs font-semibold opacity-75">
+                      {s.productCount} {s.productCount === 1 ? "product" : "products"}
                     </span>
-                  )}
+                  </span>
                 </Link>
               ))}
             </div>

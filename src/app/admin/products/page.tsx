@@ -668,6 +668,25 @@ export default function AdminProductsPage() {
                 min={0}
               />
             </Field>
+            <Field label="Offer Price" hint="Set 0 for price on request">
+              <Input
+                type="number"
+                value={form.offerPrice}
+                onChange={(e) => setForm({ ...form, offerPrice: Number(e.target.value) })}
+                min={0}
+              />
+            </Field>
+            <Field label="Original Price">
+              <Input
+                type="number"
+                value={form.originalPrice}
+                onChange={(e) => setForm({ ...form, originalPrice: Number(e.target.value) })}
+                min={0}
+              />
+            </Field>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-4">
             <Field label="Bulk Bundle Qty" hint="Pieces per bundle">
               <Input
                 type="number"
