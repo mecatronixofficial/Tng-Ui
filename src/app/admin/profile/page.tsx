@@ -191,12 +191,12 @@ export default function AdminProfilePage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="w-full space-y-4 sm:space-y-6">
       <AdminCard className="overflow-hidden">
-        <div className="grid gap-0 2xl:grid-cols-[1.1fr_0.9fr]">
-          <div className="bg-primary-900 p-6 text-white md:p-8">
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-              <div className="grid h-20 w-20 shrink-0 place-items-center rounded-lg bg-white text-3xl font-extrabold text-primary-900 shadow-soft">
+        <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="bg-primary-900 p-4 text-white sm:p-6 md:p-8">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
+              <div className="grid h-16 w-16 shrink-0 place-items-center rounded-lg bg-white text-2xl font-extrabold text-primary-900 shadow-soft sm:h-20 sm:w-20 sm:text-3xl">
                 {initials(user.name)}
               </div>
               <div className="min-w-0">
@@ -204,7 +204,7 @@ export default function AdminProfilePage() {
                   <FaUserShield className="h-3 w-3 text-secondary" />
                   Admin profile
                 </div>
-                <h2 className="display break-words text-3xl font-bold text-white md:text-4xl">
+                <h2 className="display break-words text-2xl font-bold text-white sm:text-3xl md:text-4xl">
                   {user.name}
                 </h2>
                 <div className="mt-3 flex min-w-0 flex-wrap gap-2 text-xs font-bold">
@@ -221,7 +221,7 @@ export default function AdminProfilePage() {
             </div>
           </div>
 
-          <div className="grid content-center gap-4 bg-white p-6 md:p-8">
+          <div className="grid content-center gap-4 bg-white p-4 sm:p-6 md:p-8">
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-lg border border-primary-100 bg-primary-50 p-4">
                 <div className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest-x text-primary-800">
@@ -244,11 +244,11 @@ export default function AdminProfilePage() {
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <AdminButton type="button" variant="outline" onClick={handleRefresh}>
+              <AdminButton type="button" variant="outline" onClick={handleRefresh} className="flex-1 sm:flex-none">
                 <FaSyncAlt className="h-3.5 w-3.5" />
                 Refresh
               </AdminButton>
-              <AdminButton type="button" variant="ghost" onClick={logout}>
+              <AdminButton type="button" variant="ghost" onClick={logout} className="flex-1 sm:flex-none">
                 <FaSignOutAlt className="h-3.5 w-3.5" />
                 Sign out
               </AdminButton>
@@ -257,12 +257,12 @@ export default function AdminProfilePage() {
         </div>
       </AdminCard>
 
-      <div className="grid min-w-0 gap-6 2xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="min-w-0 space-y-6">
-          <AdminCard className="p-6 md:p-7">
+      <div className="grid min-w-0 gap-4 sm:gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="min-w-0 space-y-4 sm:space-y-6">
+          <AdminCard className="p-4 sm:p-6 md:p-7">
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex items-start gap-3">
-                <div className="grid h-11 w-11 place-items-center rounded-lg bg-primary-100 text-primary-800">
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-primary-100 text-primary-800">
                   <FaUser className="h-4 w-4" />
                 </div>
                 <div>
@@ -283,7 +283,7 @@ export default function AdminProfilePage() {
             </div>
 
             <form onSubmit={handleSaveInfo} className="space-y-5">
-              <div className="grid gap-4 lg:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Full Name" required>
                   <Input
                     value={info.name}
@@ -313,10 +313,11 @@ export default function AdminProfilePage() {
                     variant="ghost"
                     disabled={!infoChanged || savingInfo}
                     onClick={() => setInfo({ name: user.name, email: user.email })}
+                    className="flex-1 sm:flex-none"
                   >
                     Reset
                   </AdminButton>
-                  <AdminButton type="submit" loading={savingInfo} disabled={!infoChanged}>
+                  <AdminButton type="submit" loading={savingInfo} disabled={!infoChanged} className="flex-1 sm:flex-none">
                     Save changes
                   </AdminButton>
                 </div>
@@ -324,10 +325,10 @@ export default function AdminProfilePage() {
             </form>
           </AdminCard>
 
-          <AdminCard className="p-6 md:p-7">
+          <AdminCard className="p-4 sm:p-6 md:p-7">
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex items-start gap-3">
-                <div className="grid h-11 w-11 place-items-center rounded-lg bg-primary-100 text-primary-800">
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-primary-100 text-primary-800">
                   <FaLock className="h-4 w-4" />
                 </div>
                 <div>
@@ -343,6 +344,7 @@ export default function AdminProfilePage() {
                 type="button"
                 variant="outline"
                 onClick={() => setShowPasswords((value) => !value)}
+                className="w-fit"
               >
                 {showPasswords ? <FaEyeSlash className="h-3.5 w-3.5" /> : <FaEye className="h-3.5 w-3.5" />}
                 {showPasswords ? "Hide" : "Show"}
@@ -350,7 +352,7 @@ export default function AdminProfilePage() {
             </div>
 
             <form onSubmit={handleSavePwd} className="space-y-5">
-              <div className="grid gap-4 xl:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <Field label="Current Password" required>
                   <Input
                     type={showPasswords ? "text" : "password"}
@@ -392,7 +394,7 @@ export default function AdminProfilePage() {
                 <div className="h-2 overflow-hidden rounded-full bg-white">
                   <div className={cn("h-full rounded-full transition-all", passwordStrength.bar)} />
                 </div>
-                <div className="mt-4 grid gap-2 lg:grid-cols-2">
+                <div className="mt-4 grid gap-2 sm:grid-cols-2">
                   {PASSWORD_RULES.map((rule) => {
                     const passed = rule.test(pwd.newPassword);
                     return (
@@ -403,7 +405,7 @@ export default function AdminProfilePage() {
                           passed ? "text-emerald-700" : "text-ink-muted",
                         )}
                       >
-                        <FaCheckCircle className={cn("h-3.5 w-3.5", passed ? "text-emerald-600" : "text-primary-200")} />
+                        <FaCheckCircle className={cn("h-3.5 w-3.5 shrink-0", passed ? "text-emerald-600" : "text-primary-200")} />
                         {rule.label}
                       </div>
                     );
@@ -415,7 +417,7 @@ export default function AdminProfilePage() {
                 <p className="text-xs font-semibold leading-5 text-ink-muted">
                   You will stay signed in after a successful password update.
                 </p>
-                <AdminButton type="submit" loading={savingPwd}>
+                <AdminButton type="submit" loading={savingPwd} className="sm:w-fit">
                   Change password
                 </AdminButton>
               </div>
@@ -423,10 +425,10 @@ export default function AdminProfilePage() {
           </AdminCard>
         </div>
 
-        <aside className="min-w-0 space-y-6">
-          <AdminCard className="p-6">
+        <aside className="min-w-0 space-y-4 sm:space-y-6">
+          <AdminCard className="p-4 sm:p-6">
             <div className="mb-5 flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-lg bg-primary-100 text-primary-800">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-primary-100 text-primary-800">
                 <FaAt className="h-4 w-4" />
               </div>
               <div>
@@ -436,7 +438,7 @@ export default function AdminProfilePage() {
                 </p>
               </div>
             </div>
-            <div className="space-y-3">
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
               {[
                 { label: "User ID", value: user.id, Icon: FaKey },
                 { label: "Name", value: user.name, Icon: FaUser },
@@ -456,9 +458,9 @@ export default function AdminProfilePage() {
             </div>
           </AdminCard>
 
-          <AdminCard className="p-6">
+          <AdminCard className="p-4 sm:p-6">
             <div className="mb-5 flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-lg bg-emerald-50 text-emerald-700">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-emerald-50 text-emerald-700">
                 <FaShieldAlt className="h-4 w-4" />
               </div>
               <div>
