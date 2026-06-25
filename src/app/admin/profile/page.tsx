@@ -193,7 +193,7 @@ export default function AdminProfilePage() {
   return (
     <div className="space-y-6">
       <AdminCard className="overflow-hidden">
-        <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="grid gap-0 2xl:grid-cols-[1.1fr_0.9fr]">
           <div className="bg-primary-900 p-6 text-white md:p-8">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
               <div className="grid h-20 w-20 shrink-0 place-items-center rounded-lg bg-white text-3xl font-extrabold text-primary-900 shadow-soft">
@@ -204,16 +204,16 @@ export default function AdminProfilePage() {
                   <FaUserShield className="h-3 w-3 text-secondary" />
                   Admin profile
                 </div>
-                <h2 className="display truncate text-3xl font-bold text-white md:text-4xl">
+                <h2 className="display break-words text-3xl font-bold text-white md:text-4xl">
                   {user.name}
                 </h2>
-                <div className="mt-3 flex flex-wrap gap-2 text-xs font-bold">
-                  <span className="inline-flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2 text-cream-100">
-                    <FaEnvelope className="h-3 w-3 text-secondary" />
-                    {user.email}
+                <div className="mt-3 flex min-w-0 flex-wrap gap-2 text-xs font-bold">
+                  <span className="inline-flex min-w-0 max-w-full items-center gap-2 rounded-lg bg-white/10 px-3 py-2 text-cream-100">
+                    <FaEnvelope className="h-3 w-3 shrink-0 text-secondary" />
+                    <span className="min-w-0 break-all">{user.email}</span>
                   </span>
-                  <span className="inline-flex items-center gap-2 rounded-lg bg-secondary px-3 py-2 text-white">
-                    <FaIdBadge className="h-3 w-3" />
+                  <span className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-secondary px-3 py-2 text-white">
+                    <FaIdBadge className="h-3 w-3 shrink-0" />
                     {roleLabel(user.role)}
                   </span>
                 </div>
@@ -257,8 +257,8 @@ export default function AdminProfilePage() {
         </div>
       </AdminCard>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="space-y-6">
+      <div className="grid min-w-0 gap-6 2xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="min-w-0 space-y-6">
           <AdminCard className="p-6 md:p-7">
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex items-start gap-3">
@@ -283,7 +283,7 @@ export default function AdminProfilePage() {
             </div>
 
             <form onSubmit={handleSaveInfo} className="space-y-5">
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 lg:grid-cols-2">
                 <Field label="Full Name" required>
                   <Input
                     value={info.name}
@@ -307,7 +307,7 @@ export default function AdminProfilePage() {
                 <p className="text-xs font-semibold leading-5 text-ink-muted">
                   Email changes may affect future password reset requests.
                 </p>
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3">
                   <AdminButton
                     type="button"
                     variant="ghost"
@@ -350,7 +350,7 @@ export default function AdminProfilePage() {
             </div>
 
             <form onSubmit={handleSavePwd} className="space-y-5">
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 xl:grid-cols-3">
                 <Field label="Current Password" required>
                   <Input
                     type={showPasswords ? "text" : "password"}
@@ -392,7 +392,7 @@ export default function AdminProfilePage() {
                 <div className="h-2 overflow-hidden rounded-full bg-white">
                   <div className={cn("h-full rounded-full transition-all", passwordStrength.bar)} />
                 </div>
-                <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                <div className="mt-4 grid gap-2 lg:grid-cols-2">
                   {PASSWORD_RULES.map((rule) => {
                     const passed = rule.test(pwd.newPassword);
                     return (
@@ -423,7 +423,7 @@ export default function AdminProfilePage() {
           </AdminCard>
         </div>
 
-        <aside className="space-y-6">
+        <aside className="min-w-0 space-y-6">
           <AdminCard className="p-6">
             <div className="mb-5 flex items-center gap-3">
               <div className="grid h-10 w-10 place-items-center rounded-lg bg-primary-100 text-primary-800">
