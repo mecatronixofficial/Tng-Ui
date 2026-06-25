@@ -448,19 +448,6 @@
   outline: 2px solid #ffedd5;
 }
 
-.admin-section-profile > div:first-child {
-  max-width: 62rem;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1.25rem;
-}
-
-@media (min-width: 1024px) {
-  .admin-section-profile > div:first-child {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
 .admin-section-profile .admin-card {
   border-radius: 0.25rem !important;
   border-top: 5px solid #475569 !important;
