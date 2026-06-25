@@ -58,7 +58,7 @@ export default function ProductsPage() {
         setProducts(r.data);
         setLoading(false);
       })
-      .catch(() => setLoading(true));
+      .catch(() => setLoading(false));
     api.publicCategories().then(setCategories).catch(() => {});
     api.publicSubcategories().then(setSubcategories).catch(() => {});
   }, []);

@@ -223,7 +223,7 @@ export default function Footer() {
               <span
                 className="
                   relative grid h-16 w-16 shrink-0 place-items-center
-                  overflow-hidden rounded-xl bg-white
+                  overflow-hidden rounded-xl bg-white group-hover:bg-primary-800
                   ring-1 ring-white/20
                   shadow-[0_4px_18px_rgba(220,38,38,0.18)]
                   transition-all duration-300

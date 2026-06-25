@@ -11,16 +11,16 @@ type Step = "login" | "forgot" | "otp" | "reset" | "done";
 
 function BrandLogo({ className, dark }: { className?: string; dark?: boolean }) {
   return (
-    <Link href="/" className={`flex items-center gap-4 group ${className ?? ""}`}>
+    <Link href="/" className={`group flex min-w-0 items-center gap-3 sm:gap-4 ${className ?? ""}`}>
       {siteConfig.logo ? (
-        <img src={siteConfig.logo} alt={siteConfig.name} className="h-11 w-11 object-cover" />
+        <img src={siteConfig.logo} alt={siteConfig.name} className="h-10 w-10 shrink-0 object-cover sm:h-11 sm:w-11" />
       ) : (
-        <div className="grid h-12 w-12 place-items-center rounded-full bg-secondary text-primary-950 font-display text-2xl font-bold uppercase">
+        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-secondary font-display text-xl font-bold uppercase text-primary-950 sm:h-12 sm:w-12 sm:text-2xl">
           {siteConfig?.name?.charAt(0) || "T"}
         </div>
       )}
-      <div className="leading-tight">
-        <div className={`display text-xl font-semibold tracking-tight ${dark ? "text-cream-50" : "text-primary-900"}`}>
+      <div className="min-w-0 leading-tight">
+        <div className={`display truncate text-lg font-semibold tracking-tight sm:text-xl ${dark ? "text-cream-50" : "text-primary-900"}`}>
           {siteConfig.name}
         </div>
         <div className={`text-[10px] uppercase tracking-widest-x font-semibold ${dark ? "text-cream-100/60" : "text-secondary-dark"}`}>
@@ -190,7 +190,7 @@ export default function AdminLoginPage() {
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="admin-login min-h-screen grid lg:grid-cols-5 bg-cream-50">
+    <div className="admin-login grid min-h-svh bg-cream-50 lg:grid-cols-5">
       {/* Visual side */}
       <div className="hidden lg:flex lg:col-span-2 relative bg-primary-950 text-cream-50 overflow-hidden">
         <div className="absolute inset-0 bg-weave-dark opacity-50" />
@@ -215,17 +215,17 @@ export default function AdminLoginPage() {
       </div>
 
       {/* Form side */}
-      <div className="lg:col-span-3 flex items-center justify-center p-6 lg:p-12">
-        <div className="w-full max-w-md">
-          <BrandLogo className="lg:hidden mb-8" />
+      <div className="flex min-h-svh items-center justify-center px-4 py-6 sm:px-6 lg:col-span-3 lg:p-12">
+        <div className="w-full max-w-md rounded-xl border border-cream-200 bg-white/95 p-5 shadow-soft sm:p-8 lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
+          <BrandLogo className="mb-6 lg:hidden" />
 
           {/* ── STEP: login ── */}
           {step === "login" && (
             <>
-              <h1 className="display text-4xl font-semibold text-primary-950">Sign in</h1>
-              <p className="text-ink-soft mt-2">Enter your admin credentials to continue.</p>
+              <h1 className="display text-3xl font-semibold text-primary-950 sm:text-4xl">Sign in</h1>
+              <p className="mt-2 text-sm leading-6 text-ink-soft sm:text-base">Enter your admin credentials to continue.</p>
 
-              <form onSubmit={handleLogin} className="mt-10 space-y-5">
+              <form onSubmit={handleLogin} className="mt-7 space-y-5 sm:mt-10">
                 <div>
                   <label className="block text-[11px] uppercase tracking-widest-x text-secondary-dark font-semibold mb-2">Email</label>
                   <div className="relative">
@@ -236,7 +236,7 @@ export default function AdminLoginPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="admin@example.in"
-                      className="w-full rounded-lg border border-cream-300 bg-white pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-primary-700 focus:ring-2 focus:ring-primary-700/10"
+                      className="w-full rounded-lg border border-cream-300 bg-white py-3 pl-11 pr-4 text-base focus:border-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-700/10 sm:text-sm"
                       autoFocus
                     />
                   </div>
@@ -253,7 +253,7 @@ export default function AdminLoginPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full rounded-lg border border-cream-300 bg-white pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-primary-700 focus:ring-2 focus:ring-primary-700/10"
+                      className="w-full rounded-lg border border-cream-300 bg-white py-3 pl-11 pr-4 text-base focus:border-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-700/10 sm:text-sm"
                     />
                   </div>
                 </div>
@@ -279,12 +279,12 @@ export default function AdminLoginPage() {
           {step === "forgot" && (
             <>
               <BackButton />
-              <h1 className="display text-4xl font-semibold text-primary-950 mt-4">Forgot password</h1>
-              <p className="text-ink-soft mt-2">
+              <h1 className="display mt-4 text-3xl font-semibold text-primary-950 sm:text-4xl">Forgot password</h1>
+              <p className="mt-2 text-sm leading-6 text-ink-soft sm:text-base">
                 Enter your admin email and we'll send a one-time code to reset your password.
               </p>
 
-              <form onSubmit={handleForgot} className="mt-10 space-y-5">
+              <form onSubmit={handleForgot} className="mt-7 space-y-5 sm:mt-10">
                 <div>
                   <label className="block text-[11px] uppercase tracking-widest-x text-secondary-dark font-semibold mb-2">Email</label>
                   <div className="relative">
@@ -295,7 +295,7 @@ export default function AdminLoginPage() {
                       value={fpEmail}
                       onChange={(e) => setFpEmail(e.target.value)}
                       placeholder="admin@example.in"
-                      className="w-full rounded-lg border border-cream-300 bg-white pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-primary-700 focus:ring-2 focus:ring-primary-700/10"
+                      className="w-full rounded-lg border border-cream-300 bg-white py-3 pl-11 pr-4 text-base focus:border-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-700/10 sm:text-sm"
                       autoFocus
                     />
                   </div>
@@ -311,15 +311,15 @@ export default function AdminLoginPage() {
           {step === "otp" && (
             <>
               <BackButton />
-              <h1 className="display text-4xl font-semibold text-primary-950 mt-4">Enter OTP</h1>
-              <p className="text-ink-soft mt-2">
-                A 6-digit code was sent to <span className="font-medium text-primary-800">{fpEmail}</span>. Enter it below.
+              <h1 className="display mt-4 text-3xl font-semibold text-primary-950 sm:text-4xl">Enter OTP</h1>
+              <p className="mt-2 text-sm leading-6 text-ink-soft sm:text-base">
+                A 6-digit code was sent to <span className="break-all font-medium text-primary-800">{fpEmail}</span>. Enter it below.
               </p>
 
-              <form onSubmit={handleVerifyOtp} className="mt-10 space-y-6">
+              <form onSubmit={handleVerifyOtp} className="mt-7 space-y-6 sm:mt-10">
                 <div>
                   <label className="block text-[11px] uppercase tracking-widest-x text-secondary-dark font-semibold mb-4">One-time code</label>
-                  <div className="flex gap-3 justify-between">
+                  <div className="grid grid-cols-6 gap-2 sm:gap-3">
                     {otp.map((digit, i) => (
                       <input
                         key={i}
@@ -334,7 +334,7 @@ export default function AdminLoginPage() {
                         title={`OTP digit ${i + 1}`}
                         aria-label={`OTP digit ${i + 1}`}
                         placeholder="·"
-                        className="w-full aspect-square text-center text-lg font-semibold rounded-lg border border-cream-300 bg-white focus:outline-none focus:border-primary-700 focus:ring-2 focus:ring-primary-700/10 caret-primary-700"
+                        className="aspect-square min-w-0 rounded-lg border border-cream-300 bg-white text-center text-lg font-semibold caret-primary-700 focus:border-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-700/10"
                         autoFocus={i === 0}
                       />
                     ))}
@@ -362,10 +362,10 @@ export default function AdminLoginPage() {
           {step === "reset" && (
             <>
               <BackButton />
-              <h1 className="display text-4xl font-semibold text-primary-950 mt-4">New password</h1>
-              <p className="text-ink-soft mt-2">Choose a strong password for your admin account.</p>
+              <h1 className="display mt-4 text-3xl font-semibold text-primary-950 sm:text-4xl">New password</h1>
+              <p className="mt-2 text-sm leading-6 text-ink-soft sm:text-base">Choose a strong password for your admin account.</p>
 
-              <form onSubmit={handleReset} className="mt-10 space-y-5">
+              <form onSubmit={handleReset} className="mt-7 space-y-5 sm:mt-10">
                 <div>
                   <label className="block text-[11px] uppercase tracking-widest-x text-secondary-dark font-semibold mb-2">New password</label>
                   <div className="relative">
@@ -377,7 +377,7 @@ export default function AdminLoginPage() {
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="Min. 8 characters"
-                      className="w-full rounded-lg border border-cream-300 bg-white pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-primary-700 focus:ring-2 focus:ring-primary-700/10"
+                      className="w-full rounded-lg border border-cream-300 bg-white py-3 pl-11 pr-4 text-base focus:border-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-700/10 sm:text-sm"
                       autoFocus
                     />
                   </div>
@@ -394,7 +394,7 @@ export default function AdminLoginPage() {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Repeat your password"
-                      className="w-full rounded-lg border border-cream-300 bg-white pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-primary-700 focus:ring-2 focus:ring-primary-700/10"
+                      className="w-full rounded-lg border border-cream-300 bg-white py-3 pl-11 pr-4 text-base focus:border-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-700/10 sm:text-sm"
                     />
                   </div>
                 </div>
@@ -411,8 +411,8 @@ export default function AdminLoginPage() {
               <div className="flex justify-center">
                 <FaCheckCircle className="h-14 w-14 text-green-500" />
               </div>
-              <h1 className="display text-3xl font-semibold text-primary-950">Password updated</h1>
-              <p className="text-ink-soft">{success}</p>
+              <h1 className="display text-2xl font-semibold text-primary-950 sm:text-3xl">Password updated</h1>
+              <p className="text-sm leading-6 text-ink-soft sm:text-base">{success}</p>
               <button
                 type="button"
                 onClick={() => { setStep("login"); setError(""); setSuccess(""); }}
