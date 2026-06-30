@@ -15,7 +15,6 @@ import {
   FaUpload,
 } from "react-icons/fa";
 import { api } from "@/lib/api";
-import { uploadToCloudinary } from "@/lib/cloudinary";
 import { cn } from "@/utils";
 
 /* -------------------------------- Button -------------------------------- */
@@ -328,8 +327,8 @@ export function ImageUploader({
     try {
       const uploaded: string[] = [];
       for (const file of Array.from(files)) {
-        const res = await uploadToCloudinary(file);
-        uploaded.push(res.secure_url);
+        const res = await api.uploadImage(file);
+        uploaded.push(res.url);
       }
       if (multiple) onChange([...value, ...uploaded]);
       else onChange([uploaded[0]]);
