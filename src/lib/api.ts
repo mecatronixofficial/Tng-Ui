@@ -1,7 +1,40 @@
 "use client";
 
-const BASE = process.env.NEXT_PUBLIC_API_URL || "/api/v1";
+import { uploadToCloudinary } from "@/lib/cloudinary";
+
+const CONFIGURED_BASE = process.env.NEXT_PUBLIC_API_URL || "/api/v1";
 const TOKEN_KEY = "tt-admin-token";
+
+function isLocalHost(hostname: string) {
+  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
+}
+
+function getBaseUrl() {
+  if (typeof window === "undefined") return CONFIGURED_BASE;
+
+  try {
+    const configured = new URL(CONFIGURED_BASE, window.location.origin);
+
+    if (
+      configured.origin !== window.location.origin &&
+      isLocalHost(configured.hostname) &&
+      !isLocalHost(window.location.hostname)
+    ) {
+      return configured.pathname.replace(/\/$/, "");
+    }
+  } catch {
+    // Relative API bases like "/api/v1" are already safe for shared devices.
+  }
+
+  return CONFIGURED_BASE.replace(/\/$/, "");
+}
+
+function canUploadDirectlyToCloudinary() {
+  return Boolean(
+    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME &&
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
+  );
+}
 
 export class ApiError extends Error {
   constructor(public status: number, message: string, public payload?: unknown) {
@@ -38,17 +71,26 @@ async function request<T = any>(path: string, opts: RequestOpts = {}): Promise<T
     if (token) headers.Authorization = `Bearer ${token}`;
   }
 
-  const res = await fetch(`${BASE}${path}`, {
-    method,
-    headers,
-    body:
-      body === undefined
-        ? undefined
-        : multipart
-        ? (body as BodyInit)
-        : JSON.stringify(body),
-    cache: "no-store",
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${getBaseUrl()}${path}`, {
+      method,
+      headers,
+      body:
+        body === undefined
+          ? undefined
+          : multipart
+          ? (body as BodyInit)
+          : JSON.stringify(body),
+      cache: "no-store",
+    });
+  } catch (error) {
+    throw new Error(
+      error instanceof TypeError
+        ? "Cannot reach the backend. Check that the backend server is running and that this device can access the site host."
+        : "Request failed before the server responded.",
+    );
+  }
 
   let payload: any = null;
   const text = await res.text();
@@ -259,11 +301,33 @@ export const api = {
   uploadImage: async (file: File): Promise<UploadedImage> => {
     const form = new FormData();
     form.append("file", file);
-    return request<UploadedImage>("/admin/uploads/image", {
-      method: "POST",
-      body: form,
-      multipart: true,
-    });
+    try {
+      return await request<UploadedImage>("/admin/uploads/image", {
+        method: "POST",
+        body: form,
+        multipart: true,
+      });
+    } catch (error) {
+      const shouldFallback =
+        !(error instanceof ApiError) ||
+        error.status === 404 ||
+        error.status === 413 ||
+        error.status >= 500;
+
+      if (!shouldFallback || !canUploadDirectlyToCloudinary()) {
+        throw error;
+      }
+
+      const uploaded = await uploadToCloudinary(file);
+      return {
+        url: uploaded.secure_url,
+        publicId: uploaded.public_id,
+        width: uploaded.width,
+        height: uploaded.height,
+        format: uploaded.format,
+        bytes: uploaded.bytes,
+      };
+    }
   },
 };
 
