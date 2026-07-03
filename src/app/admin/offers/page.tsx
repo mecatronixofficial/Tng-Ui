@@ -6,20 +6,20 @@ import { FaPlus, FaEdit, FaTrash, FaSpinner, FaTag, FaEyeSlash } from "react-ico
 
 import { api, OfferApi } from "@/lib/api";
 import {
-  AdminButton, AdminCard, EmptyState, Field, Input, Modal,
+  AdminButton, AdminCard, EmptyState, Field, ImageUploader, Input, Modal,
   TextArea, Toggle, toast, useConfirm,
 } from "@/components/admin/AdminUI";
 import { cn } from "@/utils";
 
 interface FormState {
   title: string; description: string; code: string;
-  discountPercent: number; expiresAt: string;
+  discountPercent: number; expiresAt: string; image: string;
   ctaLabel: string; ctaHref: string; order: number; active: boolean;
 }
 
 const emptyForm: FormState = {
   title: "", description: "", code: "",
-  discountPercent: 0, expiresAt: "",
+  discountPercent: 0, expiresAt: "", image: "",
   ctaLabel: "", ctaHref: "", order: 0, active: true,
 };
 
@@ -55,7 +55,7 @@ export default function AdminOffersPage() {
     setEditing(o);
     setForm({
       title: o.title, description: o.description, code: o.code || "",
-      discountPercent: o.discountPercent,
+      discountPercent: o.discountPercent, image: o.image || "",
       expiresAt: new Date(o.expiresAt).toISOString().slice(0, 10),
       ctaLabel: o.ctaLabel || "", ctaHref: o.ctaHref || "",
       order: o.order, active: o.active,
@@ -78,6 +78,7 @@ export default function AdminOffersPage() {
         active: form.active,
       };
       if (form.code) body.code = form.code;
+      if (form.image) body.image = form.image;
       if (form.ctaLabel) body.ctaLabel = form.ctaLabel;
       if (form.ctaHref) body.ctaHref = form.ctaHref;
 
@@ -169,6 +170,12 @@ export default function AdminOffersPage() {
 
       <Modal open={open} onClose={() => setOpen(false)} title={editing ? "Edit Offer" : "Add Offer"}>
         <div className="space-y-5">
+          <ImageUploader
+            value={form.image ? [form.image] : []}
+            onChange={(urls) => setForm({ ...form, image: urls[0] || "" })}
+            label="Offer Image"
+          />
+
           <Field label="Title" required>
             <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
           </Field>

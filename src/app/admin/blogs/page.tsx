@@ -13,13 +13,13 @@ import { cn } from "@/utils";
 
 interface FormState {
   title: string; slug: string; excerpt: string; content: string;
-  coverImage: string; author: string; category: string; tags: string;
+  coverImage: string; author: string; authorImage: string; category: string; tags: string;
   readTime: number; featured: boolean; published: boolean;
 }
 
 const emptyForm: FormState = {
   title: "", slug: "", excerpt: "", content: "",
-  coverImage: "", author: "", category: "", tags: "",
+  coverImage: "", author: "", authorImage: "", category: "", tags: "",
   readTime: 5, featured: false, published: true,
 };
 
@@ -55,7 +55,7 @@ export default function AdminBlogsPage() {
     setEditing(b);
     setForm({
       title: b.title, slug: b.slug, excerpt: b.excerpt, content: b.content,
-      coverImage: b.coverImage, author: b.author, category: b.category,
+      coverImage: b.coverImage, author: b.author, authorImage: b.authorImage || "", category: b.category,
       tags: b.tags.join(", "), readTime: b.readTime,
       featured: b.featured, published: b.published,
     });
@@ -76,6 +76,7 @@ export default function AdminBlogsPage() {
         content: form.content,
         coverImage: form.coverImage,
         author: form.author,
+        authorImage: form.authorImage || undefined,
         category: form.category,
         tags: form.tags.split(",").map((s) => s.trim()).filter(Boolean),
         readTime: Number(form.readTime),
@@ -184,6 +185,12 @@ export default function AdminBlogsPage() {
             value={form.coverImage ? [form.coverImage] : []}
             onChange={(urls) => setForm({ ...form, coverImage: urls[0] || "" })}
             label="Cover Image"
+          />
+
+          <ImageUploader
+            value={form.authorImage ? [form.authorImage] : []}
+            onChange={(urls) => setForm({ ...form, authorImage: urls[0] || "" })}
+            label="Author Image"
           />
 
           <Field label="Title" required>
