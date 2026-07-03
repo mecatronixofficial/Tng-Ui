@@ -7,6 +7,10 @@ const nextConfig = {
   reactStrictMode: true,
   experimental: {
     devtoolSegmentExplorer: false,
+    middlewareClientMaxBodySize: "25mb",
+    serverActions: {
+      bodySizeLimit: "25mb",
+    },
   },
 
   images: {
