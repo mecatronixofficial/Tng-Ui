@@ -298,6 +298,42 @@ export const api = {
     request<{ deleted: boolean }>(`/admin/orders/${id}`, { method: "DELETE" }),
 
   // --- Admin: uploads
+  uploadImages: async (files: File[]): Promise<UploadedImage[]> => {
+    if (files.length === 0) return [];
+
+    const form = new FormData();
+    files.forEach((file) => form.append("files", file));
+
+    try {
+      return await request<UploadedImage[]>("/admin/uploads/images", {
+        method: "POST",
+        body: form,
+        multipart: true,
+      });
+    } catch (error) {
+      const shouldFallback =
+        !(error instanceof ApiError) ||
+        error.status === 400 ||
+        error.status === 404 ||
+        error.status === 413 ||
+        error.status >= 500;
+
+      if (!shouldFallback || !canUploadDirectlyToCloudinary()) {
+        throw error;
+      }
+
+      const uploaded = await Promise.all(files.map((file) => uploadToCloudinary(file)));
+      return uploaded.map((item) => ({
+        url: item.secure_url,
+        publicId: item.public_id,
+        width: item.width,
+        height: item.height,
+        format: item.format,
+        bytes: item.bytes,
+      }));
+    }
+  },
+
   uploadImage: async (file: File): Promise<UploadedImage> => {
     const form = new FormData();
     form.append("file", file);

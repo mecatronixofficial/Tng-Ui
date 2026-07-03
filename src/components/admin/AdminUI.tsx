@@ -325,11 +325,11 @@ export function ImageUploader({
     if (!files || files.length === 0) return;
     setUploading(true);
     try {
-      const uploaded: string[] = [];
-      for (const file of Array.from(files)) {
-        const res = await api.uploadImage(file);
-        uploaded.push(res.url);
-      }
+      const selectedFiles = Array.from(files);
+      const results = multiple
+        ? await api.uploadImages(selectedFiles)
+        : [await api.uploadImage(selectedFiles[0])];
+      const uploaded = results.map((res) => res.url);
       if (multiple) onChange([...value, ...uploaded]);
       else onChange([uploaded[0]]);
       toast(`${uploaded.length} image${uploaded.length > 1 ? "s" : ""} uploaded`);

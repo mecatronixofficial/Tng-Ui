@@ -5,20 +5,20 @@ import { FaPlus, FaEdit, FaTrash, FaSpinner, FaStar, FaCheckCircle, FaTimesCircl
 
 import { api, TestimonialApi } from "@/lib/api";
 import {
-  AdminButton, AdminCard, EmptyState, Field, Input, Modal,
+  AdminButton, AdminCard, EmptyState, Field, ImageUploader, Input, Modal,
   Select, TextArea, Toggle, toast, useConfirm,
 } from "@/components/admin/AdminUI";
 import { cn } from "@/utils";
 
 interface FormState {
   name: string; role: string; company: string; location: string;
-  rating: number; review: string; productPurchased: string;
+  rating: number; review: string; image: string; productPurchased: string;
   approved: boolean; featured: boolean; order: number;
 }
 
 const emptyForm: FormState = {
   name: "", role: "", company: "", location: "",
-  rating: 5, review: "", productPurchased: "",
+  rating: 5, review: "", image: "", productPurchased: "",
   approved: true, featured: false, order: 0,
 };
 
@@ -55,6 +55,7 @@ export default function AdminTestimonialsPage() {
     setForm({
       name: t.name, role: t.role, company: t.company || "",
       location: t.location, rating: t.rating, review: t.review,
+      image: t.image || "",
       productPurchased: t.productPurchased || "",
       approved: t.approved, featured: t.featured, order: t.order,
     });
@@ -79,6 +80,7 @@ export default function AdminTestimonialsPage() {
         order: Number(form.order),
       };
       if (form.company) body.company = form.company;
+      if (form.image) body.image = form.image;
       if (form.productPurchased) body.productPurchased = form.productPurchased;
 
       if (editing) {
@@ -195,6 +197,12 @@ export default function AdminTestimonialsPage() {
 
       <Modal open={open} onClose={() => setOpen(false)} title={editing ? "Edit Review" : "Add Review"}>
         <div className="space-y-5">
+          <ImageUploader
+            value={form.image ? [form.image] : []}
+            onChange={(urls) => setForm({ ...form, image: urls[0] || "" })}
+            label="Customer Image"
+          />
+
           <div className="grid sm:grid-cols-2 gap-4">
             <Field label="Customer Name" required>
               <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
