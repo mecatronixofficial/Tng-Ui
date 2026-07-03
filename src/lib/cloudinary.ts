@@ -37,7 +37,16 @@ export async function uploadToCloudinary(
   );
 
   if (!res.ok) {
-    throw new Error(`Cloudinary upload failed: ${res.statusText}`);
+    let message = res.statusText || "Upload failed";
+
+    try {
+      const payload = await res.json();
+      message = payload?.error?.message || payload?.message || message;
+    } catch {
+      // Keep the HTTP status text if Cloudinary did not send JSON.
+    }
+
+    throw new Error(`Cloudinary upload failed: ${message}`);
   }
 
   return (await res.json()) as CloudinaryUploadResult;

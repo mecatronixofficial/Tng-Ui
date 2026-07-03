@@ -310,6 +310,7 @@ export const api = {
     } catch (error) {
       const shouldFallback =
         !(error instanceof ApiError) ||
+        error.status === 400 ||
         error.status === 404 ||
         error.status === 413 ||
         error.status >= 500;
