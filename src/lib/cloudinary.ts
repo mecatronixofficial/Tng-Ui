@@ -15,6 +15,102 @@ export interface CloudinaryUploadResult {
   bytes: number;
 }
 
+const IMAGE_TYPES_TO_OPTIMIZE = new Set(["image/jpeg", "image/png", "image/webp"]);
+const DEFAULT_MAX_IMAGE_SIDE = 2200;
+const DEFAULT_IMAGE_QUALITY = 0.82;
+const OPTIMIZE_AFTER_BYTES = 1.5 * 1024 * 1024;
+
+function extensionFromType(type: string) {
+  if (type === "image/png") return "png";
+  if (type === "image/webp") return "webp";
+  return "jpg";
+}
+
+function renameImage(file: File, type: string) {
+  const ext = extensionFromType(type);
+  const name = file.name.replace(/\.[^.]+$/, "");
+  return `${name || "image"}.${ext}`;
+}
+
+async function loadBitmap(file: File): Promise<ImageBitmap> {
+  return createImageBitmap(file, { imageOrientation: "from-image" });
+}
+
+async function canvasToBlob(
+  canvas: HTMLCanvasElement,
+  type: string,
+  quality: number,
+): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => {
+        if (blob) resolve(blob);
+        else reject(new Error("Could not prepare this image for upload."));
+      },
+      type,
+      quality,
+    );
+  });
+}
+
+export async function optimizeImageForUpload(
+  file: File,
+  options: { maxSide?: number; quality?: number } = {},
+): Promise<File> {
+  if (!IMAGE_TYPES_TO_OPTIMIZE.has(file.type)) return file;
+  if (typeof window === "undefined") return file;
+
+  const maxSide = options.maxSide ?? DEFAULT_MAX_IMAGE_SIDE;
+  const quality = options.quality ?? DEFAULT_IMAGE_QUALITY;
+
+  let bitmap: ImageBitmap;
+  try {
+    bitmap = await loadBitmap(file);
+  } catch {
+    return file;
+  }
+
+  const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
+  const width = Math.max(1, Math.round(bitmap.width * scale));
+  const height = Math.max(1, Math.round(bitmap.height * scale));
+  const shouldOptimize = scale < 1 || file.size > OPTIMIZE_AFTER_BYTES;
+
+  if (!shouldOptimize) {
+    bitmap.close();
+    return file;
+  }
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d", { alpha: true });
+
+  if (!ctx) {
+    bitmap.close();
+    return file;
+  }
+
+  ctx.drawImage(bitmap, 0, 0, width, height);
+  bitmap.close();
+
+  let outputType = "image/webp";
+  let blob: Blob;
+
+  try {
+    blob = await canvasToBlob(canvas, outputType, quality);
+  } catch {
+    outputType = "image/jpeg";
+    blob = await canvasToBlob(canvas, outputType, quality);
+  }
+
+  if (blob.size >= file.size) return file;
+
+  return new File([blob], renameImage(file, outputType), {
+    type: outputType,
+    lastModified: Date.now(),
+  });
+}
+
 export async function uploadToCloudinary(
   file: File
 ): Promise<CloudinaryUploadResult> {
