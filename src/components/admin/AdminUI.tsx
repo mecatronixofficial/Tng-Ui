@@ -308,6 +308,13 @@ export function ToastHost() {
 
 /* ----------------------------- Image uploader --------------------------- */
 
+const MAX_UPLOAD_FILE_SIZE = 60 * 1024 * 1024;
+
+function formatBytes(bytes: number) {
+  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))}KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(bytes >= 10 * 1024 * 1024 ? 0 : 1)}MB`;
+}
+
 export function ImageUploader({
   value,
   onChange,
@@ -320,23 +327,48 @@ export function ImageUploader({
   label?: string;
 }) {
   const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState({ done: 0, total: 0 });
+  const [inputKey, setInputKey] = useState(0);
 
   async function handleFiles(files: FileList | null) {
     if (!files || files.length === 0) return;
+    const selectedFiles = Array.from(files);
+    const invalidFile = selectedFiles.find((file) => !file.type.startsWith("image/"));
+    const oversizedFile = selectedFiles.find((file) => file.size > MAX_UPLOAD_FILE_SIZE);
+
+    if (invalidFile) {
+      toast(`${invalidFile.name} is not an image file.`, "error");
+      setInputKey((key) => key + 1);
+      return;
+    }
+
+    if (oversizedFile) {
+      toast(
+        `${oversizedFile.name} is ${formatBytes(oversizedFile.size)}. Please choose an image under ${formatBytes(MAX_UPLOAD_FILE_SIZE)}.`,
+        "error",
+      );
+      setInputKey((key) => key + 1);
+      return;
+    }
+
     setUploading(true);
+    setProgress({ done: 0, total: selectedFiles.length });
     try {
-      const selectedFiles = Array.from(files);
       const results = multiple
-        ? await api.uploadImages(selectedFiles)
+        ? await api.uploadImages(selectedFiles, {
+            onProgress: (done, total) => setProgress({ done, total }),
+          })
         : [await api.uploadImage(selectedFiles[0])];
       const uploaded = results.map((res) => res.url);
       if (multiple) onChange([...value, ...uploaded]);
       else onChange([uploaded[0]]);
+      setProgress({ done: uploaded.length, total: selectedFiles.length });
       toast(`${uploaded.length} image${uploaded.length > 1 ? "s" : ""} uploaded`);
     } catch (e) {
       toast((e as Error).message || "Upload failed", "error");
     } finally {
       setUploading(false);
+      setInputKey((key) => key + 1);
     }
   }
 
@@ -380,7 +412,12 @@ export function ImageUploader({
           {uploading ? (
             <>
               <FaSpinner className="h-6 w-6 text-secondary animate-spin mx-auto" />
-              <p className="text-sm text-ink-soft mt-2">Uploading…</p>
+              <p className="text-sm text-ink-soft mt-2">
+                {progress.total > 1
+                  ? `Uploading ${progress.done} of ${progress.total} images...`
+                  : "Preparing and uploading image..."}
+              </p>
+              <p className="text-xs text-ink-muted mt-1">Large photos are resized automatically.</p>
             </>
           ) : (
             <>
@@ -388,11 +425,14 @@ export function ImageUploader({
               <p className="text-sm font-semibold text-ink-soft mt-2">
                 {multiple ? "Click to select images" : "Click to upload"}
               </p>
-              <p className="text-xs text-ink-muted mt-1">Cloth photos: JPG, PNG, WebP up to 10MB</p>
+              <p className="text-xs text-ink-muted mt-1">
+                JPG, PNG, WebP up to {formatBytes(MAX_UPLOAD_FILE_SIZE)}. Large photos upload optimized.
+              </p>
             </>
           )}
         </div>
         <input
+          key={inputKey}
           type="file"
           accept="image/*"
           multiple={multiple}

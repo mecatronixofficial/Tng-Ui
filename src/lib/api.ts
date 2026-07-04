@@ -1,6 +1,6 @@
 "use client";
 
-import { uploadToCloudinary } from "@/lib/cloudinary";
+import { optimizeImageForUpload, uploadToCloudinary } from "@/lib/cloudinary";
 
 const CONFIGURED_BASE = process.env.NEXT_PUBLIC_API_URL || "/api/v1";
 const TOKEN_KEY = "tt-admin-token";
@@ -34,6 +34,84 @@ function canUploadDirectlyToCloudinary() {
     process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME &&
       process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
   );
+}
+
+function isUploadFallbackError(error: unknown) {
+  return (
+    !(error instanceof ApiError) ||
+    error.status === 400 ||
+    error.status === 404 ||
+    error.status === 413 ||
+    error.status >= 500
+  );
+}
+
+function toUploadedImage(item: Awaited<ReturnType<typeof uploadToCloudinary>>): UploadedImage {
+  return {
+    url: item.secure_url,
+    publicId: item.public_id,
+    width: item.width,
+    height: item.height,
+    format: item.format,
+    bytes: item.bytes,
+  };
+}
+
+async function uploadToBackend(file: File) {
+  const form = new FormData();
+  form.append("file", file);
+
+  return request<UploadedImage>("/admin/uploads/image", {
+    method: "POST",
+    body: form,
+    multipart: true,
+  });
+}
+
+async function uploadPreparedImage(file: File): Promise<UploadedImage> {
+  if (canUploadDirectlyToCloudinary()) {
+    try {
+      return toUploadedImage(await uploadToCloudinary(file));
+    } catch (cloudinaryError) {
+      try {
+        return await uploadToBackend(file);
+      } catch (backendError) {
+        if (isUploadFallbackError(backendError)) throw cloudinaryError;
+        throw backendError;
+      }
+    }
+  }
+
+  try {
+    return await uploadToBackend(file);
+  } catch (error) {
+    if (!isUploadFallbackError(error) || !canUploadDirectlyToCloudinary()) {
+      throw error;
+    }
+
+    return toUploadedImage(await uploadToCloudinary(file));
+  }
+}
+
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  limit: number,
+  mapper: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+  const results: R[] = new Array(items.length);
+  let nextIndex = 0;
+
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, async () => {
+      while (nextIndex < items.length) {
+        const currentIndex = nextIndex;
+        nextIndex += 1;
+        results[currentIndex] = await mapper(items[currentIndex], currentIndex);
+      }
+    }),
+  );
+
+  return results;
 }
 
 export class ApiError extends Error {
@@ -298,73 +376,28 @@ export const api = {
     request<{ deleted: boolean }>(`/admin/orders/${id}`, { method: "DELETE" }),
 
   // --- Admin: uploads
-  uploadImages: async (files: File[]): Promise<UploadedImage[]> => {
+  uploadImages: async (
+    files: File[],
+    options: { onProgress?: (done: number, total: number) => void } = {},
+  ): Promise<UploadedImage[]> => {
     if (files.length === 0) return [];
 
-    const form = new FormData();
-    files.forEach((file) => form.append("files", file));
+    let done = 0;
+    const optimizedFiles = await mapWithConcurrency(files, 2, (file) =>
+      optimizeImageForUpload(file),
+    );
 
-    try {
-      return await request<UploadedImage[]>("/admin/uploads/images", {
-        method: "POST",
-        body: form,
-        multipart: true,
-      });
-    } catch (error) {
-      const shouldFallback =
-        !(error instanceof ApiError) ||
-        error.status === 400 ||
-        error.status === 404 ||
-        error.status === 413 ||
-        error.status >= 500;
-
-      if (!shouldFallback || !canUploadDirectlyToCloudinary()) {
-        throw error;
-      }
-
-      const uploaded = await Promise.all(files.map((file) => uploadToCloudinary(file)));
-      return uploaded.map((item) => ({
-        url: item.secure_url,
-        publicId: item.public_id,
-        width: item.width,
-        height: item.height,
-        format: item.format,
-        bytes: item.bytes,
-      }));
-    }
+    return mapWithConcurrency(optimizedFiles, 3, async (file) => {
+      const uploaded = await uploadPreparedImage(file);
+      done += 1;
+      options.onProgress?.(done, files.length);
+      return uploaded;
+    });
   },
 
   uploadImage: async (file: File): Promise<UploadedImage> => {
-    const form = new FormData();
-    form.append("file", file);
-    try {
-      return await request<UploadedImage>("/admin/uploads/image", {
-        method: "POST",
-        body: form,
-        multipart: true,
-      });
-    } catch (error) {
-      const shouldFallback =
-        !(error instanceof ApiError) ||
-        error.status === 400 ||
-        error.status === 404 ||
-        error.status === 413 ||
-        error.status >= 500;
-
-      if (!shouldFallback || !canUploadDirectlyToCloudinary()) {
-        throw error;
-      }
-
-      const uploaded = await uploadToCloudinary(file);
-      return {
-        url: uploaded.secure_url,
-        publicId: uploaded.public_id,
-        width: uploaded.width,
-        height: uploaded.height,
-        format: uploaded.format,
-        bytes: uploaded.bytes,
-      };
-    }
+    const optimizedFile = await optimizeImageForUpload(file);
+    return uploadPreparedImage(optimizedFile);
   },
 };
 
