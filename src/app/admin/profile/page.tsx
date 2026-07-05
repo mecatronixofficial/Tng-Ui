@@ -178,6 +178,7 @@ export default function AdminProfilePage() {
       );
       toast("Account details refreshed");
     } catch (err) {
+      console.log(err);
       toast((err as Error).message, "error");
     }
   }
