@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FaBoxes,
@@ -309,6 +309,7 @@ export function ToastHost() {
 /* ----------------------------- Image uploader --------------------------- */
 
 const MAX_UPLOAD_FILE_SIZE = 60 * 1024 * 1024;
+const MAX_UPLOAD_FILES = 200;
 
 function formatBytes(bytes: number) {
   if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))}KB`;
@@ -329,12 +330,26 @@ export function ImageUploader({
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState({ done: 0, total: 0 });
   const [inputKey, setInputKey] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const folderInputRef = useRef<HTMLInputElement | null>(null);
 
   async function handleFiles(files: FileList | null) {
     if (!files || files.length === 0) return;
-    const selectedFiles = Array.from(files);
+    const selectedFiles = Array.from(files).filter((file) => file.size > 0);
     const invalidFile = selectedFiles.find((file) => !file.type.startsWith("image/"));
     const oversizedFile = selectedFiles.find((file) => file.size > MAX_UPLOAD_FILE_SIZE);
+
+    if (selectedFiles.length === 0) {
+      toast("No image files found to upload.", "error");
+      setInputKey((key) => key + 1);
+      return;
+    }
+
+    if (selectedFiles.length > MAX_UPLOAD_FILES) {
+      toast(`Please upload ${MAX_UPLOAD_FILES} images or fewer at once.`, "error");
+      setInputKey((key) => key + 1);
+      return;
+    }
 
     if (invalidFile) {
       toast(`${invalidFile.name} is not an image file.`, "error");
@@ -402,8 +417,19 @@ export function ImageUploader({
         </div>
       )}
 
-      <label className="block">
+      <div className="block">
         <div
+          role="button"
+          tabIndex={uploading ? -1 : 0}
+          onClick={() => {
+            if (!uploading) fileInputRef.current?.click();
+          }}
+          onKeyDown={(event) => {
+            if (!uploading && (event.key === "Enter" || event.key === " ")) {
+              event.preventDefault();
+              fileInputRef.current?.click();
+            }
+          }}
           className={cn(
             "admin-uploader border-2 border-dashed border-primary-200 rounded-lg p-6 text-center cursor-pointer hover:border-secondary hover:bg-primary-50 transition",
             uploading && "opacity-60 pointer-events-none",
@@ -417,29 +443,68 @@ export function ImageUploader({
                   ? `Uploading ${progress.done} of ${progress.total} images...`
                   : "Preparing and uploading image..."}
               </p>
-              <p className="text-xs text-ink-muted mt-1">Large photos are resized automatically.</p>
+              <p className="text-xs text-ink-muted mt-1">Large photos and folders are resized automatically.</p>
             </>
           ) : (
             <>
               <FaUpload className="h-6 w-6 text-primary-800 mx-auto" />
               <p className="text-sm font-semibold text-ink-soft mt-2">
-                {multiple ? "Click to select images" : "Click to upload"}
+                {multiple ? "Select image files or a folder" : "Click to upload"}
               </p>
               <p className="text-xs text-ink-muted mt-1">
-                JPG, PNG, WebP up to {formatBytes(MAX_UPLOAD_FILE_SIZE)}. Large photos upload optimized.
+                JPG, PNG, WebP up to {formatBytes(MAX_UPLOAD_FILE_SIZE)} each. Up to {MAX_UPLOAD_FILES} images at once.
               </p>
+              <div className="mt-4 flex flex-wrap justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    fileInputRef.current?.click();
+                  }}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary-200 bg-white px-4 py-2 text-xs font-bold text-primary-800 transition hover:border-secondary hover:text-secondary"
+                >
+                  <FaUpload className="h-3 w-3" />
+                  {multiple ? "Choose files" : "Choose file"}
+                </button>
+                {multiple && (
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      folderInputRef.current?.click();
+                    }}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary-200 bg-white px-4 py-2 text-xs font-bold text-primary-800 transition hover:border-secondary hover:text-secondary"
+                  >
+                    <FaUpload className="h-3 w-3" />
+                    Choose folder
+                  </button>
+                )}
+              </div>
             </>
           )}
         </div>
         <input
           key={inputKey}
+          ref={fileInputRef}
           type="file"
           accept="image/*"
           multiple={multiple}
           onChange={(e) => handleFiles(e.target.files)}
           className="hidden"
         />
-      </label>
+        {multiple && (
+          <input
+            key={`folder-${inputKey}`}
+            ref={folderInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={(e) => handleFiles(e.target.files)}
+            className="hidden"
+            {...({ webkitdirectory: "", directory: "" } as Record<string, string>)}
+          />
+        )}
+      </div>
     </div>
   );
 }

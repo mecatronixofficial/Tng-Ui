@@ -20,7 +20,7 @@ import {
 import HeroSlider from "@/components/HeroSlider";
 import SectionTitle from "@/components/SectionTitle";
 import CategorySlider from "@/components/CategorySlider";
-import ProductCard from "@/components/ProductCard";
+import CollapsibleProductGrid from "@/components/CollapsibleProductGrid";
 import StatsCounter from "@/components/StatsCounter";
 import TestimonialSlider from "@/components/TestimonialSlider";
 import FAQAccordion from "@/components/FAQAccordion";
@@ -77,6 +77,17 @@ const tradeSteps = [
   "We prepare and despatch your order",
 ];
 
+function shuffleItems<T>(items: T[]): T[] {
+  const shuffled = [...items];
+
+  for (let i = shuffled.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled;
+}
+
 export default async function HomePage() {
   const [categories, products, blogPosts, testimonials, offers, faqs] =
     await Promise.all([
@@ -88,11 +99,20 @@ export default async function HomePage() {
       loadFaqs(),
     ]);
 
-  const featured = products.filter((p) => p.featured).slice(0, 8);
-  const newArrivals = products.filter((p) => p.newArrival).slice(0, 4);
-  const wholesaleReady = products
-    .filter((p) => p.stock >= 100 || p.featured)
-    .slice(0, 4);
+  const featured = shuffleItems(products.filter((p) => p.featured)).slice(0, 8);
+  const newArrivals = shuffleItems(products.filter((p) => p.newArrival)).slice(
+    0,
+    8,
+  );
+  const wholesaleReady = shuffleItems(
+    products.filter((p) => p.stock >= 100 || p.featured),
+  ).slice(0, 8);
+  const homeOfficeImages = [
+    siteConfig.office.workplace1,
+    siteConfig.office.workplace2,
+    siteConfig.office.workplace3,
+  ];
+  const introImage = homeOfficeImages[0];
 
   return (
     <>
@@ -191,7 +211,7 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_16%_20%,rgba(255,214,51,0.14),transparent_48%),radial-gradient(ellipse_80%_70%_at_84%_10%,rgba(66,133,252,0.22),transparent_52%)]" />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary/70 to-transparent" />
 
-        <div className="container-x relative gap-10 flex flex-col">
+        <div className="container-x relative grid gap-10 lg:grid-cols-12 lg:items-center">
           <div className="relative lg:col-span-5">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-4 py-2 text-[10px] font-black uppercase tracking-widest-x text-secondary-light shadow-[0_0_0_1px_rgba(255,255,255,0.04)]">
               <FaTags className="h-3 w-3" />
@@ -243,7 +263,22 @@ export default async function HomePage() {
 
           <div className="relative lg:col-span-7">
             <div className="absolute -inset-4 rounded-[2rem]" />
-            <div className="relative">
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] shadow-[0_24px_80px_-44px_rgba(0,0,0,0.85)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={introImage}
+                alt={`${siteConfig.name} textile products`}
+                className="h-[260px] w-full object-cover sm:h-[340px] lg:h-[420px]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-primary-950/80 via-primary-950/10 to-transparent" />
+              <div className="absolute bottom-5 left-5 right-5">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-primary-950/65 px-4 py-2 text-[10px] font-black uppercase tracking-widest-x text-white/85 backdrop-blur">
+                  <FaCheckCircle className="h-3 w-3 text-secondary-light" />
+                  Retail and wholesale cloth supply
+                </div>
+              </div>
+            </div>
+            <div className="relative mt-5">
               <StatsCounter items={stats} light />
             </div>
           </div>
@@ -287,6 +322,30 @@ export default async function HomePage() {
           <div className="rounded-2xl border border-primary-100 p-3 md:p-5">
             <CategorySlider categories={categories.slice(-5)} />
           </div>
+
+          <div className="mt-8 grid gap-6 overflow-hidden rounded-2xl border border-primary-100 bg-primary-950 p-4 text-white lg:grid-cols-12 lg:items-center lg:p-6">
+            <div className="overflow-hidden rounded-xl bg-primary-900 lg:col-span-5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={homeOfficeImages[1]}
+                alt={`${siteConfig.name} office and textile display`}
+                className="h-[220px] w-full object-cover sm:h-[280px] lg:h-[320px]"
+              />
+            </div>
+            <div className="lg:col-span-7 lg:pl-4">
+              <div className="mb-3 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest-x text-secondary-light">
+                <FaStore className="h-3 w-3" />
+                In-store selection
+              </div>
+              <h3 className="max-w-2xl text-2xl font-extrabold leading-tight text-white md:text-3xl">
+                Cloth ranges arranged for easy retail and wholesale buying.
+              </h3>
+              <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-white/65">
+                Visit, compare, confirm quantities and discuss repeat supply
+                directly with our team.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -307,11 +366,11 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 gap-5 md:gap-7 lg:grid-cols-4">
-            {wholesaleReady.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
+          <CollapsibleProductGrid
+            products={wholesaleReady}
+            showLabel="Show Wholesale Products"
+            hideLabel="Hide Wholesale Products"
+          />
         </div>
       </section>
 
@@ -340,13 +399,11 @@ export default async function HomePage() {
               Shop New Arrivals <FaArrowRight className="h-3 w-3" />
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-5 md:gap-7 lg:grid-cols-4">
-            {(newArrivals.length > 0 ? newArrivals : featured.slice(0, 4)).map(
-              (p) => (
-                <ProductCard key={p.id} product={p} />
-              ),
-            )}
-          </div>
+          <CollapsibleProductGrid
+            products={newArrivals.length > 0 ? newArrivals : featured}
+            showLabel="Show New Arrivals"
+            hideLabel="Hide New Arrivals"
+          />
         </div>
       </section>
 
@@ -424,12 +481,23 @@ export default async function HomePage() {
       {/* Manufacturing process */}
       <section className="section-y bg-white">
         <div className="container-x">
-          <SectionTitle
-            eyebrow="From yarn to packing"
-            title="How our cloth is prepared"
-            description="A practical textile process focused on repeatable quality for retail shelves and wholesale supply."
-            align="center"
-          />
+          <div className="mb-10 grid gap-8 lg:grid-cols-12 lg:items-end">
+            <div className="lg:col-span-7">
+              <SectionTitle
+                eyebrow="From yarn to packing"
+                title="How our cloth is prepared"
+                description="A practical textile process focused on repeatable quality for retail shelves and wholesale supply."
+              />
+            </div>
+            <div className="overflow-hidden rounded-2xl border border-primary-100 bg-primary-50 lg:col-span-5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={homeOfficeImages[2]}
+                alt={`${siteConfig.name} packing and despatch area`}
+                className="h-[220px] w-full object-cover md:h-[260px]"
+              />
+            </div>
+          </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
             {manufacturingProcess.map((p) => (
               <div

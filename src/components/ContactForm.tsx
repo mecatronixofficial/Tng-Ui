@@ -121,7 +121,7 @@ export default function ContactForm({ defaultProduct = "" }: Props) {
     state.email ? `Email: ${state.email}` : "",
     enquiryDetails,
     "",
-    "Please share availability and price details.",
+    "Please share availability details.",
   ]
     .filter(Boolean)
     .join("\n");

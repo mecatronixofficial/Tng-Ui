@@ -48,8 +48,6 @@ interface FormState {
   colors: string;       // comma-separated in form
   sizes: string;        // comma-separated in form
   stock: number;
-  offerPrice: number;
-  originalPrice: number;
   material: string;
   gsm: string;
   pattern: string;
@@ -71,7 +69,7 @@ const emptyForm: FormState = {
   name: "", slug: "", category: "", subcategory: "",
   images: [], description: "", clothType: "",
   colors: "", sizes: "",
-  stock: 0, offerPrice: 0, originalPrice: 0,
+  stock: 0,
   material: "", gsm: "", pattern: "", tags: "",
   washable: true, featured: false, newArrival: false, active: true,
   retailEnabled: true, wholesaleEnabled: true, bundleSize: 12,
@@ -82,7 +80,7 @@ const emptyForm: FormState = {
 const bulkTemplate = [
   [
     "name", "slug", "category", "subcategory", "images", "description",
-    "clothType", "colors", "sizes", "stock", "offerPrice", "originalPrice",
+    "clothType", "colors", "sizes", "stock",
     "material", "gsm", "pattern", "tags", "retailEnabled",
     "wholesaleEnabled", "bundleSize", "allowMixedColors", "allowMixedSizes",
     "featured", "newArrival", "active",
@@ -91,7 +89,7 @@ const bulkTemplate = [
     "Premium Cotton Petticoat", "premium-cotton-petticoat", "petticoats", "",
     "https://example.com/image-1.jpg | https://example.com/image-2.jpg",
     "Soft cotton petticoat for daily wear", "Cotton", "White | Maroon | Black",
-    "S | M | L | XL", "100", "199", "249", "100% Pure Cotton", "150 GSM",
+    "S | M | L | XL", "100", "100% Pure Cotton", "150 GSM",
     "Solid", "cotton | daily-wear", "true", "true", "12", "false", "false",
     "false", "true", "true",
   ],
@@ -172,7 +170,6 @@ function toNumber(value: string, fallback = 0) {
 function buildBulkProducts(csvText: string) {
   return parseCsv(csvText).map((row) => {
     const name = getCell(row, ["name", "product name", "product"]);
-    const offerPrice = toNumber(getCell(row, ["offerPrice", "offer price", "price", "sale price"]));
     return {
       name,
       slug: getCell(row, ["slug"]),
@@ -184,9 +181,6 @@ function buildBulkProducts(csvText: string) {
       colors: splitList(getCell(row, ["colors", "colour", "color"])),
       sizes: splitList(getCell(row, ["sizes", "size"])),
       stock: toNumber(getCell(row, ["stock", "qty", "quantity"])),
-      offerPrice,
-      originalPrice:
-        toNumber(getCell(row, ["originalPrice", "original price", "mrp"]), offerPrice) || offerPrice,
       material: getCell(row, ["material", "fabric"]) || "Cotton",
       gsm: getCell(row, ["gsm"]),
       pattern: getCell(row, ["pattern", "design"]),
@@ -274,8 +268,6 @@ export default function AdminProductsPage() {
       colors: p.colors.join(", "),
       sizes: p.sizes.join(", "),
       stock: p.stock,
-      offerPrice: p.offerPrice,
-      originalPrice: p.originalPrice,
       material: p.material,
       gsm: p.gsm || "",
       pattern: p.pattern || "",
@@ -327,8 +319,6 @@ export default function AdminProductsPage() {
         sizes: form.sizes.split(",").map((s) => s.trim()).filter(Boolean),
         tags: form.tags.split(",").map((s) => s.trim()).filter(Boolean),
         stock: Number(form.stock),
-        offerPrice: Number(form.offerPrice),
-        originalPrice: Number(form.originalPrice),
         material: form.material,
         gsm: form.gsm || undefined,
         pattern: form.pattern || undefined,
@@ -659,7 +649,7 @@ export default function AdminProductsPage() {
             </Field>
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 gap-4">
             <Field label="Stock">
               <Input
                 type="number"
@@ -668,25 +658,6 @@ export default function AdminProductsPage() {
                 min={0}
               />
             </Field>
-            <Field label="Offer Price" hint="Set 0 for price on request">
-              <Input
-                type="number"
-                value={form.offerPrice}
-                onChange={(e) => setForm({ ...form, offerPrice: Number(e.target.value) })}
-                min={0}
-              />
-            </Field>
-            <Field label="Original Price">
-              <Input
-                type="number"
-                value={form.originalPrice}
-                onChange={(e) => setForm({ ...form, originalPrice: Number(e.target.value) })}
-                min={0}
-              />
-            </Field>
-          </div>
-
-          <div className="grid sm:grid-cols-3 gap-4">
             <Field label="Bulk Bundle Qty" hint="Pieces per bundle">
               <Input
                 type="number"
@@ -818,7 +789,7 @@ export default function AdminProductsPage() {
             Upload products from a CSV file exported from Excel. Keep the first row as column
             names. Required columns: <strong>name</strong> and <strong>category</strong>.
             Recommended columns: images, description, clothType, colors, sizes, stock,
-            offerPrice, originalPrice and material.
+            material, gsm, pattern and tags.
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">

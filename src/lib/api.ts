@@ -383,12 +383,9 @@ export const api = {
     if (files.length === 0) return [];
 
     let done = 0;
-    const optimizedFiles = await mapWithConcurrency(files, 2, (file) =>
-      optimizeImageForUpload(file),
-    );
-
-    return mapWithConcurrency(optimizedFiles, 3, async (file) => {
-      const uploaded = await uploadPreparedImage(file);
+    return mapWithConcurrency(files, 3, async (file) => {
+      const optimizedFile = await optimizeImageForUpload(file);
+      const uploaded = await uploadPreparedImage(optimizedFile);
       done += 1;
       options.onProgress?.(done, files.length);
       return uploaded;
@@ -426,8 +423,6 @@ export interface ProductApi {
   colors: string[];
   sizes: string[];
   stock: number;
-  offerPrice: number;
-  originalPrice: number;
   material: string;
   gsm?: string;
   pattern?: string;

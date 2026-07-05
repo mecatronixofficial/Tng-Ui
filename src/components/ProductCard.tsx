@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -30,15 +30,24 @@ export default function ProductCard({ product }: { product: Product }) {
   }, [product.images]);
   const imageCount = galleryImages.length;
 
+  useEffect(() => {
+    setActiveImage(0);
+  }, [product.id, imageCount]);
+
+  useEffect(() => {
+    if (imageCount <= 1 || isHovered) return;
+
+    const timer = window.setInterval(() => {
+      setActiveImage((current) => (current + 1) % imageCount);
+    }, 2800);
+
+    return () => window.clearInterval(timer);
+  }, [imageCount, isHovered]);
+
   const whatsappUrl = buildWhatsAppOrderUrl({
     productName: product.name,
     productLink: `https://thangaveltextile.in/products/${product.slug}`,
   });
-
-  const discount =
-    product.originalPrice && product.offerPrice && product.originalPrice > product.offerPrice
-      ? Math.round(((product.originalPrice - product.offerPrice) / product.originalPrice) * 100)
-      : 0;
 
   return (
     <motion.article
@@ -48,7 +57,7 @@ export default function ProductCard({ product }: { product: Product }) {
       transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
       className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-[#faf8f5] shadow-[0_2px_12px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.14)]"
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => { setIsHovered(false); setActiveImage(0); }}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative aspect-square overflow-hidden bg-primary-100">
         <Link href={`/products/${product.slug}`} className="absolute inset-0 z-0" aria-label={product.name}>
@@ -76,11 +85,6 @@ export default function ProductCard({ product }: { product: Product }) {
           {product.newArrival && (
             <span className="bg-secondary px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest text-primary-950">
               New
-            </span>
-          )}
-          {discount >= 10 && (
-            <span className="bg-rose-500 px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest text-white">
-              −{discount}%
             </span>
           )}
           {product.stock === 0 && (
@@ -147,28 +151,6 @@ export default function ProductCard({ product }: { product: Product }) {
             {product.name}
           </h3>
         </Link>
-
-        <div className="mt-1.5 flex items-baseline gap-1.5">
-          {product.offerPrice ? (
-            <>
-              <span className="text-base font-black leading-none text-primary-900">
-                ₹{product.offerPrice.toLocaleString("en-IN")}
-              </span>
-              {product.originalPrice && product.originalPrice !== product.offerPrice && (
-                <span className="text-[10px] text-ink-muted line-through">
-                  ₹{product.originalPrice.toLocaleString("en-IN")}
-                </span>
-              )}
-              {discount >= 10 && (
-                <span className="rounded bg-rose-50 px-1 py-0.5 text-[9px] font-black text-rose-500">
-                  −{discount}%
-                </span>
-              )}
-            </>
-          ) : (
-            <span className="text-[10px] font-bold uppercase tracking-wide text-ink-muted">Price on request</span>
-          )}
-        </div>
 
         <div className="mt-2 flex items-center justify-between gap-2">
           {product.colors.length > 0 ? (
