@@ -60,13 +60,18 @@ const tradeFlow = [
 
 export default async function AboutPage() {
   const categories = await loadCategories();
+  const aboutOfficeImages = [
+    siteConfig.office.workplace4,
+    siteConfig.office.workplace5,
+  ];
+
   return (
     <>
       <PageHero
         eyebrow="About the store"
         title="Retail and wholesale cloth supply from Erode."
         subtitle={`${siteConfig.name} serves families, shop owners and textile traders with practical cotton and handloom products since ${siteConfig.established}.`}
-        bgImage="https://images.unsplash.com/photo-1564584217132-2271feaeb3c5?w=1920&auto=format&fit=crop&q=80"
+        bgImage={aboutOfficeImages[0]}
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "About" }]}
       />
 
@@ -78,8 +83,8 @@ export default async function AboutPage() {
               <div className="aspect-[4/5] overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1200&auto=format&fit=crop&q=85"
-                  alt="Cotton cloth retail and wholesale"
+                  src={aboutOfficeImages[1]}
+                  alt={`${siteConfig.name} office and cloth display`}
                   className="h-full w-full object-cover"
                 />
               </div>

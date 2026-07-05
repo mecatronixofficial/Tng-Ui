@@ -22,6 +22,8 @@ import { cn } from "@/utils";
 
 type SortKey = "featured" | "rating" | "newest";
 type BuyerMode = "all" | "retail" | "wholesale";
+type CategoryLike = Pick<CategoryApi, "id" | "name" | "slug">;
+type SubcategoryLike = Pick<SubcategoryApi, "id" | "name" | "slug" | "category">;
 
 const sortOptions: { value: SortKey; label: string }[] = [
   { value: "featured", label: "Featured stock" },
@@ -34,6 +36,53 @@ const buyerModes: { value: BuyerMode; label: string; Icon: typeof FaStore }[] = 
   { value: "retail", label: "Retail picks", Icon: FaStore },
   { value: "wholesale", label: "Wholesale ready", Icon: FaBoxes },
 ];
+
+function normalizeValue(value: unknown) {
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    return normalizeValue(record.slug || record.name || record.id || record._id);
+  }
+
+  return String(value ?? "").trim().toLowerCase();
+}
+
+function matchesAny(value: unknown, options: unknown[]) {
+  const normalized = normalizeValue(value);
+  return Boolean(normalized) && options.some((option) => normalizeValue(option) === normalized);
+}
+
+function productMatchesCategory(product: ProductApi, category: CategoryLike | string) {
+  if (typeof category === "string") {
+    return matchesAny(product.category, [category]);
+  }
+
+  return matchesAny(product.category, [category.slug, category.name, category.id]);
+}
+
+function subcategoryMatchesCategory(subcategory: SubcategoryLike, category: CategoryLike | string) {
+  if (typeof category === "string") {
+    return matchesAny(subcategory.category, [category]);
+  }
+
+  return matchesAny(subcategory.category, [category.slug, category.name, category.id]);
+}
+
+function productMatchesSubcategory(product: ProductApi, subcategory: SubcategoryLike | string) {
+  if (typeof subcategory === "string") {
+    return matchesAny(product.subcategory, [subcategory]);
+  }
+
+  return matchesAny(product.subcategory, [subcategory.slug, subcategory.name, subcategory.id]);
+}
+
+function mergeSubcategories(current: SubcategoryApi[], incoming: SubcategoryApi[]) {
+  const merged = new Map<string, SubcategoryApi>();
+  [...current, ...incoming].forEach((subcategory) => {
+    const key = subcategory.id || subcategory.slug || subcategory.name;
+    if (key) merged.set(key, subcategory);
+  });
+  return Array.from(merged.values());
+}
 
 export default function ProductsPage() {
   const params = useSearchParams();
@@ -52,15 +101,30 @@ export default function ProductsPage() {
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    api
-      .publicProducts()
-      .then((r) => {
-        setProducts(r.data);
+    let mounted = true;
+
+    Promise.all([
+      api.publicProducts("limit=100"),
+      api.publicCategories().catch(() => []),
+      api.publicSubcategories().catch(() => []),
+      initialCategory !== "all"
+        ? api.publicSubcategories(initialCategory).catch(() => [])
+        : Promise.resolve([]),
+    ])
+      .then(([productResponse, categoryRows, subcategoryRows, selectedSubcategoryRows]) => {
+        if (!mounted) return;
+        setProducts(productResponse.data);
+        setCategories(categoryRows);
+        setSubcategories(mergeSubcategories(subcategoryRows, selectedSubcategoryRows));
         setLoading(false);
       })
-      .catch(() => setLoading(false));
-    api.publicCategories().then(setCategories).catch(() => {});
-    api.publicSubcategories().then(setSubcategories).catch(() => {});
+      .catch(() => {
+        if (mounted) setLoading(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -68,36 +132,57 @@ export default function ProductsPage() {
     setSubcategory(params.get("subcategory") || "all");
   }, [params]);
 
+  useEffect(() => {
+    if (category === "all") return;
+    api
+      .publicSubcategories(category)
+      .then((rows) => setSubcategories((current) => mergeSubcategories(current, rows)))
+      .catch(() => {});
+  }, [category]);
+
   const subcategoryByValue = useMemo(
     () =>
       new Map(
         subcategories.flatMap((s) => [
           [s.slug, s.name],
           [s.name, s.name],
+          [s.id, s.name],
         ]),
       ),
     [subcategories],
   );
 
+  const activeCategory = useMemo(
+    () =>
+      categories.find((c) => matchesAny(category, [c.slug, c.name, c.id])),
+    [categories, category],
+  );
+
+  const activeSubcategory = useMemo(
+    () =>
+      subcategories.find((s) => matchesAny(subcategory, [s.slug, s.name, s.id])),
+    [subcategories, subcategory],
+  );
+
   const visibleSubcategories = useMemo(
     () =>
       subcategories.filter(
-        (s) => category === "all" || s.category === category,
+        (s) =>
+          category === "all" ||
+          subcategoryMatchesCategory(s, activeCategory || category),
       ),
-    [category, subcategories],
+    [activeCategory, category, subcategories],
   );
-
-  function productMatchesSubcategory(product: ProductApi, value: string) {
-    if (value === "all") return true;
-    const selected = subcategories.find((s) => s.slug === value);
-    return product.subcategory === value || product.subcategory === selected?.name;
-  }
 
   const filtered = useMemo(() => {
     let list = [...products];
-    if (category !== "all") list = list.filter((p) => p.category === category);
+    if (category !== "all") {
+      list = list.filter((p) => productMatchesCategory(p, activeCategory || category));
+    }
     if (subcategory !== "all") {
-      list = list.filter((p) => productMatchesSubcategory(p, subcategory));
+      list = list.filter((p) =>
+        productMatchesSubcategory(p, activeSubcategory || subcategory),
+      );
     }
     if (buyerMode === "retail") list = list.filter((p) => !p.featured || p.stock < 100);
     if (buyerMode === "wholesale") {
@@ -110,9 +195,11 @@ export default function ProductsPage() {
           p.name.toLowerCase().includes(q) ||
           p.tags.some((t) => t.toLowerCase().includes(q)) ||
           p.material.toLowerCase().includes(q) ||
-          p.category.toLowerCase().includes(q) ||
-          (p.subcategory || "").toLowerCase().includes(q) ||
-          (p.subcategory ? subcategoryByValue.get(p.subcategory)?.toLowerCase().includes(q) : false),
+          normalizeValue(p.category).includes(q) ||
+          normalizeValue(p.subcategory).includes(q) ||
+          (p.subcategory
+            ? subcategoryByValue.get(String(p.subcategory))?.toLowerCase().includes(q)
+            : false),
       );
     }
 
@@ -127,7 +214,23 @@ export default function ProductsPage() {
         list.sort((a, b) => Number(b.featured) - Number(a.featured));
     }
     return list;
-  }, [products, category, subcategory, buyerMode, search, sort, subcategoryByValue, subcategories]);
+  }, [
+    products,
+    category,
+    activeCategory,
+    subcategory,
+    activeSubcategory,
+    buyerMode,
+    search,
+    sort,
+    subcategoryByValue,
+  ]);
+
+  const productCountForCategory = (value: CategoryLike | string) =>
+    products.filter((p) => productMatchesCategory(p, value)).length;
+
+  const productCountForSubcategory = (value: SubcategoryLike | string) =>
+    products.filter((p) => productMatchesSubcategory(p, value)).length;
 
   return (
     <>
@@ -268,9 +371,9 @@ export default function ProductsPage() {
                     {categories.map((c) => (
                       <FilterButton
                         key={c.id}
-                        active={category === c.slug}
+                        active={activeCategory?.id === c.id}
                         label={c.name}
-                        count={c.productCount}
+                        count={c.productCount || productCountForCategory(c)}
                         onClick={() => {
                           setCategory(c.slug);
                           setSubcategory("all");
@@ -289,20 +392,17 @@ export default function ProductsPage() {
                         count={
                           category === "all"
                             ? products.length
-                            : products.filter((p) => p.category === category).length
+                            : productCountForCategory(activeCategory || category)
                         }
                         onClick={() => setSubcategory("all")}
                       />
                       {visibleSubcategories.map((s) => (
                         <FilterButton
                           key={s.id}
-                          active={subcategory === s.slug}
+                          active={activeSubcategory?.id === s.id}
                           label={s.name}
                           image={s.image}
-                          count={
-                            s.productCount ||
-                            products.filter((p) => p.subcategory === s.slug || p.subcategory === s.name).length
-                          }
+                          count={s.productCount || productCountForSubcategory(s)}
                           onClick={() => setSubcategory(s.slug)}
                         />
                       ))}

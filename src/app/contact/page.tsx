@@ -38,7 +38,7 @@ const contactWhatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURICom
     "Color:",
     "City:",
     "",
-    "Please share availability and price details.",
+    "Please share availability details.",
   ].join("\n"),
 )}`;
 

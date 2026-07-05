@@ -143,8 +143,6 @@ function mapProduct(api: any): ProductType {
     colors: asStringArray(api.colors),
     sizes: asStringArray(api.sizes),
     stock: asNumber(api.stock),
-    offerPrice: asNumber(api.offerPrice),
-    originalPrice: asNumber(api.originalPrice),
     material: asString(api.material),
     gsm: asString(api.gsm) || undefined,
     pattern: asString(api.pattern) || undefined,
