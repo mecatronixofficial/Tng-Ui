@@ -423,6 +423,8 @@ export interface ProductApi {
   colors: string[];
   sizes: string[];
   stock: number;
+  offerPrice: number;
+  originalPrice: number;
   material: string;
   gsm?: string;
   pattern?: string;
