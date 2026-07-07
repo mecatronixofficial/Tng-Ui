@@ -13,7 +13,7 @@ import {
 import { api, type BannerApi } from "@/lib/api";
 import { cn } from "@/utils";
 
-const SLIDE_MS = 6500;
+const SLIDE_MS = 6000;
 
 const heroStats = [
   { value: "Retail", label: "Single piece" },
@@ -91,7 +91,7 @@ export default function HeroSlider() {
           <img
             src={slide.image}
             alt={slide.title}
-            className="h-full w-full object-cover object-center"
+            className="absolute inset-0 h-full w-full object-cover object-center"
           />
         </motion.div>
       </AnimatePresence>
@@ -100,8 +100,8 @@ export default function HeroSlider() {
       <div className="pointer-events-none absolute inset-0 z-[11] bg-gradient-to-t from-primary-950/85 via-primary-950/25 to-primary-950/20 sm:from-primary-950/70 sm:via-transparent sm:to-transparent" />
 
       {/* ── Content ── */}
-      <div className="relative z-20 flex min-h-[560px] items-end px-4 pb-28 pt-20 sm:min-h-[calc(100svh-6.75rem)] sm:items-center sm:px-10 sm:py-20 lg:px-16 xl:px-24">
-        <div className="w-full max-w-lg sm:max-w-xl xl:max-w-2xl">
+      <div className="relative  z-20 flex min-h-[560px] items-end px-4 pb-28 pt-20 sm:min-h-[calc(100svh-6.75rem)] sm:items-center sm:px-10 sm:py-20 lg:px-16 xl:px-24">
+        <div className="absolute bottom-0 left-0 z-20 w-full px-4 pb-24 sm:px-10 lg:px-16 xl:px-24">
           <AnimatePresence mode="wait">
             <motion.div
               key={slide.id + "-content"}
@@ -120,7 +120,7 @@ export default function HeroSlider() {
                 </span>
               </motion.div>
 
-              <motion.h1
+              {/*     <motion.h1
                 variants={stagger.item}
                 className="mt-4 max-w-3xl font-display text-3xl font-black leading-[1.06] tracking-tight text-white sm:mt-5 sm:text-5xl lg:text-6xl xl:text-7xl"
               >
@@ -133,7 +133,7 @@ export default function HeroSlider() {
                     </span>
                   </>
                 )}
-              </motion.h1>
+              </motion.h1> */}
 
               <motion.div
                 variants={stagger.item}
@@ -144,7 +144,7 @@ export default function HeroSlider() {
                     href={slide.ctaHref}
                     target="_blank"
                     rel="noreferrer"
-                    className="group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-lg bg-secondary px-5 py-3 text-sm font-bold text-white shadow-warm transition-all duration-300 hover:scale-[1.02] hover:bg-secondary-dark active:scale-[0.98] sm:px-6 sm:py-3.5"
+                    className="group inline-flex h-10 items-center justify-center gap-2 rounded-md bg-white px-4 py-2 text-xs font-semibold text-primary-900 shadow-soft transition-all duration-300 hover:scale-[1.02] hover:bg-primary-50 active:scale-[0.98]"
                   >
                     <FaWhatsapp className="h-4 w-4" />
                     {slide.ctaLabel}
@@ -153,7 +153,7 @@ export default function HeroSlider() {
                 ) : (
                   <Link
                     href={slide.ctaHref}
-                    className="group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-lg bg-white px-5 py-3 text-sm font-bold text-primary-900 shadow-soft transition-all duration-300 hover:scale-[1.02] hover:bg-primary-50 active:scale-[0.98] sm:px-6 sm:py-3.5"
+                    className="group inline-flex min-h-4 items-center justify-center gap-2.5 rounded-lg bg-white px-5 py-3 text-sm font-bold text-primary-900 shadow-soft transition-all duration-300 hover:scale-[1.02] hover:bg-primary-50 active:scale-[0.98] sm:px-6 sm:py-3.5"
                   >
                     {slide.ctaLabel}
                     <FaArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
@@ -163,7 +163,7 @@ export default function HeroSlider() {
                 {slide.secondaryHref && (
                   <Link
                     href={slide.secondaryHref}
-                    className="group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-lg border border-white/25 bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:bg-white/20 sm:px-6 sm:py-3.5"
+                    className="group inline-flex min-h-8 items-center justify-center gap-2.5 rounded-lg border border-white/25 bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:bg-white/20 sm:px-6 sm:py-3.5"
                   >
                     {slide.secondaryLabel || "View Products"}
                     <FaArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
@@ -197,7 +197,7 @@ export default function HeroSlider() {
         </div>
 
         {/* ── Bottom bar: dots + counter + nav ── */}
-        <div className="absolute inset-x-0 bottom-0 z-30 flex items-center justify-between px-4 pb-5 sm:items-end sm:px-10 sm:pb-8 lg:px-16 xl:px-24">
+        <div className="absolute inset-x-0 bottom-0 z-30 flex items-center justify-between px-0 pb-0 sm:items-end sm:px-10 sm:pb-8 lg:px-16 xl:px-24">
           <div className="flex items-center gap-1.5">
             {displaySlides.map((s, i) => (
               <button

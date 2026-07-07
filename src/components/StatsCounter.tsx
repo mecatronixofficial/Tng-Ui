@@ -78,7 +78,7 @@ function StatTile({
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
-      className={`group relative overflow-hidden rounded-lg border p-5 transition hover:-translate-y-1 md:p-6 ${
+      className={`group relative overflow-hidden rounded-lg border p-3 transition hover:-translate-y-1 md:p-6 ${
         light
           ? "border-secondary/30 bg-primary-900/80 shadow-warm"
           : "border-primary-100 bg-white shadow-soft hover:border-secondary hover:shadow-warm"
