@@ -331,7 +331,6 @@ export function ImageUploader({
   const [progress, setProgress] = useState({ done: 0, total: 0 });
   const [inputKey, setInputKey] = useState(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const folderInputRef = useRef<HTMLInputElement | null>(null);
 
   async function handleFiles(files: FileList | null) {
     if (!files || files.length === 0) return;
@@ -443,13 +442,13 @@ export function ImageUploader({
                   ? `Uploading ${progress.done} of ${progress.total} images...`
                   : "Preparing and uploading image..."}
               </p>
-              <p className="text-xs text-ink-muted mt-1">Large photos and folders are resized automatically.</p>
+              <p className="text-xs text-ink-muted mt-1">Large photos are resized automatically.</p>
             </>
           ) : (
             <>
               <FaUpload className="h-6 w-6 text-primary-800 mx-auto" />
               <p className="text-sm font-semibold text-ink-soft mt-2">
-                {multiple ? "Select image files or a folder" : "Click to upload"}
+                {multiple ? "Select image files" : "Click to upload"}
               </p>
               <p className="text-xs text-ink-muted mt-1">
                 JPG, PNG, WebP up to {formatBytes(MAX_UPLOAD_FILE_SIZE)} each. Up to {MAX_UPLOAD_FILES} images at once.
@@ -466,19 +465,6 @@ export function ImageUploader({
                   <FaUpload className="h-3 w-3" />
                   {multiple ? "Choose files" : "Choose file"}
                 </button>
-                {multiple && (
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      folderInputRef.current?.click();
-                    }}
-                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary-200 bg-white px-4 py-2 text-xs font-bold text-primary-800 transition hover:border-secondary hover:text-secondary"
-                  >
-                    <FaUpload className="h-3 w-3" />
-                    Choose folder
-                  </button>
-                )}
               </div>
             </>
           )}
@@ -492,18 +478,6 @@ export function ImageUploader({
           onChange={(e) => handleFiles(e.target.files)}
           className="hidden"
         />
-        {multiple && (
-          <input
-            key={`folder-${inputKey}`}
-            ref={folderInputRef}
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={(e) => handleFiles(e.target.files)}
-            className="hidden"
-            {...({ webkitdirectory: "", directory: "" } as Record<string, string>)}
-          />
-        )}
       </div>
     </div>
   );
