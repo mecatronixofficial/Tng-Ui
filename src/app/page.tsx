@@ -206,84 +206,92 @@ export default async function HomePage() {
       </section>
       
       {/* Intro / stats */}
-      <section className="relative overflow-hidden bg-primary-950 py-16 text-white md:py-24">
-        <div className="absolute inset-0 bg-weave-dark opacity-30" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_16%_20%,rgba(255,214,51,0.14),transparent_48%),radial-gradient(ellipse_80%_70%_at_84%_10%,rgba(66,133,252,0.22),transparent_52%)]" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary/70 to-transparent" />
+     <section className="relative overflow-hidden bg-primary-950 py-16 text-white md:py-24">
+  <div className="absolute inset-0 bg-weave-dark opacity-30" />
+  <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_16%_20%,rgba(255,214,51,0.14),transparent_48%),radial-gradient(ellipse_80%_70%_at_84%_10%,rgba(66,133,252,0.22),transparent_52%)]" />
+  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary/70 to-transparent" />
 
-        <div className="container-x relative grid gap-10 lg:grid-cols-12 lg:items-center">
-          <div className="relative lg:col-span-5">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-4 py-2 text-[10px] font-black uppercase tracking-widest-x text-secondary-light shadow-[0_0_0_1px_rgba(255,255,255,0.04)]">
-              <FaTags className="h-3 w-3" />
-              Est. {siteConfig.established} · {siteConfig.address.city}, Tamil
-              Nadu
-            </div>
-            <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-white md:text-5xl">
-              {siteConfig.tagline}
-            </h2>
-            <p className="mt-5 text-base leading-7 text-white/65">
-              {siteConfig.description}
-            </p>
+  <div className="container-x relative grid gap-10 lg:grid-cols-12 lg:items-stretch">
+    {/* LEFT CONTENT */}
+    <div className="relative flex h-full flex-col justify-center lg:col-span-5">
+      <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-4 py-2 text-[10px] font-black uppercase tracking-widest-x text-secondary-light shadow-[0_0_0_1px_rgba(255,255,255,0.04)]">
+        <FaTags className="h-3 w-3" />
+        Est. {siteConfig.established} · {siteConfig.address.city}, Tamil Nadu
+      </div>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              {[
-                "Inskirt, Nighty, Lungi",
-                "Dhotis & Towels",
-                `GST registered since ${siteConfig.gstSince}`,
-                "Pan-India despatch",
-              ].map((item) => (
-                <div
-                  key={item}
-                  className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2.5 text-sm font-semibold text-white/80"
-                >
-                  <FaCheckCircle className="h-3.5 w-3.5 shrink-0 text-secondary-light" />
-                  {item}
-                </div>
-              ))}
-            </div>
+      <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-white md:text-5xl">
+        {siteConfig.tagline}
+      </h2>
 
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/products"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-secondary px-6 py-3 text-sm font-black text-primary-950 shadow-[0_16px_40px_-20px_rgba(255,214,51,0.8)] transition hover:-translate-y-0.5 hover:bg-secondary-light"
-              >
-                Browse Cloth Range <FaArrowRight className="h-3.5 w-3.5" />
-              </Link>
-              <a
-                href={siteConfig.socials.whatsapp}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.07] px-6 py-3 text-sm font-bold text-white/90 shadow-soft backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-[#25D366]/50 hover:bg-[#25D366]/10 hover:text-white"
-              >
-                <FaWhatsapp className="h-4 w-4" />
-                Wholesale Enquiry
-              </a>
-            </div>
+      <p className="mt-5 text-base leading-7 text-white/65">
+        {siteConfig.description}
+      </p>
+
+      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        {[
+          "Inskirt, Nighty, Lungi",
+          "Dhotis & Towels",
+          `GST registered since ${siteConfig.gstSince}`,
+          "Pan-India despatch",
+        ].map((item) => (
+          <div
+            key={item}
+            className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2.5 text-sm font-semibold text-white/80"
+          >
+            <FaCheckCircle className="h-3.5 w-3.5 shrink-0 text-secondary-light" />
+            {item}
           </div>
+        ))}
+      </div>
 
-          <div className="relative lg:col-span-7">
-            <div className="absolute -inset-4 rounded-[2rem]" />
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] shadow-[0_24px_80px_-44px_rgba(0,0,0,0.85)]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={introImage}
-                alt={`${siteConfig.name} textile products`}
-                className="h-[260px] w-full object-cover sm:h-[340px] lg:h-[420px]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary-950/80 via-primary-950/10 to-transparent" />
-              <div className="absolute bottom-5 left-5 right-5">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-primary-950/65 px-4 py-2 text-[10px] font-black uppercase tracking-widest-x text-white/85 backdrop-blur">
-                  <FaCheckCircle className="h-3 w-3 text-secondary-light" />
-                  Retail and wholesale cloth supply
-                </div>
-              </div>
-            </div>
-            <div className="relative mt-5">
-              <StatsCounter items={stats} light />
-            </div>
+      <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+        <Link
+          href="/products"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-secondary px-6 py-3 text-sm font-black text-primary-950 shadow-[0_16px_40px_-20px_rgba(255,214,51,0.8)] transition hover:-translate-y-0.5 hover:bg-secondary-light"
+        >
+          Browse Cloth Range <FaArrowRight className="h-3.5 w-3.5" />
+        </Link>
+
+        <a
+          href={siteConfig.socials.whatsapp}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.07] px-6 py-3 text-sm font-bold text-white/90 shadow-soft backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-[#25D366]/50 hover:bg-[#25D366]/10 hover:text-white"
+        >
+          <FaWhatsapp className="h-4 w-4" />
+          Wholesale Enquiry
+        </a>
+      </div>
+    </div>
+
+    {/* RIGHT CONTENT */}
+    <div className="relative flex h-full flex-col gap-5 lg:col-span-7">
+      <div className="absolute -inset-4 rounded-[2rem]" />
+
+      <div className="relative flex flex-1 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] shadow-[0_24px_80px_-44px_rgba(0,0,0,0.85)]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={introImage}
+          alt={`${siteConfig.name} textile products`}
+          className="min-h-[260px] w-full object-cover sm:min-h-[340px] lg:min-h-[420px]"
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-primary-950/80 via-primary-950/10 to-transparent" />
+
+        <div className="absolute bottom-5 left-5 right-5">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-primary-950/65 px-4 py-2 text-[10px] font-black uppercase tracking-widest-x text-white/85 backdrop-blur">
+            <FaCheckCircle className="h-3 w-3 text-secondary-light" />
+            Retail and wholesale cloth supply
           </div>
         </div>
-      </section>
+      </div>
+
+      <div className="relative">
+        <StatsCounter items={stats} light />
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* Categories */}
       <section className="section-y bg-white">

@@ -46,15 +46,15 @@ export const siteConfig = {
   },
   office: {
     workplace1:
-      "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1782368406/c6b31125-7a39-4fdd-aba4-fb114116034b_beh2tp.png",
+      "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1783403876/DSC09656_jw1zlp.jpg",
     workplace2:
-      "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1782368406/c6b31125-7a39-4fdd-aba4-fb114116034b_beh2tp.png",
+      "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1783404177/DSC09619_uk3sxd.jpg",
     workplace3:
-      "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1782368406/c6b31125-7a39-4fdd-aba4-fb114116034b_beh2tp.png",
+      "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1783404293/DSC09615_zd1xrg.jpg",
     workplace4:
-      "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1782368406/c6b31125-7a39-4fdd-aba4-fb114116034b_beh2tp.png",
+      "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1783405030/DSC09659_jmdxc1.jpg",
     workplace5:
-      "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1782368406/c6b31125-7a39-4fdd-aba4-fb114116034b_beh2tp.png",
+      "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1783405030/DSC09659_jmdxc1.jpg",
     workplace6:
       "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1782368406/c6b31125-7a39-4fdd-aba4-fb114116034b_beh2tp.png",
   },
