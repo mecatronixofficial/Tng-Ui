@@ -26,9 +26,8 @@ const navLinks = [
   { href: "/contact", label: "Contact" },
 ];
 
-const logoSrc =
-  siteConfig.logo ||
-  "https://res.cloudinary.com/ddpfxvydm/image/upload/v1782198017/101b65a0-c9c8-4cb8-bf78-4470b446f7e7_kpcr9z.png";
+const logoSrc = "/logo/tng%20logo.jpeg";
+const logoClassName = "h-[50px] w-auto shrink-0 rounded object-contain";
 
 const whatsappHref = `https://wa.me/${siteConfig.whatsapp.replace(/\D/g, "")}`;
 
@@ -71,27 +70,18 @@ export default function Navbar() {
           <Link href="/" className="group mr-2 flex min-w-0 shrink-0 items-center gap-3">
             <span
               className="
-                relative grid h-14 w-14 shrink-0 place-items-center
-                overflow-hidden rounded-xl bg-primary-800
-                ring-1 ring-red-200
-                shadow-[0_4px_18px_rgba(220,38,38,0.14)]
+                relative grid shrink-0 place-items-center
                 transition-all duration-300
-                group-hover:ring-red-200
-                group-hover:shadow-[0_6px_24px_rgba(220,38,38,0.24)]
               "
             >
               <img
                 src={logoSrc}
                 alt={siteConfig.name}
-                className="
-                  h-full w-full
-                  scale-[1.22]
-                  object-contain
-                "
+                className={logoClassName}
               />
             </span>
 
-            <span className="hidden min-w-0 xl:block">
+            <span className="min-w-0">
               <span className="block truncate font-display text-[1.08rem] font-extrabold tracking-tight text-primary-950 transition-colors duration-200 group-hover:text-primary-700">
                 {siteConfig.name}
               </span>
@@ -178,7 +168,7 @@ export default function Navbar() {
             <img
               src={logoSrc}
               alt={siteConfig.name}
-              className="h-10 w-10 rounded-lg bg-primary-800 object-contain scale-[1.18] ring-1 ring-red-200 transition-all duration-200 group-hover:ring-red-200"
+              className={logoClassName}
             />
             <span className="min-w-0">
               <span className="block max-w-[10rem] truncate font-display text-base font-extrabold tracking-tight text-primary-950">

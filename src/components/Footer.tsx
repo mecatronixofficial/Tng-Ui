@@ -27,9 +27,7 @@ import {
 import { siteConfig } from "@/data/site";
 import { api, type CategoryApi } from "@/lib/api";
 
-const logoSrc =
-  siteConfig.logo ||
-  "https://res.cloudinary.com/ddpfxvydm/image/upload/v1782198017/101b65a0-c9c8-4cb8-bf78-4470b446f7e7_kpcr9z.png";
+const logoSrc = "/logo/tng%20logo.jpeg";
 
 const whatsappHref = `https://wa.me/${siteConfig.whatsapp.replace(/\D/g, "")}`;
 
@@ -119,12 +117,20 @@ const contactItems = [
   {
     Icon: FaPhoneAlt,
     render: () => (
-      <a
-        href={`tel:${siteConfig.phone.replace(/\s+/g, "")}`}
-        className="transition hover:text-secondary-light"
-      >
-        {siteConfig.phone}
-      </a>
+      <span className="flex flex-col gap-1">
+        <a
+          href={`tel:${siteConfig.phone.replace(/\s+/g, "")}`}
+          className="transition hover:text-secondary-light"
+        >
+          {siteConfig.phone}
+        </a>
+        <a
+          href={`tel:${siteConfig.secondaryPhone.replace(/\s+/g, "")}`}
+          className="transition hover:text-secondary-light"
+        >
+          {siteConfig.secondaryPhone}
+        </a>
+      </span>
     ),
   },
   {
@@ -152,7 +158,7 @@ export default function Footer() {
     api
       .publicCategories()
       .then(setCategories)
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   if (pathname.startsWith("/admin")) return null;
@@ -219,31 +225,21 @@ export default function Footer() {
 
           {/* Brand */}
           <div className="lg:col-span-4">
-            <Link href="/" className="group mr-3 flex shrink-0 items-center gap-3">
-              <span
-                className="
-                  relative grid h-16 w-16 shrink-0 place-items-center
-                  overflow-hidden rounded-xl bg-white group-hover:bg-primary-800
-                  ring-1 ring-white/20
-                  shadow-[0_4px_18px_rgba(220,38,38,0.18)]
-                  transition-all duration-300
-                  group-hover:ring-secondary/40
-                  group-hover:shadow-[0_6px_24px_rgba(220,38,38,0.28)]
-                "
-              >
-                <img
-                  src={logoSrc}
-                  alt={siteConfig.name}
-                  className="h-full w-full scale-[1.22] object-contain"
-                />
-              </span>
+            <Link href="/" className="group mr-3 bg-white rounded flex shrink-0 items-center gap-3 ring-1 ring-red-200 shadow-[0_4px_18px_rgba(220,38,38,0.14)] transition-all duration-300 group-hover:ring-red-300 group-hover:shadow-[0_6px_24px_rgba(220,38,38,0.24)]">
+              <img
+                src={logoSrc}
+                alt={siteConfig.name}
+                className="h-14 w-auto p-1 shrink-0 object-contain"
+              />
 
-              <span>
-                <span className="block text-xl font-extrabold tracking-tight text-white transition group-hover:text-secondary-light">
+              <span className="min-w-0">
+                <span className="block truncate font-display text-[1.08rem] font-extrabold tracking-tight text-primary-950 transition-colors duration-200 group-hover:text-primary-700">
                   {siteConfig.name}
                 </span>
-                <span className="mt-0.5 block text-[10px] font-bold uppercase tracking-widest text-secondary/70">
-                  Retail | Wholesale | Textiles
+
+                <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest text-secondary-dark">
+                  <span className="h-px w-4 bg-gradient-to-r from-secondary to-transparent" />
+                  Textile manufacturer
                 </span>
               </span>
             </Link>

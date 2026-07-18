@@ -119,16 +119,23 @@ export default async function HomePage() {
       <HeroSlider />
 
       {/* Buyer paths */}
-      <section className="border-y border-primary-100 bg-white py-12">
-        <div className="container-x">
-          <div className="mb-8 flex justify-center">
-            <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary-600">
+      <section className="relative overflow-hidden border-y border-primary-100 bg-white py-14 md:py-16">
+        <div className="pointer-events-none absolute inset-0 bg-weave-light opacity-50" />
+        <div className="container-x relative">
+          <div className="mb-9 text-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary-100 bg-white px-4 py-2 text-[10px] font-black uppercase tracking-widest text-primary-600 shadow-sm">
               <FaStore className="h-3 w-3 text-primary-500" />
-              How would you like to buy?
+              Shop your way
             </span>
+            <h2 className="mt-3 font-display text-2xl font-black text-primary-950 sm:text-3xl">
+              How would you like to buy?
+            </h2>
+            <p className="mx-auto mt-2 max-w-xl text-sm text-ink-muted">
+              Choose the option that best fits your textile needs.
+            </p>
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-[1fr_1fr_auto] lg:items-stretch">
+          <div className="grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3">
             {buyerPaths.map(({ title, text, href, action, Icon, ...rest }) => {
               const external = "external" in rest ? rest.external : false;
               const isWholesale = external;
@@ -138,25 +145,25 @@ export default async function HomePage() {
               const badge = isWholesale ? "B2B · Bulk orders" : "B2C · Retail";
 
               const content = (
-                <div className="flex gap-4">
+                <div className="flex h-full gap-4">
                   <span
-                    className={`grid h-12 w-12 shrink-0 place-items-center rounded-xl ${iconCls}`}
+                    className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl transition-transform duration-300 group-hover:scale-105 ${iconCls}`}
                   >
                     <Icon className="h-5 w-5" />
                   </span>
-                  <div className="min-w-0">
+                  <div className="flex min-w-0 flex-1 flex-col">
                     <span className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-primary-400">
                       {badge}
                     </span>
-                    <span className="block text-lg font-bold text-ink">
+                    <span className="block text-lg font-black text-ink">
                       {title}
                     </span>
                     <span className="mt-1 block text-sm leading-6 text-ink-muted">
                       {text}
                     </span>
-                    <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-primary-600">
+                    <span className="mt-auto inline-flex items-center gap-2 pt-5 text-xs font-black uppercase tracking-wide text-primary-600">
                       {action}
-                      <FaArrowRight className="h-2.5 w-2.5" />
+                      <FaArrowRight className="h-2.5 w-2.5 transition-transform duration-300 group-hover:translate-x-1" />
                     </span>
                   </div>
                 </div>
@@ -168,7 +175,7 @@ export default async function HomePage() {
                   href={href}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-2xl border border-primary-100 bg-white p-6 transition hover:border-primary-300"
+                  className="group h-full rounded-3xl border border-primary-100 bg-white p-6 shadow-[0_12px_35px_-24px_rgba(45,5,5,0.35)] transition-all duration-300 hover:-translate-y-1 hover:border-primary-300 hover:shadow-[0_18px_45px_-24px_rgba(45,5,5,0.45)]"
                 >
                   {content}
                 </a>
@@ -176,122 +183,158 @@ export default async function HomePage() {
                 <Link
                   key={title}
                   href={href}
-                  className="rounded-2xl border border-primary-100 bg-white p-6 transition hover:border-primary-300"
+                  className="group h-full rounded-3xl border border-primary-100 bg-white p-6 shadow-[0_12px_35px_-24px_rgba(45,5,5,0.35)] transition-all duration-300 hover:-translate-y-1 hover:border-primary-300 hover:shadow-[0_18px_45px_-24px_rgba(45,5,5,0.45)]"
                 >
                   {content}
                 </Link>
               );
             })}
 
-            <div className="rounded-2xl border border-primary-100 bg-primary-950 p-6 text-white">
-              <div className="flex items-center gap-3">
-                <span className="grid h-12 w-12 place-items-center rounded-xl bg-secondary/15 text-secondary">
+            <div
+              className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-primary-800 bg-primary-950 p-6 text-white shadow-[0_18px_45px_-24px_rgba(45,5,5,0.75)] transition-all duration-300 hover:-translate-y-1 hover:border-secondary/50 md:col-span-2 lg:col-span-1"
+            >
+              <div className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-secondary/15 blur-3xl" />
+              <div className="relative flex items-start gap-4">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-secondary/15 text-secondary-light transition-transform duration-300 group-hover:scale-105">
                   <FaPhoneAlt className="h-5 w-5" />
                 </span>
-                <div>
+                <div className="min-w-0">
                   <span className="block text-[10px] font-bold uppercase tracking-widest text-white/50">
                     Call store directly
                   </span>
-                  <span className="block text-lg font-bold">
+                  <a
+                    href={`tel:${siteConfig.phone.replace(/\D/g, "")}`}
+                    className="mt-1 block break-words text-lg font-black transition hover:text-secondary-light"
+                  >
                     {siteConfig.phone}
-                  </span>
+                  </a>
+                  <a
+                    href={`tel:${siteConfig.secondaryPhone.replace(/\D/g, "")}`}
+                    className="mt-1 block break-words text-sm font-bold text-white/70 transition hover:text-secondary-light"
+                  >
+                    {siteConfig.secondaryPhone}
+                  </a>
                 </div>
               </div>
-              <div className="mt-4 border-t border-white/10 pt-3 text-xs leading-5 text-white/55">
-                {siteConfig.workingHours}
+              <div className="relative mt-auto pt-5">
+                <div className="border-t border-white/10 pt-4 text-xs leading-5 text-white/60">
+                  {siteConfig.workingHours}
+                </div>
+                <span className="mt-3 inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-secondary-light">
+                  Choose a number
+                  <FaArrowRight className="h-2.5 w-2.5 transition-transform duration-300 group-hover:translate-x-1" />
+                </span>
               </div>
             </div>
           </div>
         </div>
       </section>
-      
+
       {/* Intro / stats */}
-     <section className="relative overflow-hidden bg-primary-950 py-16 text-white md:py-24">
-  <div className="absolute inset-0 bg-weave-dark opacity-30" />
-  <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_16%_20%,rgba(255,214,51,0.14),transparent_48%),radial-gradient(ellipse_80%_70%_at_84%_10%,rgba(66,133,252,0.22),transparent_52%)]" />
-  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary/70 to-transparent" />
+      <section className="relative overflow-hidden bg-primary-950 py-16 text-white md:py-20 lg:py-24">
+        <div className="absolute inset-0 bg-weave-dark opacity-25" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_16%_20%,rgba(255,214,51,0.14),transparent_48%),radial-gradient(ellipse_80%_70%_at_84%_10%,rgba(66,133,252,0.22),transparent_52%)]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary/70 to-transparent" />
+        <div className="pointer-events-none absolute -left-32 top-1/3 h-72 w-72 rounded-full border border-secondary/10" />
+        <div className="pointer-events-none absolute -left-24 top-1/3 h-56 w-56 rounded-full border border-secondary/10" />
 
-  <div className="container-x relative grid gap-10 lg:grid-cols-12 lg:items-stretch">
-    {/* LEFT CONTENT */}
-    <div className="relative flex h-full flex-col justify-center lg:col-span-5">
-      <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-4 py-2 text-[10px] font-black uppercase tracking-widest-x text-secondary-light shadow-[0_0_0_1px_rgba(255,255,255,0.04)]">
-        <FaTags className="h-3 w-3" />
-        Est. {siteConfig.established} · {siteConfig.address.city}, Tamil Nadu
-      </div>
+        <div className="container-x relative grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-14">
+          {/* LEFT CONTENT */}
+          <div className="relative flex h-full flex-col justify-center lg:col-span-7 lg:pr-4">
+            <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-4 py-2 text-[10px] font-black uppercase tracking-widest-x text-secondary-light shadow-[0_0_0_1px_rgba(255,255,255,0.04)]">
+              <FaTags className="h-3 w-3" />
+              Est. {siteConfig.established} · {siteConfig.address.city}, Tamil Nadu
+            </div>
 
-      <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-white md:text-5xl">
-        {siteConfig.tagline}
-      </h2>
+            <h2 className="max-w-xl font-display text-4xl font-black leading-[1.05] tracking-[-0.03em] text-white md:text-5xl lg:text-[3.4rem]">
+              {siteConfig.tagline}
+            </h2>
 
-      <p className="mt-5 text-base leading-7 text-white/65">
-        {siteConfig.description}
-      </p>
+            <p className="mt-5 max-w-xl border-l-2 border-secondary/60 pl-4 text-base leading-7 text-white/65">
+              {siteConfig.description}
+            </p>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        {[
-          "Inskirt, Nighty, Lungi",
-          "Dhotis & Towels",
-          `GST registered since ${siteConfig.gstSince}`,
-          "Pan-India despatch",
-        ].map((item) => (
-          <div
-            key={item}
-            className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2.5 text-sm font-semibold text-white/80"
-          >
-            <FaCheckCircle className="h-3.5 w-3.5 shrink-0 text-secondary-light" />
-            {item}
+            <div className="mt-7 grid gap-3 sm:grid-cols-2">
+              {[
+                "Inskirt, Nighty, Lungi",
+                "Dhotis & Towels",
+                `GST registered since ${siteConfig.gstSince}`,
+                "Pan-India dispatch",
+              ].map((item) => (
+                <div
+                  key={item}
+                  className="group flex min-h-12 items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3 text-sm font-semibold text-white/80 transition-all duration-300 hover:border-secondary/30 hover:bg-white/[0.1]"
+                >
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-secondary/10">
+                    <FaCheckCircle className="h-3.5 w-3.5 text-secondary-light" />
+                  </span>
+                  {item}
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Link
+                href="/products"
+                className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-secondary px-6 text-sm font-black text-primary-950 shadow-[0_16px_40px_-20px_rgba(255,214,51,0.8)] transition-all hover:-translate-y-0.5 hover:bg-secondary-light"
+              >
+                Browse Cloth Range
+                <FaArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+              </Link>
+
+              <a
+                href={siteConfig.socials.whatsapp}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-6 text-sm font-bold text-white/90 shadow-soft backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-[#25D366]/50 hover:bg-[#25D366]/10 hover:text-white"
+              >
+                <FaWhatsapp className="h-4 w-4" />
+                Wholesale Enquiry
+              </a>
+            </div>
           </div>
-        ))}
-      </div>
 
-      <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-        <Link
-          href="/products"
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-secondary px-6 py-3 text-sm font-black text-primary-950 shadow-[0_16px_40px_-20px_rgba(255,214,51,0.8)] transition hover:-translate-y-0.5 hover:bg-secondary-light"
-        >
-          Browse Cloth Range <FaArrowRight className="h-3.5 w-3.5" />
-        </Link>
+          {/* RIGHT CONTENT */}
+          <div className="relative flex min-w-0 flex-col gap-5 lg:col-span-5">
+            <div className="pointer-events-none absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-secondary/10 via-transparent to-primary-400/10 blur-2xl" />
 
-        <a
-          href={siteConfig.socials.whatsapp}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.07] px-6 py-3 text-sm font-bold text-white/90 shadow-soft backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-[#25D366]/50 hover:bg-[#25D366]/10 hover:text-white"
-        >
-          <FaWhatsapp className="h-4 w-4" />
-          Wholesale Enquiry
-        </a>
-      </div>
-    </div>
+            <div className="group relative overflow-hidden rounded-[2rem] border border-white/15 bg-white/[0.06] p-1.5 shadow-[0_30px_90px_-45px_rgba(0,0,0,0.9)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={introImage}
+                alt={`${siteConfig.name} textile products`}
+                className="block h-auto w-full rounded-[1.65rem] object-contain transition-transform duration-700 group-hover:scale-[1.03]"
+              />
 
-    {/* RIGHT CONTENT */}
-    <div className="relative flex h-full flex-col gap-5 lg:col-span-7">
-      <div className="absolute -inset-4 rounded-[2rem]" />
+              <div className="absolute inset-1.5 rounded-[1.65rem] bg-gradient-to-t from-primary-950/90 via-primary-950/5 to-transparent" />
 
-      <div className="relative flex flex-1 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] shadow-[0_24px_80px_-44px_rgba(0,0,0,0.85)]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={introImage}
-          alt={`${siteConfig.name} textile products`}
-          className="min-h-[260px] w-full object-cover sm:min-h-[340px] lg:min-h-[420px]"
-        />
+              <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4 sm:inset-x-6 sm:bottom-6">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-primary-950/65 px-4 py-2 text-[10px] font-black uppercase tracking-widest-x text-white/85 backdrop-blur-md">
+                  <FaCheckCircle className="h-3 w-3 text-secondary-light" />
+                  Retail and wholesale cloth supply
+                </div>
+                <span className="hidden text-right text-[10px] font-bold uppercase tracking-widest text-white/50 sm:block">
+                  Quality textiles<br />from Erode
+                </span>
+              </div>
+            </div>
 
-        <div className="absolute inset-0 bg-gradient-to-t from-primary-950/80 via-primary-950/10 to-transparent" />
-
-        <div className="absolute bottom-5 left-5 right-5">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-primary-950/65 px-4 py-2 text-[10px] font-black uppercase tracking-widest-x text-white/85 backdrop-blur">
-            <FaCheckCircle className="h-3 w-3 text-secondary-light" />
-            Retail and wholesale cloth supply
           </div>
         </div>
-      </div>
 
-      <div className="relative">
-        <StatsCounter items={stats} light />
-      </div>
-    </div>
-  </div>
-</section>
+        <div className="container-x relative mt-10 lg:mt-14">
+          <div className="mb-5 flex items-center gap-4">
+            <span className="h-px flex-1 bg-gradient-to-r from-transparent to-white/15" />
+            <span className="text-[9px] font-black uppercase tracking-[0.24em] text-white/40">
+              Trusted textile supply
+            </span>
+            <span className="h-px flex-1 bg-gradient-to-l from-transparent to-white/15" />
+          </div>
+          <div className="relative overflow-hidden rounded-lg border border-white/10 bg-white/[0.05] p-1.5 shadow-[0_24px_70px_-45px_rgba(0,0,0,0.9)] backdrop-blur-sm">
+            <StatsCounter items={stats} light compact />
+          </div>
+        </div>
+      </section>
 
       {/* Categories */}
       <section className="section-y bg-white">

@@ -13,20 +13,28 @@ interface Stat {
 export default function StatsCounter({
   items,
   light = false,
+  compact = false,
 }: {
   items: Stat[];
   light?: boolean;
+  compact?: boolean;
 }) {
   const icons = [FaStore, FaBoxes, FaTruckMoving, FaTags];
 
   return (
     <div
-      className={`grid grid-cols-2 gap-3 md:grid-cols-4 ${
+      className={`grid grid-cols-2 md:grid-cols-4 ${compact ? "gap-2" : "gap-3"} ${
         light ? "text-white" : "text-ink"
       }`}
     >
       {items.map((item, i) => (
-        <StatTile key={i} item={item} light={light} Icon={icons[i % icons.length]} />
+        <StatTile
+          key={i}
+          item={item}
+          light={light}
+          compact={compact}
+          Icon={icons[i % icons.length]}
+        />
       ))}
     </div>
   );
@@ -35,10 +43,12 @@ export default function StatsCounter({
 function StatTile({
   item,
   light,
+  compact,
   Icon,
 }: {
   item: Stat;
   light: boolean;
+  compact: boolean;
   Icon: React.ComponentType<{ className?: string }>;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -78,19 +88,23 @@ function StatTile({
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
-      className={`group relative overflow-hidden rounded-lg border p-3 transition hover:-translate-y-1 md:p-6 ${
+      className={`group relative overflow-hidden rounded-lg border transition hover:-translate-y-1 ${
+        compact ? "p-3 md:p-4" : "p-3 md:p-6"
+      } ${
         light
           ? "border-secondary/30 bg-primary-900/80 shadow-warm"
           : "border-primary-100 bg-white shadow-soft hover:border-secondary hover:shadow-warm"
       }`}
     >
       <div
-        className={`mb-5 flex items-center justify-between gap-3 border-b pb-4 ${
+        className={`${compact ? "mb-3 pb-3" : "mb-5 pb-4"} flex items-center justify-between gap-3 border-b ${
           light ? "border-white/10" : "border-primary-100"
         }`}
       >
         <span
-          className={`grid h-11 w-11 place-items-center rounded-lg text-white transition group-hover:bg-secondary ${
+          className={`grid place-items-center rounded-lg text-white transition group-hover:bg-secondary ${
+            compact ? "h-9 w-9" : "h-11 w-11"
+          } ${
             light ? "bg-secondary" : "bg-primary-600"
           }`}
         >
@@ -107,7 +121,9 @@ function StatTile({
         </span>
       </div>
       <div
-        className={`text-4xl font-extrabold leading-none md:text-5xl ${
+        className={`font-extrabold leading-none ${
+          compact ? "text-3xl md:text-4xl" : "text-4xl md:text-5xl"
+        } ${
           light ? "text-secondary-light" : "text-primary-950"
         }`}
       >
@@ -117,7 +133,7 @@ function StatTile({
         </span>
       </div>
       <div
-        className={`mt-3 text-xs font-bold uppercase leading-5 tracking-wider-x ${
+        className={`${compact ? "mt-2 text-[10px]" : "mt-3 text-xs"} font-bold uppercase leading-5 tracking-wider-x ${
           light ? "text-cream-100/70" : "text-ink-muted"
         }`}
       >

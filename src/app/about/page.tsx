@@ -173,25 +173,32 @@ export default async function AboutPage() {
               <Link
                 key={category.id}
                 href={`/products?category=${category.slug}`}
-                className="rounded-2xl border border-primary-100 p-4 transition hover:border-primary-300"
+                className="group relative overflow-hidden rounded-2xl border border-primary-100 bg-white p-4 shadow-[0_12px_35px_-26px_rgba(45,5,5,0.35)] transition-all duration-300 hover:-translate-y-1 hover:border-secondary/40 hover:shadow-[0_20px_45px_-24px_rgba(45,5,5,0.45)]"
               >
-                <div className="flex items-center gap-3">
-                  <div className="h-14 w-14 overflow-hidden rounded-xl bg-primary-50">
+                <span className="pointer-events-none absolute -right-8 -top-8 h-20 w-20 rounded-full bg-secondary/10 blur-2xl transition-colors duration-300 group-hover:bg-secondary/20" />
+
+                <div className="relative flex items-center gap-4">
+                  <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-primary-100 bg-primary-50 p-0.5">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="h-full w-full object-cover"
+                      className="h-full w-full rounded-[0.65rem] object-cover transition-transform duration-500 group-hover:scale-110"
                     />
                   </div>
-                  <div>
-                    <div className="font-bold text-primary-950">
+
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate font-display text-base font-black text-primary-950 transition-colors group-hover:text-primary-700">
                       {category.name}
                     </div>
-                    <div className="mt-1 text-[10px] font-bold uppercase tracking-widest text-primary-500">
+                    <div className="mt-1.5 inline-flex rounded-full bg-primary-50 px-2.5 py-1 text-[9px] font-black uppercase tracking-widest text-primary-500">
                       {category.productCount} items
                     </div>
                   </div>
+
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-primary-100 bg-primary-50 text-primary-500 transition-all duration-300 group-hover:border-secondary group-hover:bg-secondary group-hover:text-primary-950">
+                    <FaArrowRight className="h-2.5 w-2.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+                  </span>
                 </div>
               </Link>
             ))}

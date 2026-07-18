@@ -34,16 +34,6 @@ export default function ProductCard({ product }: { product: Product }) {
     setActiveImage(0);
   }, [product.id, imageCount]);
 
-  useEffect(() => {
-    if (imageCount <= 1 || isHovered) return;
-
-    const timer = window.setInterval(() => {
-      setActiveImage((current) => (current + 1) % imageCount);
-    }, 2800);
-
-    return () => window.clearInterval(timer);
-  }, [imageCount, isHovered]);
-
   const whatsappUrl = buildWhatsAppOrderUrl({
     productName: product.name,
     productLink: `https://thangaveltextile.in/products/${product.slug}`,
@@ -56,8 +46,14 @@ export default function ProductCard({ product }: { product: Product }) {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
       className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-[#faf8f5] shadow-[0_2px_12px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.14)]"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        if (imageCount > 1) setActiveImage(1);
+      }}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setActiveImage(0);
+      }}
     >
       <div className="relative aspect-square overflow-hidden bg-primary-100">
         <Link href={`/products/${product.slug}`} className="absolute inset-0 z-0" aria-label={product.name}>

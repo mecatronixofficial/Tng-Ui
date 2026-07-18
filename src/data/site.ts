@@ -30,11 +30,11 @@ export const siteConfig = {
     country: "India",
     pincode: "638001",
   },
-  ownerPhoto:
-    "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1782368406/c6b31125-7a39-4fdd-aba4-fb114116034b_beh2tp.png",
+  ownerPhoto: "/logo/ceo.jpeg",
   locationlink:
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d500719.3869732372!2d77.11703358906247!3d11.344189399999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba96f76701221ad%3A0xdd9e9ade36b41375!2sThangavel%20Textile%20-%20Inskirts%20Wholesaler!5e0!3m2!1sen!2sin!4v1782230759309!5m2!1sen!2sin",
   phone: "+91 9443454628",
+  secondaryPhone: "+91 9486273862",
   whatsapp: whatsappNumber,
   email: "thangaveltextile99@gmail.com",
   workingHours: "Mon – Sat: 9:00 AM – 8:00 PM",
@@ -45,8 +45,7 @@ export const siteConfig = {
     whatsapp: `https://wa.me/${whatsappNumber}`,
   },
   office: {
-    workplace1:
-      "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1783403876/DSC09656_jw1zlp.jpg",
+    workplace1: "/logo/tng%20shop.png",
     workplace2:
       "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1783404177/DSC09619_uk3sxd.jpg",
     workplace3:
