@@ -118,7 +118,7 @@ export default function NotFound() {
               })}
             </div>
 
-            <div className="grid gap-3 border-t border-primary-100 bg-primary-50 p-5 sm:grid-cols-2">
+            <div className="grid gap-3 border-t border-primary-100 bg-primary-50 p-5 sm:grid-cols-3">
               <a
                 href={siteConfig.socials.whatsapp}
                 target="_blank"
@@ -134,6 +134,13 @@ export default function NotFound() {
               >
                 <FaPhoneAlt className="h-4 w-4" />
                 Call {siteConfig.phone}
+              </a>
+              <a
+                href={`tel:${siteConfig.secondaryPhone.replace(/\s+/g, "")}`}
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary-200 bg-white px-5 py-3 text-sm font-bold text-primary-900 transition hover:border-secondary hover:text-secondary"
+              >
+                <FaPhoneAlt className="h-4 w-4" />
+                Call {siteConfig.secondaryPhone}
               </a>
             </div>
           </div>

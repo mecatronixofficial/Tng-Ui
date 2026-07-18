@@ -53,14 +53,14 @@ const contactTiles = [
     Icon: FaWhatsapp,
     label: "Wholesale WhatsApp",
     title: "Send bulk enquiry",
-    text: siteConfig.phone,
+    text: siteConfig.secondaryPhone,
     href: contactWhatsappHref,
   },
   {
     Icon: FaPhoneAlt,
     label: "Retail Phone Enquiry",
     title: siteConfig.phone,
-    text: "Call before visiting",
+    text: siteConfig.secondaryPhone,
     href: `tel:${siteConfig.phone.replace(/\s+/g, "")}`,
   },
   {
@@ -188,7 +188,7 @@ export default function ContactPage() {
                       <div className="text-xs font-bold uppercase tracking-wider-x text-white/80">
                         WhatsApp
                       </div>
-                      <div className="font-extrabold">{siteConfig.phone}</div>
+                      <div className="font-extrabold">{siteConfig.secondaryPhone}</div>
                     </div>
                   </a>
                   <a
@@ -201,6 +201,18 @@ export default function ContactPage() {
                         Phone
                       </div>
                       <div className="font-extrabold">{siteConfig.phone}</div>
+                    </div>
+                  </a>
+                  <a
+                    href={`tel:${siteConfig.secondaryPhone.replace(/\s+/g, "")}`}
+                    className="flex items-center gap-4 rounded-lg bg-white/8 px-5 py-4 transition hover:bg-white/12"
+                  >
+                    <FaPhoneAlt className="h-5 w-5 text-secondary-light" />
+                    <div>
+                      <div className="text-xs font-bold uppercase tracking-wider-x text-white/60">
+                        Alternate phone
+                      </div>
+                      <div className="font-extrabold">{siteConfig.secondaryPhone}</div>
                     </div>
                   </a>
                   <a

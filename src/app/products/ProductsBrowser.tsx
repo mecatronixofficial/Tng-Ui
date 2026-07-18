@@ -5,6 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FaBoxes,
+  FaChevronLeft,
+  FaChevronRight,
   FaFilter,
   FaSearch,
   FaStore,
@@ -24,6 +26,8 @@ type SortKey = "featured" | "rating" | "newest";
 type BuyerMode = "all" | "retail" | "wholesale";
 type CategoryLike = Pick<CategoryApi, "id" | "name" | "slug">;
 type SubcategoryLike = Pick<SubcategoryApi, "id" | "name" | "slug" | "category">;
+
+const PRODUCTS_PER_PAGE = 30;
 
 const sortOptions: { value: SortKey; label: string }[] = [
   { value: "featured", label: "Featured stock" },
@@ -84,6 +88,19 @@ function mergeSubcategories(current: SubcategoryApi[], incoming: SubcategoryApi[
   return Array.from(merged.values());
 }
 
+async function fetchAllProducts() {
+  const firstPage = await api.publicProducts("page=1&limit=100");
+  if (firstPage.meta.pages <= 1) return firstPage.data;
+
+  const remainingPages = await Promise.all(
+    Array.from({ length: firstPage.meta.pages - 1 }, (_, index) =>
+      api.publicProducts(`page=${index + 2}&limit=100`),
+    ),
+  );
+
+  return [firstPage.data, ...remainingPages.map((page) => page.data)].flat();
+}
+
 export default function ProductsPage() {
   const params = useSearchParams();
   const initialCategory = params.get("category") || "all";
@@ -99,21 +116,22 @@ export default function ProductsPage() {
   const [sort, setSort] = useState<SortKey>("featured");
   const [buyerMode, setBuyerMode] = useState<BuyerMode>("all");
   const [showFilters, setShowFilters] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     let mounted = true;
 
     Promise.all([
-      api.publicProducts("limit=100"),
+      fetchAllProducts(),
       api.publicCategories().catch(() => []),
       api.publicSubcategories().catch(() => []),
       initialCategory !== "all"
         ? api.publicSubcategories(initialCategory).catch(() => [])
         : Promise.resolve([]),
     ])
-      .then(([productResponse, categoryRows, subcategoryRows, selectedSubcategoryRows]) => {
+      .then(([productRows, categoryRows, subcategoryRows, selectedSubcategoryRows]) => {
         if (!mounted) return;
-        setProducts(productResponse.data);
+        setProducts(productRows);
         setCategories(categoryRows);
         setSubcategories(mergeSubcategories(subcategoryRows, selectedSubcategoryRows));
         setLoading(false);
@@ -231,6 +249,36 @@ export default function ProductsPage() {
 
   const productCountForSubcategory = (value: SubcategoryLike | string) =>
     products.filter((p) => productMatchesSubcategory(p, value)).length;
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PRODUCTS_PER_PAGE));
+  const paginatedProducts = filtered.slice(
+    (currentPage - 1) * PRODUCTS_PER_PAGE,
+    currentPage * PRODUCTS_PER_PAGE,
+  );
+  const visiblePageNumbers = Array.from(
+    new Set(
+      [1, currentPage - 1, currentPage, currentPage + 1, totalPages].filter(
+        (page) => page >= 1 && page <= totalPages,
+      ),
+    ),
+  ).sort((a, b) => a - b);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [category, subcategory, buyerMode, search, sort]);
+
+  useEffect(() => {
+    setCurrentPage((page) => Math.min(page, totalPages));
+  }, [totalPages]);
+
+  const goToPage = (page: number) => {
+    setCurrentPage(Math.min(Math.max(page, 1), totalPages));
+    window.requestAnimationFrame(() => {
+      document
+        .getElementById("product-results")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
 
   return (
     <>
@@ -437,7 +485,7 @@ export default function ProductsPage() {
               </div>
             </aside>
 
-            <div className="lg:col-span-9">
+            <div id="product-results" className="scroll-mt-24 lg:col-span-9">
               <AnimatePresence mode="popLayout">
                 {filtered.length === 0 ? (
                   <motion.div
@@ -462,12 +510,68 @@ export default function ProductsPage() {
                     layout
                     className="grid grid-cols-2 gap-5 md:gap-7 lg:grid-cols-3"
                   >
-                    {filtered.map((p) => (
+                    {paginatedProducts.map((p) => (
                       <ProductCard key={p.id} product={p} />
                     ))}
                   </motion.div>
                 )}
               </AnimatePresence>
+
+              {filtered.length > 0 && totalPages > 1 && (
+                <nav
+                  aria-label="Product pagination"
+                  className="mt-10 flex flex-col items-center justify-between gap-4 rounded-xl border border-primary-100 bg-white p-4 shadow-soft sm:flex-row"
+                >
+                  <p className="text-xs font-bold text-ink-muted">
+                    Showing {(currentPage - 1) * PRODUCTS_PER_PAGE + 1}–
+                    {Math.min(currentPage * PRODUCTS_PER_PAGE, filtered.length)} of {filtered.length}
+                  </p>
+
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => goToPage(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      aria-label="Previous page"
+                      className="grid h-9 w-9 place-items-center rounded-lg border border-primary-100 text-primary-700 transition hover:border-primary-300 hover:bg-primary-50 disabled:cursor-not-allowed disabled:opacity-35"
+                    >
+                      <FaChevronLeft className="h-3 w-3" />
+                    </button>
+
+                    {visiblePageNumbers.map((page, index) => (
+                      <span key={page} className="flex items-center gap-1.5">
+                        {index > 0 && page - visiblePageNumbers[index - 1] > 1 && (
+                          <span className="px-1 text-xs text-ink-muted">…</span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => goToPage(page)}
+                          aria-label={`Page ${page}`}
+                          aria-current={page === currentPage ? "page" : undefined}
+                          className={cn(
+                            "grid h-9 min-w-9 place-items-center rounded-lg px-2 text-xs font-black transition",
+                            page === currentPage
+                              ? "bg-primary-700 text-white shadow-soft"
+                              : "border border-primary-100 text-primary-700 hover:border-primary-300 hover:bg-primary-50",
+                          )}
+                        >
+                          {page}
+                        </button>
+                      </span>
+                    ))}
+
+                    <button
+                      type="button"
+                      onClick={() => goToPage(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      aria-label="Next page"
+                      className="grid h-9 w-9 place-items-center rounded-lg border border-primary-100 text-primary-700 transition hover:border-primary-300 hover:bg-primary-50 disabled:cursor-not-allowed disabled:opacity-35"
+                    >
+                      <FaChevronRight className="h-3 w-3" />
+                    </button>
+                  </div>
+                </nav>
+              )}
             </div>
           </div>
           </>
