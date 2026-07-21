@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import moment from "moment";
 import {
   FaArrowRight,
@@ -26,12 +27,28 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await loadBlogBySlug(slug);
-  if (!post) return { title: "Article Not Found" };
+  if (!post) {
+    return { title: "Article Not Found", robots: { index: false, follow: false } };
+  }
 
   return {
     title: post.title,
     description: post.excerpt,
+    keywords: [post.category, ...post.tags, "textile blog", siteConfig.name],
+    authors: [{ name: post.author }],
+    alternates: { canonical: `/blog/${slug}` },
     openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: `/blog/${slug}`,
+      type: "article",
+      publishedTime: post.publishedAt,
+      authors: [post.author],
+      tags: post.tags,
+      images: [{ url: blogImage(post.images, 0), alt: post.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
       title: post.title,
       description: post.excerpt,
       images: [blogImage(post.images, 0)],
@@ -60,12 +77,53 @@ export default async function BlogDetail({
   ];
   let paraKey = 0;
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    image: post.images.map((img) => blogImage([img], 0)),
+    author: { "@type": "Person", name: post.author },
+    publisher: {
+      "@type": "Organization",
+      name: siteConfig.name,
+      logo: { "@type": "ImageObject", url: "https://www.thangaveltextile.in/logo/tng%20logo.jpeg" },
+    },
+    datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
+    mainEntityOfPage: `https://www.thangaveltextile.in/blog/${slug}`,
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.thangaveltextile.in" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://www.thangaveltextile.in/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: `https://www.thangaveltextile.in/blog/${slug}` },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* Minimal text hero — article cover photo behind a light scrim, dark text stays readable */}
       <section className="relative overflow-hidden border-b border-primary-100 bg-primary-100">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={blogImage(post.images, 0)} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <Image
+          src={blogImage(post.images, 0)}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-primary-50/95 via-primary-50/85 to-primary-50/50" />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
         <div className="relative container-x py-8 md:py-12">
@@ -108,8 +166,15 @@ export default async function BlogDetail({
             {/* Main column */}
             <div>
               <div className="relative overflow-hidden rounded-3xl bg-white shadow-soft">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={blogImage(post.images, 0)} alt={post.title} className="aspect-[16/8] w-full object-cover" />
+                <div className="relative aspect-[16/8] w-full">
+                  <Image
+                    src={blogImage(post.images, 0)}
+                    alt={post.title}
+                    fill
+                    sizes="(min-width: 1024px) 800px, 100vw"
+                    className="object-cover"
+                  />
+                </div>
 
                 <div className="p-6 md:p-10">
                   {/* Pull-quote excerpt */}
@@ -129,9 +194,14 @@ export default async function BlogDetail({
 
                   {paragraphChunks[1].length > 0 && (
                     <>
-                      <figure className="my-8 overflow-hidden rounded-2xl">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={blogImage(post.images, 2)} alt={`${post.title} — in the middle of the article`} className="aspect-[16/8] w-full object-cover" />
+                      <figure className="relative my-8 aspect-[16/8] w-full overflow-hidden rounded-2xl">
+                        <Image
+                          src={blogImage(post.images, 2)}
+                          alt={`${post.title} — in the middle of the article`}
+                          fill
+                          sizes="(min-width: 1024px) 672px, 100vw"
+                          className="object-cover"
+                        />
                       </figure>
                       <div className="max-w-2xl space-y-6 text-base leading-8 text-ink-soft md:text-[1.05rem]">
                         {paragraphChunks[1].map((para) => (
@@ -273,8 +343,13 @@ export default async function BlogDetail({
               {related.map((blog) => (
                 <Link key={blog.id} href={`/blog/${blog.slug}`} className="group overflow-hidden rounded-2xl bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-lg">
                   <div className="relative aspect-[16/10] overflow-hidden">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={blogImage(blog.images, 0)} alt={blog.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+                    <Image
+                      src={blogImage(blog.images, 0)}
+                      alt={blog.title}
+                      fill
+                      sizes="(min-width: 768px) 33vw, 100vw"
+                      className="object-cover transition duration-700 group-hover:scale-105"
+                    />
                   </div>
                   <div className="p-5">
                     <span className="text-[10px] font-bold uppercase tracking-widest-x text-secondary">{blog.category}</span>

@@ -2,7 +2,12 @@ import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: "*", allow: "/", disallow: ["/admin", "/api"] },
-    sitemap: "https://www.jai-india.com/sitemap.xml",
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      disallow: ["/admin", "/api", "/cart", "/wishlist"],
+    },
+    sitemap: "https://www.thangaveltextile.in/sitemap.xml",
+    host: "https://www.thangaveltextile.in",
   };
 }

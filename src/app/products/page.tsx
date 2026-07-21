@@ -7,6 +7,21 @@ import { siteConfig } from "@/data/site";
 export const metadata: Metadata = {
   title: "Retail & Wholesale Cloth Products",
   description: `Browse ${siteConfig.name} retail and wholesale cloth products — petticoats, lungis, towels, gamcha, bed sheets, handloom and dhotis from Erode.`,
+  keywords: [
+    "cotton petticoat wholesale",
+    "lungi wholesale Erode",
+    "towel manufacturer",
+    "gamcha supplier",
+    "bed sheet wholesale India",
+    "dhoti manufacturer",
+  ],
+  alternates: { canonical: "/products" },
+  openGraph: {
+    title: `Retail & Wholesale Cloth Products — ${siteConfig.name}`,
+    description: `Browse ${siteConfig.name} retail and wholesale cloth products — petticoats, lungis, towels, gamcha, bed sheets, handloom and dhotis from Erode.`,
+    url: "/products",
+    type: "website",
+  },
 };
 
 export default function ProductsPage() {

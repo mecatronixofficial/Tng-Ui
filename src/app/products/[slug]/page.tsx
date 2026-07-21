@@ -29,13 +29,39 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const product = await loadProductBySlug(slug);
-  if (!product) return { title: "Product Not Found" };
+  if (!product) {
+    return { title: "Product Not Found", robots: { index: false, follow: false } };
+  }
+
+  const description =
+    product.description?.slice(0, 160) ??
+    `${product.name} — retail and wholesale ${product.category} from Thangavel Textile, Erode.`;
+
   return {
     title: product.name,
-    description: product.description?.slice(0, 160) ?? "",
+    description,
+    keywords: [
+      product.name,
+      product.category,
+      product.subcategory,
+      product.material,
+      "wholesale",
+      "retail",
+      "Erode textile",
+      ...product.tags,
+    ].filter(Boolean) as string[],
+    alternates: { canonical: `/products/${slug}` },
     openGraph: {
       title: product.name,
-      description: product.description?.slice(0, 160) ?? "",
+      description,
+      url: `/products/${slug}`,
+      type: "website",
+      images: product.images[0] ? [{ url: product.images[0], alt: product.name }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description,
       images: product.images[0] ? [product.images[0]] : [],
     },
   };
@@ -53,8 +79,54 @@ export default async function ProductDetailPage({
   const related = await loadRelatedProducts(slug);
   const inStock = product.stock > 0;
 
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description,
+    image: product.images,
+    sku: product.id,
+    category: product.category,
+    material: product.material,
+    brand: { "@type": "Brand", name: "Thangavel Textile" },
+    ...(product.reviews > 0 && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: product.rating,
+        reviewCount: product.reviews,
+      },
+    }),
+    offers: {
+      "@type": "Offer",
+      availability: inStock
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      itemCondition: "https://schema.org/NewCondition",
+      seller: { "@type": "Organization", name: "Thangavel Textile" },
+      url: `https://www.thangaveltextile.in/products/${slug}`,
+    },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.thangaveltextile.in" },
+      { "@type": "ListItem", position: 2, name: "Products", item: "https://www.thangaveltextile.in/products" },
+      { "@type": "ListItem", position: 3, name: product.name, item: `https://www.thangaveltextile.in/products/${slug}` },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <PageHero
         title={product.name}
         eyebrow="Retail and wholesale product"

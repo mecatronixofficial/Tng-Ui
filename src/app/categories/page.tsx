@@ -7,14 +7,33 @@ import SectionTitle from "@/components/SectionTitle";
 import { loadCategories } from "@/lib/data";
 import { siteConfig } from "@/data/site";
 
+const banner =
+  "/banners/a-picturesque-arrangement-of-cotton-fabric-in-a-rainbow-of-colors-with-expansive-copy-space-perfect-for-use-in-textile-industry-catalogs-or-creative-arts-flyers-free-photo.jpg";
+
 export const metadata: Metadata = {
   title: "Categories",
   description: `${siteConfig.name} retail and wholesale cloth categories including petticoats, lungis, towels, gamcha, bed sheets, dhotis and handloom products.`,
+  keywords: [
+    "cloth categories Erode",
+    "petticoat category",
+    "lungi category",
+    "towel wholesale",
+    "gamcha wholesale",
+    "bed sheet category",
+    "dhoti category",
+  ],
+  alternates: { canonical: "/categories" },
+  openGraph: {
+    title: `Categories — ${siteConfig.name}`,
+    description: `${siteConfig.name} retail and wholesale cloth categories including petticoats, lungis, towels, gamcha, bed sheets, dhotis and handloom products.`,
+    url: "/categories",
+    type: "website",
+    images: [{ url: banner, width: 1200, height: 630, alt: "Thangavel Textile categories" }],
+  },
 };
 
 export default async function CategoriesPage() {
   const categories = await loadCategories();
-  const banner = "/banners/a-picturesque-arrangement-of-cotton-fabric-in-a-rainbow-of-colors-with-expansive-copy-space-perfect-for-use-in-textile-industry-catalogs-or-creative-arts-flyers-free-photo.jpg"
   return (
     <>
       <PageHero

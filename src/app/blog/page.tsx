@@ -16,15 +16,31 @@ import { siteConfig } from "@/data/site";
 import { loadBlogs } from "@/lib/data";
 import { blogImage, cn } from "@/utils";
 
+const banner =
+  "/banners/different-types-of-cotton-fabric-every-indian-woman-should-know-1712779539443264_l.png";
+
 export const metadata: Metadata = {
   title: "Cloth Buying Guides",
   description: `Retail and wholesale cloth buying guides, fabric care notes and textile stock updates from ${siteConfig.name}.`,
+  keywords: [
+    "cloth buying guide",
+    "fabric care tips",
+    "textile stock updates Erode",
+    "wholesale cloth blog",
+  ],
+  alternates: { canonical: "/blog" },
+  openGraph: {
+    title: `Cloth Buying Guides — ${siteConfig.name}`,
+    description: `Retail and wholesale cloth buying guides, fabric care notes and textile stock updates from ${siteConfig.name}.`,
+    url: "/blog",
+    type: "website",
+    images: [{ url: banner, width: 1200, height: 630, alt: "Thangavel Textile blog" }],
+  },
 };
 
 export default async function BlogPage() {
   const blogPosts = await loadBlogs();
   const [first, ...rest] = blogPosts;
-const banner = "/banners/different-types-of-cotton-fabric-every-indian-woman-should-know-1712779539443264_l.png";
   return (
     <>
       <PageHero

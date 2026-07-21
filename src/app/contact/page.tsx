@@ -22,6 +22,26 @@ import { siteConfig } from "@/data/site";
 export const metadata: Metadata = {
   title: "Contact Us",
   description: `Contact ${siteConfig.name} for retail cloth shopping, wholesale textile supply, bulk orders and store enquiries in ${siteConfig.address.city}.`,
+  keywords: [
+    "contact Thangavel Textile",
+    "textile supplier contact Erode",
+    "wholesale cloth enquiry",
+  ],
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: `Contact Us — ${siteConfig.name}`,
+    description: `Contact ${siteConfig.name} for retail cloth shopping, wholesale textile supply, bulk orders and store enquiries in ${siteConfig.address.city}.`,
+    url: "/contact",
+    type: "website",
+    images: [
+      {
+        url: "/banners/WhatsApp%20Image%202026-07-21%20at%2023.49.15.jpeg",
+        width: 1200,
+        height: 630,
+        alt: `Contact ${siteConfig.name}`,
+      },
+    ],
+  },
 };
 
 const whatsappNumber = siteConfig.whatsapp.replace(/\D/g, "");
