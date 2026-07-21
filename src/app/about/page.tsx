@@ -6,18 +6,25 @@ import {
   FaCheckCircle,
   FaFileInvoice,
   FaHandshake,
+  FaIndustry,
+  FaLeaf,
+  FaQuestionCircle,
   FaQuoteRight,
+  FaShippingFast,
   FaStore,
   FaTags,
   FaTruckMoving,
+  FaTshirt,
+  FaWeight,
   FaWhatsapp,
 } from "react-icons/fa";
 
 import PageHero from "@/components/PageHero";
 import SectionTitle from "@/components/SectionTitle";
 import StatsCounter from "@/components/StatsCounter";
-import { loadCategories } from "@/lib/data";
-import { siteConfig, stats } from "@/data/site";
+import { loadCategories, loadFaqs } from "@/lib/data";
+import { siteConfig, stats, whyChooseUs } from "@/data/site";
+import FAQAccordion from "@/components/FAQAccordion";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -42,6 +49,13 @@ const buyerPaths = [
   },
 ];
 
+const tradeSteps = [
+  "Share cloth type, quantity and delivery city",
+  "Receive product options and availability",
+  "Confirm packing, colour and size requirement",
+  "We prepare and despatch your order",
+];
+
 const promises = [
   "Retail and wholesale orders handled with the same care",
   "Focused range: petticoats, lungis, towels, gamcha, bed sheets, dhotis and handloom",
@@ -58,20 +72,34 @@ const tradeFlow = [
   "Confirm order and despatch preference",
 ];
 
+const iconMap = {
+  FaIndustry,
+  FaTshirt,
+  FaWeight,
+  FaHandshake,
+  FaShippingFast,
+  FaLeaf,
+};
+
+const [faqs] =
+  await Promise.all([
+    loadFaqs(),
+  ]);
+
 export default async function AboutPage() {
-  const categories = await loadCategories();
   const aboutOfficeImages = [
     siteConfig.office.workplace4,
     siteConfig.office.workplace5,
   ];
 
+const banner = "/banners/WhatsApp%20Image%202026-07-21%20at%2023.39.25.jpeg";
   return (
     <>
       <PageHero
         eyebrow="About the store"
         title="Retail and wholesale cloth supply from Erode."
         subtitle={`${siteConfig.name} serves families, shop owners and textile traders with practical cotton and handloom products since ${siteConfig.established}.`}
-        bgImage={aboutOfficeImages[0]}
+        bgImage={banner}
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "About" }]}
       />
 
@@ -103,7 +131,6 @@ export default async function AboutPage() {
             <SectionTitle
               eyebrow="Who we serve"
               title="A cloth business built for both walk-in needs and bulk trade."
-              description={`${siteConfig.name} is a ${siteConfig.legalStatus.toLowerCase()} textile business from ${siteConfig.address.city}. We supply everyday cloth products for retail customers and wholesale buyers who need dependable stock, repeat availability and clear communication.`}
             />
 
             <div className="grid gap-4 md:grid-cols-3">
@@ -151,57 +178,34 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* Product range */}
+      {/* Why choose */}
       <section className="section-y bg-white">
         <div className="container-x">
-          <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-            <SectionTitle
-              eyebrow="Our cloth range"
-              title="Focused categories for retail shelves and wholesale stock."
-              description="We keep the range practical, familiar and easy to reorder for everyday textile demand."
-            />
-            <Link
-              href="/categories"
-              className="inline-flex items-center gap-2 text-sm font-bold text-primary-700 hover:text-primary-900"
-            >
-              View categories <FaArrowRight className="h-3 w-3" />
-            </Link>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {categories.map((category) => (
-              <Link
-                key={category.id}
-                href={`/products?category=${category.slug}`}
-                className="group relative overflow-hidden rounded-2xl border border-primary-100 bg-white p-4 shadow-[0_12px_35px_-26px_rgba(45,5,5,0.35)] transition-all duration-300 hover:-translate-y-1 hover:border-secondary/40 hover:shadow-[0_20px_45px_-24px_rgba(45,5,5,0.45)]"
-              >
-                <span className="pointer-events-none absolute -right-8 -top-8 h-20 w-20 rounded-full bg-secondary/10 blur-2xl transition-colors duration-300 group-hover:bg-secondary/20" />
-
-                <div className="relative flex items-center gap-4">
-                  <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-primary-100 bg-primary-50 p-0.5">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={category.image}
-                      alt={category.name}
-                      className="h-full w-full rounded-[0.65rem] object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
+          <SectionTitle
+            eyebrow={`Why ${siteConfig.name}`}
+            title="Retail care. Wholesale discipline."
+            align="center"
+          />
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {whyChooseUs.map((item, i) => {
+              const Icon = iconMap[item.icon as keyof typeof iconMap];
+              return (
+                <div
+                  key={i}
+                  className="rounded-2xl border border-primary-100 bg-white p-6 transition hover:border-primary-300"
+                >
+                  <div className="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-primary-50 text-primary-600">
+                    {Icon && <Icon className="h-5 w-5" />}
                   </div>
-
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate font-display text-base font-black text-primary-950 transition-colors group-hover:text-primary-700">
-                      {category.name}
-                    </div>
-                    <div className="mt-1.5 inline-flex rounded-full bg-primary-50 px-2.5 py-1 text-[9px] font-black uppercase tracking-widest text-primary-500">
-                      {category.productCount} items
-                    </div>
-                  </div>
-
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-primary-100 bg-primary-50 text-primary-500 transition-all duration-300 group-hover:border-secondary group-hover:bg-secondary group-hover:text-primary-950">
-                    <FaArrowRight className="h-2.5 w-2.5 transition-transform duration-300 group-hover:translate-x-0.5" />
-                  </span>
+                  <h3 className="text-base font-bold leading-tight text-ink">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-ink-muted">
+                    {item.description}
+                  </p>
                 </div>
-              </Link>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -213,7 +217,6 @@ export default async function AboutPage() {
             <SectionTitle
               eyebrow="What we promise"
               title="Trade-friendly service without confusion."
-              description="Whether the order is small or bulk, our focus stays on practical product quality and clear communication."
               light
             />
           </div>
@@ -334,7 +337,6 @@ export default async function AboutPage() {
             <SectionTitle
               eyebrow="Business information"
               title="On record and ready for trade."
-              description="Useful details for retail customers, wholesale buyers and repeat business partners."
             />
           </div>
           <div className="lg:col-span-8">
@@ -369,6 +371,30 @@ export default async function AboutPage() {
                 );
               })}
             </dl>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="relative overflow-hidden section-y bg-gradient-to-b from-primary-50/70 to-white">
+        <div className="pointer-events-none absolute -right-24 top-10 h-72 w-72 rounded-full bg-secondary/10 blur-3xl" />
+        <div className="container-x relative grid gap-10 lg:grid-cols-12 lg:items-start">
+          <div className="lg:col-span-4">
+            <SectionTitle
+              eyebrow="Quick Answers"
+              title="Retail and wholesale questions"
+              description="Can't find what you're looking for? Send us your question directly."
+            />
+            <Link
+              href="/contact"
+              className="btn-outline rounded-xl bg-white shadow-soft"
+            >
+              <FaQuestionCircle className="h-3.5 w-3.5" />
+              Ask Your Own
+            </Link>
+          </div>
+          <div className="overflow-hidden rounded-2xl shadow-[0_18px_60px_-34px_rgba(4,14,48,0.55)] lg:col-span-8">
+            <FAQAccordion items={faqs.slice(0, 5)} />
           </div>
         </div>
       </section>

@@ -223,13 +223,21 @@ export default function ProductsPage() {
 
     switch (sort) {
       case "rating":
-        list.sort((a, b) => b.rating - a.rating);
+        list.sort((a, b) => b.rating - a.rating || a.id.localeCompare(b.id));
         break;
       case "newest":
-        list.sort((a, b) => Number(b.newArrival) - Number(a.newArrival));
+        list = list
+          .filter((p) => p.newArrival)
+          .sort(
+            (a, b) =>
+              new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime() ||
+              a.id.localeCompare(b.id),
+          );
         break;
       default:
-        list.sort((a, b) => Number(b.featured) - Number(a.featured));
+        list.sort(
+          (a, b) => Number(b.featured) - Number(a.featured) || a.id.localeCompare(b.id),
+        );
     }
     return list;
   }, [
@@ -280,37 +288,17 @@ export default function ProductsPage() {
     });
   };
 
+  const banner = "/banners/WhatsApp%20Image%202026-07-21%20at%2023.35.15.jpeg";
+
   return (
     <>
       <PageHero
         eyebrow="Cloth catalogue"
         title="Retail and wholesale cloth products."
         subtitle="Browse petticoats, lungis, towels, gamcha, bed sheets, handloom and dhotis for home use, shop stock and bulk supply."
-        bgImage="https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=1920&auto=format&fit=crop&q=80"
+        bgImage={banner}
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Products" }]}
       />
-
-      <section className="border-b border-primary-100 bg-white">
-        <div className="container-x grid gap-3 py-6 md:grid-cols-3">
-          {[
-            { label: "Retail shopping", Icon: FaStore },
-            { label: "Wholesale supply", Icon: FaBoxes },
-            { label: "Despatch support", Icon: FaTruckMoving },
-          ].map(({ label, Icon }) => (
-            <div
-              key={label}
-              className="flex items-center gap-3 rounded-lg border border-primary-100 bg-primary-50 p-4"
-            >
-              <span className="grid h-10 w-10 place-items-center rounded-lg bg-secondary text-white">
-                <Icon className="h-4 w-4" />
-              </span>
-              <span className="text-sm font-extrabold text-primary-950">
-                {label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
 
       <section className="section-y bg-cream-50">
         <div className="container-x">
@@ -365,12 +353,12 @@ export default function ProductsPage() {
             </div>
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-12">
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-start">
             <aside
               className={cn(
-                "lg:col-span-3 lg:block",
+                "lg:col-span-3 lg:block lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto no-scrollbar",
                 showFilters
-                  ? "fixed inset-0 z-40 overflow-y-auto bg-cream-50 p-5"
+                  ? "fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto bg-cream-50 p-5 pb-24"
                   : "hidden",
               )}
             >
@@ -390,7 +378,10 @@ export default function ProductsPage() {
                       <button
                         key={value}
                         type="button"
-                        onClick={() => setBuyerMode(value)}
+                        onClick={() => {
+                          setBuyerMode(value);
+                          setShowFilters(false);
+                        }}
                         className={cn(
                           "flex items-center gap-3 rounded-lg border px-3 py-3 text-left text-sm font-bold transition",
                           buyerMode === value
@@ -414,6 +405,7 @@ export default function ProductsPage() {
                       onClick={() => {
                         setCategory("all");
                         setSubcategory("all");
+                        setShowFilters(false);
                       }}
                     />
                     {categories.map((c) => (
@@ -425,6 +417,7 @@ export default function ProductsPage() {
                         onClick={() => {
                           setCategory(c.slug);
                           setSubcategory("all");
+                          setShowFilters(false);
                         }}
                       />
                     ))}
@@ -442,7 +435,10 @@ export default function ProductsPage() {
                             ? products.length
                             : productCountForCategory(activeCategory || category)
                         }
-                        onClick={() => setSubcategory("all")}
+                        onClick={() => {
+                          setSubcategory("all");
+                          setShowFilters(false);
+                        }}
                       />
                       {visibleSubcategories.map((s) => (
                         <FilterButton
@@ -451,7 +447,10 @@ export default function ProductsPage() {
                           label={s.name}
                           image={s.image}
                           count={s.productCount || productCountForSubcategory(s)}
-                          onClick={() => setSubcategory(s.slug)}
+                          onClick={() => {
+                            setSubcategory(s.slug);
+                            setShowFilters(false);
+                          }}
                         />
                       ))}
                     </div>

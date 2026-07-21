@@ -61,7 +61,7 @@ export interface BlogPost {
   slug: string;
   excerpt: string;
   content: string;
-  coverImage: string;
+  images: string[];
   author: string;
   authorImage?: string;
   publishedAt: string; // ISO

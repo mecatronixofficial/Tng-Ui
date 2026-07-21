@@ -3,19 +3,19 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import moment from "moment";
 import {
-  FaArrowLeft,
+  FaArrowRight,
   FaBoxes,
   FaClock,
   FaFacebookF,
-  FaStore,
   FaTags,
   FaTwitter,
   FaWhatsapp,
 } from "react-icons/fa";
 
-import PageHero from "@/components/PageHero";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { siteConfig } from "@/data/site";
 import { loadBlogs, loadBlogBySlug } from "@/lib/data";
+import { blogImage } from "@/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -27,13 +27,14 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await loadBlogBySlug(slug);
   if (!post) return { title: "Article Not Found" };
+
   return {
     title: post.title,
     description: post.excerpt,
     openGraph: {
       title: post.title,
       description: post.excerpt,
-      images: [post.coverImage],
+      images: [blogImage(post.images, 0)],
     },
   };
 }
@@ -48,203 +49,237 @@ export default async function BlogDetail({
   if (!post) notFound();
 
   const all = await loadBlogs();
-  const related = all.filter((b) => b.slug !== slug).slice(0, 3);
+  const related = all.filter((blog) => blog.slug !== slug).slice(0, 3);
   const shareText = encodeURIComponent(`${post.title} - ${siteConfig.name}`);
+  const paragraphs = post.content.split("\n\n").filter(Boolean);
+  const chunkSize = Math.max(1, Math.ceil(paragraphs.length / 3));
+  const paragraphChunks = [
+    paragraphs.slice(0, chunkSize),
+    paragraphs.slice(chunkSize, chunkSize * 2),
+    paragraphs.slice(chunkSize * 2),
+  ];
+  let paraKey = 0;
 
   return (
     <>
-      <PageHero
-        eyebrow={post.category}
-        title={post.title}
-        subtitle={post.excerpt}
-        bgImage={post.coverImage}
-        breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Blog", href: "/blog" },
-          { label: post.title },
-        ]}
-      />
+      {/* Minimal text hero — article cover photo behind a light scrim, dark text stays readable */}
+      <section className="relative overflow-hidden border-b border-primary-100 bg-primary-100">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={blogImage(post.images, 0)} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-50/95 via-primary-50/85 to-primary-50/50" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
+        <div className="relative container-x py-8 md:py-12">
+          <div className="mb-5">
+            <Breadcrumbs
+              items={[
+                { label: "Home", href: "/" },
+                { label: "Blog", href: "/blog" },
+                { label: post.title },
+              ]}
+            />
+          </div>
 
-      <article className="section-y bg-cream-50">
-        <div className="container-x grid gap-10 lg:grid-cols-12">
-          <aside className="lg:col-span-4">
-            <div className="sticky top-28 space-y-5">
-              <div className="rounded-lg border border-primary-100 bg-white p-5 shadow-soft">
-                <div className="mb-4 inline-flex items-center gap-2 rounded-lg bg-primary-50 px-3 py-2 text-[10px] font-bold uppercase tracking-widest-x text-primary-800">
-                  <FaTags className="h-3 w-3 text-secondary" />
-                  Article details
-                </div>
-                <div className="flex items-center gap-3 border-t border-primary-100 pt-4">
-                  <div className="grid h-11 w-11 place-items-center rounded-lg bg-secondary text-sm font-extrabold text-white">
-                    {post.author.charAt(0)}
+          <div className="max-w-3xl">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest-x text-white shadow-soft">
+              {post.category}
+            </span>
+            <h1 className="display mt-4 text-3xl font-extrabold leading-[1.05] text-primary-950 md:text-5xl">
+              {post.title}
+            </h1>
+            <div className="mt-6 flex flex-wrap items-center gap-4 text-xs font-semibold text-ink-muted">
+              <span className="flex items-center gap-2.5">
+                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-primary-950 font-display text-sm font-bold text-white">
+                  {post.author?.charAt(0) ?? "T"}
+                </span>
+                {post.author}
+              </span>
+              <span>{moment(post.publishedAt).format("MMMM D, YYYY")}</span>
+              <span className="flex items-center gap-1.5">
+                <FaClock className="h-3 w-3 text-secondary" /> {post.readTime} min read
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <article className="bg-cream-50 pb-16 pt-10 md:pb-24 md:pt-16">
+        <div className="container-x">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-14">
+            {/* Main column */}
+            <div>
+              <div className="relative overflow-hidden rounded-3xl bg-white shadow-soft">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={blogImage(post.images, 0)} alt={post.title} className="aspect-[16/8] w-full object-cover" />
+
+                <div className="p-6 md:p-10">
+                  {/* Pull-quote excerpt */}
+                  <p className="relative mt-8 max-w-2xl pl-6 font-display text-xl italic leading-relaxed text-primary-900 first:mt-0 md:text-2xl">
+                    <span className="absolute -left-1 -top-2 font-display text-5xl text-secondary/40">&ldquo;</span>
+                    {post.excerpt}
+                  </p>
+
+                  {/* Body */}
+                  <div className="prose-content mt-8 max-w-2xl space-y-6 text-base leading-8 text-ink-soft md:text-[1.05rem]">
+                    {paragraphChunks[0].map((para, i) => (
+                      <p key={paraKey++} className={i === 0 ? "first-letter:float-left first-letter:mr-2 first-letter:font-display first-letter:text-5xl first-letter:font-bold first-letter:text-primary-950" : ""}>
+                        {para}
+                      </p>
+                    ))}
                   </div>
-                  <div>
-                    <div className="text-sm font-extrabold text-ink">
-                      {post.author}
+
+                  {paragraphChunks[1].length > 0 && (
+                    <>
+                      <figure className="my-8 overflow-hidden rounded-2xl">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={blogImage(post.images, 2)} alt={`${post.title} — in the middle of the article`} className="aspect-[16/8] w-full object-cover" />
+                      </figure>
+                      <div className="max-w-2xl space-y-6 text-base leading-8 text-ink-soft md:text-[1.05rem]">
+                        {paragraphChunks[1].map((para) => (
+                          <p key={paraKey++}>{para}</p>
+                        ))}
+                      </div>
+                    </>
+                  )}
+
+                  {paragraphChunks[2].length > 0 && (
+                    <div className="my-8 flex max-w-2xl gap-4 rounded-2xl bg-cream-100 p-6">
+                      <FaBoxes className="mt-1 h-5 w-5 shrink-0 text-secondary" />
+                      <div className="space-y-6 text-base leading-8 text-ink-soft md:text-[1.05rem]">
+                        {paragraphChunks[2].map((para) => (
+                          <p key={paraKey++}>{para}</p>
+                        ))}
+                      </div>
                     </div>
-                    <div className="text-[10px] font-bold uppercase tracking-wider-x text-ink-muted">
-                      {moment(post.publishedAt).format("MMM D, YYYY")}
+                  )}
+
+                  {/* Tags + share */}
+                  <div className="mt-10 flex max-w-2xl flex-col gap-6 border-t border-primary-100 pt-8 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <FaTags className="h-3.5 w-3.5 text-ink-muted" />
+                      {post.tags.map((tag) => (
+                        <span key={tag} className="rounded-full bg-cream-100 px-3 py-1.5 text-xs font-semibold text-primary-800">#{tag}</span>
+                      ))}
                     </div>
-                  </div>
-                </div>
-                <div className="mt-4 grid gap-2">
-                  <div className="flex items-center gap-2 rounded-lg bg-primary-50 px-3 py-2 text-xs font-bold text-primary-800">
-                    <FaClock className="h-3.5 w-3.5 text-secondary" />
-                    {post.readTime} min read
-                  </div>
-                  <div className="flex items-center gap-2 rounded-lg bg-secondary/10 px-3 py-2 text-xs font-bold text-primary-800">
-                    <FaStore className="h-3.5 w-3.5 text-secondary" />
-                    Retail guide
-                  </div>
-                  <div className="flex items-center gap-2 rounded-lg bg-secondary/10 px-3 py-2 text-xs font-bold text-primary-800">
-                    <FaBoxes className="h-3.5 w-3.5 text-secondary" />
-                    Wholesale insight
+                    <div className="flex items-center gap-2.5">
+                      {[
+                        { Icon: FaWhatsapp, label: "WhatsApp", href: `https://wa.me/?text=${shareText}` },
+                        { Icon: FaFacebookF, label: "Facebook", href: "https://facebook.com" },
+                        { Icon: FaTwitter, label: "Twitter", href: "https://twitter.com" },
+                      ].map(({ Icon, label, href }) => (
+                        <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} className="grid h-9 w-9 place-items-center rounded-full bg-cream-100 text-primary-800 transition hover:bg-primary-950 hover:text-white">
+                          <Icon className="h-3.5 w-3.5" />
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-lg border border-secondary/30 bg-white p-5 shadow-soft">
-                <div className="text-[10px] font-bold uppercase tracking-widest-x text-secondary">
-                  Need cloth details?
+              {/* CTA banner — mobile / tablet only, sidebar covers desktop */}
+              <a
+                href={siteConfig.socials.whatsapp}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-8 flex items-center justify-between gap-4 rounded-2xl bg-primary-950 p-6 text-white shadow-soft transition hover:bg-primary-900 md:p-8 lg:hidden"
+              >
+                <span className="flex items-center gap-4">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-secondary/20">
+                    <FaWhatsapp className="h-5 w-5 text-secondary-light" />
+                  </span>
+                  <span>
+                    <span className="block font-display text-lg font-bold md:text-xl">Looking for this fabric?</span>
+                    <span className="mt-0.5 block text-xs text-cream-100/70 md:text-sm">Ask us about retail pieces &amp; wholesale availability</span>
+                  </span>
+                </span>
+                <FaArrowRight className="h-4 w-4 shrink-0 text-secondary-light" />
+              </a>
+            </div>
+
+            {/* Sidebar — desktop only */}
+            <aside className="hidden lg:block">
+              <div className="sticky top-28 space-y-6">
+                <div className="rounded-2xl bg-white p-6 shadow-soft">
+                  <div className="flex items-center gap-3">
+                    <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-primary-950 font-display text-lg font-bold text-white">
+                      {post.author?.charAt(0) ?? "T"}
+                    </div>
+                    <div>
+                      <span className="block text-sm font-bold text-primary-950">{post.author}</span>
+                      <span className="text-xs text-ink-muted">{moment(post.publishedAt).format("MMMM D, YYYY")}</span>
+                    </div>
+                  </div>
+                  <div className="mt-5 flex items-center gap-2 rounded-full bg-cream-100 px-3 py-2 text-xs font-semibold text-primary-800">
+                    <FaClock className="h-3 w-3 text-secondary" /> {post.readTime} min read
+                  </div>
                 </div>
-                <p className="mt-2 text-sm leading-6 text-ink-muted">
-                  Message us for retail products or wholesale stock availability.
-                </p>
+
                 <a
                   href={siteConfig.socials.whatsapp}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-secondary px-5 py-3 text-sm font-bold text-white transition hover:bg-secondary-dark"
+                  className="block rounded-2xl bg-primary-950 p-6 text-white shadow-soft transition hover:bg-primary-900"
                 >
-                  <FaWhatsapp className="h-4 w-4" />
-                  Ask on WhatsApp
+                  <span className="grid h-11 w-11 place-items-center rounded-full bg-secondary/20">
+                    <FaWhatsapp className="h-5 w-5 text-secondary-light" />
+                  </span>
+                  <span className="mt-5 block font-display text-lg font-bold leading-tight">Looking for this fabric?</span>
+                  <span className="mt-2 block text-xs leading-relaxed text-cream-100/70">Ask us about retail pieces &amp; wholesale availability</span>
+                  <span className="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider-x text-secondary-light">
+                    Chat now <FaArrowRight className="h-3 w-3" />
+                  </span>
                 </a>
-              </div>
-            </div>
-          </aside>
 
-          <div className="lg:col-span-8">
-            <div className="overflow-hidden rounded-lg border border-primary-100 bg-white shadow-soft">
-              <div className="border-b border-primary-100 p-5 md:p-7">
-                <div className="mb-4 flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-md bg-primary-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-primary-800">
-                    <FaStore className="h-3 w-3 text-secondary" />
-                    Retail
+                <div className="rounded-2xl bg-white p-6 shadow-soft">
+                  <span className="mb-3 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest-x text-ink-muted">
+                    <FaTags className="h-3 w-3" /> Filed under
                   </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-md bg-secondary/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-secondary-dark">
-                    <FaBoxes className="h-3 w-3" />
-                    Wholesale
-                  </span>
-                </div>
-                <p className="text-lg font-semibold leading-8 text-ink-soft">
-                  {post.excerpt}
-                </p>
-              </div>
-
-              <div className="p-5 md:p-7">
-                {post.content.split("\n\n").map((para, i) => (
-                  <p
-                    key={i}
-                    className="mb-7 text-lg leading-8 text-ink-soft last:mb-0"
-                  >
-                    {para}
-                  </p>
-                ))}
-              </div>
-
-              <div className="border-t border-primary-100 bg-primary-50 p-5 md:p-7">
-                <div className="mb-4 flex flex-wrap items-center gap-3">
-                  <span className="text-[10px] font-bold uppercase tracking-widest-x text-primary-800">
-                    Tags
-                  </span>
-                  {post.tags.map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-md bg-white px-3 py-1.5 text-xs font-bold text-ink-soft shadow-soft"
-                    >
-                      #{t}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className="text-[10px] font-bold uppercase tracking-widest-x text-primary-800">
-                    Share
-                  </span>
-                  {[
-                    {
-                      Icon: FaWhatsapp,
-                      label: "WhatsApp",
-                      href: `https://wa.me/?text=${shareText}`,
-                    },
-                    {
-                      Icon: FaFacebookF,
-                      label: "Facebook",
-                      href: "https://facebook.com",
-                    },
-                    { Icon: FaTwitter, label: "Twitter", href: "https://twitter.com" },
-                  ].map(({ Icon, label, href }) => (
-                    <a
-                      key={label}
-                      href={href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="grid h-10 w-10 place-items-center rounded-lg border border-primary-100 bg-white text-primary-800 transition hover:border-secondary hover:bg-secondary hover:text-white"
-                      aria-label={label}
-                    >
-                      <Icon className="h-3.5 w-3.5" />
-                    </a>
-                  ))}
+                  <div className="flex flex-wrap gap-2">
+                    {post.tags.map((tag) => (
+                      <span key={tag} className="rounded-full bg-cream-100 px-3 py-1.5 text-xs font-semibold text-primary-800">#{tag}</span>
+                    ))}
+                  </div>
+                  <span className="mb-3 mt-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest-x text-ink-muted">Share</span>
+                  <div className="flex items-center gap-2.5">
+                    {[
+                      { Icon: FaWhatsapp, label: "WhatsApp", href: `https://wa.me/?text=${shareText}` },
+                      { Icon: FaFacebookF, label: "Facebook", href: "https://facebook.com" },
+                      { Icon: FaTwitter, label: "Twitter", href: "https://twitter.com" },
+                    ].map(({ Icon, label, href }) => (
+                      <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} className="grid h-9 w-9 place-items-center rounded-full bg-cream-100 text-primary-800 transition hover:bg-primary-950 hover:text-white">
+                        <Icon className="h-3.5 w-3.5" />
+                      </a>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            </aside>
           </div>
         </div>
       </article>
 
       {related.length > 0 && (
-        <section className="section-y bg-white">
+        <section className="bg-cream-100 py-16 md:py-24">
           <div className="container-x">
-            <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+            <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
-                <div className="mb-3 inline-flex items-center gap-2 rounded-lg border border-secondary/30 bg-white px-3 py-2 text-[10px] font-bold uppercase tracking-widest-x text-primary-800 shadow-soft">
-                  <FaTags className="h-3 w-3 text-secondary" />
-                  Continue reading
-                </div>
-                <h2 className="text-3xl font-extrabold text-primary-950 md:text-4xl">
-                  More cloth trade notes
-                </h2>
+                <span className="text-[10px] font-bold uppercase tracking-widest-x text-secondary">From the journal</span>
+                <h2 className="mt-3 font-display text-3xl font-bold text-primary-950 md:text-4xl">Continue exploring</h2>
               </div>
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider-x text-primary-800 hover:text-secondary"
-              >
-                <FaArrowLeft className="h-3 w-3" /> All articles
+              <Link href="/blog" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider-x text-primary-800 transition hover:text-secondary">
+                All articles <FaArrowRight className="h-3 w-3" />
               </Link>
             </div>
-
             <div className="grid gap-6 md:grid-cols-3">
-              {related.map((b) => (
-                <Link
-                  key={b.id}
-                  href={`/blog/${b.slug}`}
-                  className="group overflow-hidden rounded-lg border border-primary-100 bg-cream-50 shadow-soft transition hover:border-secondary hover:bg-white hover:shadow-warm"
-                >
+              {related.map((blog) => (
+                <Link key={blog.id} href={`/blog/${blog.slug}`} className="group overflow-hidden rounded-2xl bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-lg">
                   <div className="relative aspect-[16/10] overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={b.coverImage}
-                      alt={b.title}
-                      className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                    />
+                    <img src={blogImage(blog.images, 0)} alt={blog.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
                   </div>
                   <div className="p-5">
-                    <h3 className="text-xl font-extrabold leading-tight text-primary-950 transition group-hover:text-primary-700">
-                      {b.title}
-                    </h3>
-                    <div className="mt-3 text-xs font-semibold text-ink-muted">
-                      {moment(b.publishedAt).format("MMM D, YYYY")}
-                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest-x text-secondary">{blog.category}</span>
+                    <h3 className="mt-2 font-display text-lg font-bold leading-tight text-primary-950 group-hover:text-primary-700">{blog.title}</h3>
+                    <div className="mt-3 text-xs font-semibold text-ink-muted">{moment(blog.publishedAt).format("MMMM D, YYYY")}</div>
                   </div>
                 </Link>
               ))}

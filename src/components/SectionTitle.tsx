@@ -1,7 +1,7 @@
 "use client";
 
+import { ReactNode } from "react";
 import { motion } from "framer-motion";
-import { FaBoxes, FaStore } from "react-icons/fa";
 import { cn } from "@/utils";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
   description?: string;
   align?: "left" | "center";
   light?: boolean;
-  decorative?: boolean;
+  action?: ReactNode;
 }
 
 export default function SectionTitle({
@@ -19,7 +19,7 @@ export default function SectionTitle({
   description,
   align = "left",
   light = false,
-  decorative = true,
+  action,
 }: Props) {
   const isCenter = align === "center";
   return (
@@ -28,95 +28,74 @@ export default function SectionTitle({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.6 }}
-      className={cn(
-        "max-w-3xl mb-12",
-        isCenter && "mx-auto text-center"
-      )}
+      className="mb-12 flex flex-nowrap items-end justify-between gap-4"
     >
-      {eyebrow && (
-        <div
-          className={cn(
-            "flex items-center gap-3 mb-5",
-            isCenter && "justify-center"
-          )}
-        >
-          {decorative && (
-            <span
-              className={cn(
-                "hidden h-px w-10 sm:block",
-                light ? "bg-secondary-light" : "bg-secondary",
-              )}
-            />
-          )}
-          <span
-            className={cn(
-              "inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-[10px] font-bold uppercase tracking-widest-x shadow-soft",
-              light
-                ? "border-secondary/40 bg-white/8 text-secondary-light"
-                : "border-primary-100 bg-white text-primary-800"
-            )}
-          >
-            <FaStore className={cn("h-3 w-3", light ? "text-secondary-light" : "text-primary-600")} />
-            {eyebrow}
-            <span className="h-3 w-px bg-current opacity-25" />
-            <FaBoxes className={cn("h-3 w-3", light ? "text-secondary-light" : "text-secondary")} />
-          </span>
-          {decorative && (
-            <span
-              className={cn(
-                "hidden h-px w-10 sm:block",
-                light ? "bg-secondary-light" : "bg-secondary",
-              )}
-            />
-          )}
-        </div>
-      )}
-      <h2
+      <div
         className={cn(
-          "text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold leading-[1.05] tracking-tight",
-          light ? "text-cream-50" : "text-primary-950"
+          "min-w-0 flex-1 max-w-3xl",
+          isCenter && "mx-auto text-center"
         )}
       >
-        {title}
-      </h2>
-      {decorative && (
-        <div
+        {eyebrow && (
+          <div
+            className={cn(
+              "mb-4 inline-flex items-center gap-2 rounded-full py-1 pl-1.5 pr-3.5",
+              light
+                ? "bg-cream-50/10 ring-1 ring-inset ring-cream-50/20"
+                : "bg-secondary/10 ring-1 ring-inset ring-secondary/20",
+              isCenter && "mx-auto"
+            )}
+          >
+            <span
+              aria-hidden="true"
+              className={cn(
+                "h-1.5 w-1.5 rounded-full",
+                light ? "bg-secondary-light" : "bg-secondary"
+              )}
+            />
+            <span
+              className={cn(
+                "text-xs font-semibold uppercase tracking-wider-x",
+                light ? "text-secondary-light" : "text-secondary-dark"
+              )}
+            >
+              {eyebrow}
+            </span>
+          </div>
+        )}
+        <h2
           className={cn(
-            "mt-5 flex items-center gap-2",
-            isCenter && "justify-center",
+            "font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl",
+            light
+              ? "text-cream-50"
+              : "bg-gradient-to-br from-primary-950 via-primary-900 to-primary-700 bg-clip-text text-transparent"
           )}
         >
-          <span
-            className={cn(
-              "h-1.5 w-10 rounded-full",
-              light ? "bg-secondary-light" : "bg-secondary",
-            )}
-          />
-          <span
-            className={cn(
-              "h-1.5 w-1.5 rounded-full",
-              light ? "bg-cream-50/60" : "bg-primary-300",
-            )}
-          />
-          <span
-            className={cn(
-              "h-1.5 w-1.5 rounded-full",
-              light ? "bg-cream-50/40" : "bg-primary-200",
-            )}
-          />
-        </div>
-      )}
-      {description && (
-        <p
+          {title}
+        </h2>
+        <span
+          aria-hidden="true"
           className={cn(
-            "mt-5 max-w-2xl text-base leading-7 md:text-lg",
-            isCenter && "mx-auto",
-            light ? "text-cream-100/80" : "text-ink-soft"
+            "mt-4 block h-1 w-14 origin-left scale-x-100 rounded-full bg-gradient-to-r",
+            light
+              ? "from-secondary-light to-secondary-light/0"
+              : "from-secondary to-secondary/0",
+            isCenter && "mx-auto"
           )}
-        >
-          {description}
-        </p>
-      )}
+        />
+        {description && (
+          <p
+            className={cn(
+              "mt-4 max-w-2xl text-base leading-7 md:text-lg",
+              isCenter && "mx-auto",
+              light ? "text-cream-100/80" : "text-ink-soft"
+            )}
+          >
+            {description}
+          </p>
+        )}
+      </div>
+      {action && <div className="shrink-0">{action}</div>}
     </motion.div>
   );
 }

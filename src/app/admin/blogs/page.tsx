@@ -11,15 +11,17 @@ import {
 } from "@/components/admin/AdminUI";
 import { cn } from "@/utils";
 
+const MAX_BLOG_IMAGES = 5;
+
 interface FormState {
   title: string; slug: string; excerpt: string; content: string;
-  coverImage: string; author: string; authorImage: string; category: string; tags: string;
+  images: string[]; author: string; authorImage: string; category: string; tags: string;
   readTime: number; featured: boolean; published: boolean;
 }
 
 const emptyForm: FormState = {
   title: "", slug: "", excerpt: "", content: "",
-  coverImage: "", author: "", authorImage: "", category: "", tags: "",
+  images: [], author: "", authorImage: "", category: "", tags: "",
   readTime: 5, featured: false, published: true,
 };
 
@@ -55,7 +57,7 @@ export default function AdminBlogsPage() {
     setEditing(b);
     setForm({
       title: b.title, slug: b.slug, excerpt: b.excerpt, content: b.content,
-      coverImage: b.coverImage, author: b.author, authorImage: b.authorImage || "", category: b.category,
+      images: b.images, author: b.author, authorImage: b.authorImage || "", category: b.category,
       tags: b.tags.join(", "), readTime: b.readTime,
       featured: b.featured, published: b.published,
     });
@@ -63,8 +65,8 @@ export default function AdminBlogsPage() {
   }
 
   async function handleSave() {
-    if (!form.title || !form.excerpt || !form.content || !form.coverImage || !form.author || !form.category) {
-      toast("Title, excerpt, content, cover image, author and category are required.", "error");
+    if (!form.title || !form.excerpt || !form.content || form.images.length === 0 || !form.author || !form.category) {
+      toast("Title, excerpt, content, at least one image, author and category are required.", "error");
       return;
     }
     setSaving(true);
@@ -74,7 +76,7 @@ export default function AdminBlogsPage() {
         slug: form.slug || undefined,
         excerpt: form.excerpt,
         content: form.content,
-        coverImage: form.coverImage,
+        images: form.images,
         author: form.author,
         authorImage: form.authorImage || undefined,
         category: form.category,
@@ -135,7 +137,7 @@ export default function AdminBlogsPage() {
             <AdminCard key={b.id} className="overflow-hidden flex flex-col">
               <div className="relative aspect-[16/10]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={b.coverImage} alt={b.title} className="absolute inset-0 h-full w-full object-cover" />
+                <img src={b.images[0]} alt={b.title} className="absolute inset-0 h-full w-full object-cover" />
                 <div className="absolute top-3 left-3 flex flex-col gap-1">
                   {b.featured && (
                     <span className="rounded-full bg-secondary text-cream-50 px-2.5 py-1 text-[9px] uppercase tracking-widest-x font-bold flex items-center gap-1">
@@ -182,9 +184,11 @@ export default function AdminBlogsPage() {
       >
         <div className="space-y-5">
           <ImageUploader
-            value={form.coverImage ? [form.coverImage] : []}
-            onChange={(urls) => setForm({ ...form, coverImage: urls[0] || "" })}
-            label="Cover Image"
+            value={form.images}
+            onChange={(images) => setForm({ ...form, images })}
+            multiple
+            max={MAX_BLOG_IMAGES}
+            label="Article Images (5 max — 1: cover (hero/listing/share), 2: sidebar photo, 3 & 4: inline photos through the article, 5: closing photo)"
           />
 
           <ImageUploader

@@ -277,7 +277,7 @@ export default function AdminDashboardPage() {
       <div className="grid lg:grid-cols-2 gap-6">
 
         {/* Order status donut */}
-        <AdminCard className="p-6">
+        <AdminCard className="p-6 flex flex-col h-full">
           <div className="flex items-center gap-2 mb-5">
             <FaChartBar className="h-4 w-4 text-primary-600" />
             <h2 className="display text-xl font-semibold text-primary-700">Order status</h2>
@@ -285,7 +285,7 @@ export default function AdminDashboardPage() {
           {orderStatusData.length === 0 ? (
             <div className="h-52 flex items-center justify-center text-sm text-ink-muted">No orders yet</div>
           ) : (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 flex-1">
               <ResponsiveContainer width="60%" height={200}>
                 <PieChart>
                   <Pie
@@ -327,7 +327,7 @@ export default function AdminDashboardPage() {
         </AdminCard>
 
         {/* Enquiry source donut */}
-        <AdminCard className="p-6">
+        <AdminCard className="p-6 flex flex-col h-full">
           <div className="flex items-center gap-2 mb-5">
             <FaChartBar className="h-4 w-4 text-primary-600" />
             <h2 className="display text-xl font-semibold text-primary-700">Enquiry sources</h2>
@@ -336,7 +336,7 @@ export default function AdminDashboardPage() {
           {sourcePieData.length === 0 ? (
             <div className="h-52 flex items-center justify-center text-sm text-ink-muted">No data yet</div>
           ) : (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 flex-1">
               <ResponsiveContainer width="60%" height={200}>
                 <PieChart>
                   <Pie
@@ -378,7 +378,7 @@ export default function AdminDashboardPage() {
       <div className="grid lg:grid-cols-2 gap-6">
 
         {/* Products bar */}
-        <AdminCard className="p-6">
+        <AdminCard className="p-6 flex flex-col h-full">
           <div className="flex items-center gap-2 mb-5">
             <FaBoxOpen className="h-4 w-4 text-primary-600" />
             <h2 className="display text-xl font-semibold text-primary-700">Product inventory</h2>
@@ -397,7 +397,7 @@ export default function AdminDashboardPage() {
               <Bar dataKey="Inactive" fill={CHART_MUTED} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-          <div className="mt-4 grid grid-cols-3 gap-3 text-center">
+          <div className="mt-auto pt-4 grid grid-cols-3 gap-3 text-center">
             <div className="rounded-lg bg-cream-50 p-3 border border-cream-200">
               <div className="display text-xl font-bold text-primary-600">{stats.products.total}</div>
               <div className="text-[10px] uppercase tracking-widest-x text-ink-muted mt-0.5">Total</div>
@@ -414,7 +414,7 @@ export default function AdminDashboardPage() {
         </AdminCard>
 
         {/* Blog bar + pending reviews */}
-        <AdminCard className="p-6">
+        <AdminCard className="p-6 flex flex-col h-full">
           <div className="flex items-center gap-2 mb-5">
             <FaBlog className="h-4 w-4 text-primary-600" />
             <h2 className="display text-xl font-semibold text-primary-700">Content & reviews</h2>
@@ -430,7 +430,7 @@ export default function AdminDashboardPage() {
               <Bar dataKey="Drafts" fill={CHART_MUTED} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-          <div className="mt-4 grid grid-cols-3 gap-3 text-center">
+          <div className="mt-auto pt-4 grid grid-cols-3 gap-3 text-center">
             <div className="rounded-lg bg-cream-50 p-3 border border-cream-200">
               <div className="display text-xl font-bold text-primary-600">{stats.blogs.total}</div>
               <div className="text-[10px] uppercase tracking-widest-x text-ink-muted mt-0.5">Total Posts</div>

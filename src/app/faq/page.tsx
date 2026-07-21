@@ -72,7 +72,6 @@ export default async function FAQPage() {
               <SectionTitle
                 eyebrow="Buyer support"
                 title="Find answers before you order."
-                description="Browse common retail and wholesale cloth questions. For live stock, WhatsApp is the fastest route."
               />
 
               <div className="space-y-5">

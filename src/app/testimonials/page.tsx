@@ -30,6 +30,7 @@ const proofPoints = [
 
 export default async function TestimonialsPage() {
   const testimonials = await loadTestimonials();
+const banner = "/banners/WhatsApp%20Image%202026-07-21%20at%2023.49.14.jpeg";
 
   return (
     <>
@@ -37,7 +38,7 @@ export default async function TestimonialsPage() {
         eyebrow="Buyer reviews"
         title="Retail and wholesale cloth buyers speak."
         subtitle="Real feedback from families, shop owners, resellers and textile trade customers we have served."
-        bgImage="https://images.unsplash.com/photo-1583846552345-d2ce05fbe1c5?w=1920&auto=format&fit=crop&q=80"
+        bgImage={banner}
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Reviews" }]}
       />
 
@@ -66,7 +67,6 @@ export default async function TestimonialsPage() {
             <SectionTitle
               eyebrow="Featured buyer proof"
               title="Trusted by retail homes and wholesale shops."
-              description="See what customers say about cloth quality, response time, packing and repeat supply."
             />
             <div className="rounded-lg border border-primary-100 bg-white p-5 shadow-soft">
               <div className="flex items-center gap-1 text-secondary">
@@ -94,7 +94,6 @@ export default async function TestimonialsPage() {
           <SectionTitle
             eyebrow="All reviews"
             title="What cloth customers say"
-            description="Retail and wholesale feedback from buyers across different product categories."
             align="center"
           />
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -168,7 +167,6 @@ export default async function TestimonialsPage() {
             <SectionTitle
               eyebrow="Your review"
               title="Bought cloth from us?"
-              description="Share your retail shopping or wholesale order experience. Honest feedback helps future buyers choose the right products."
             />
             <div className="space-y-3">
               {[

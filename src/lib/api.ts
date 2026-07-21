@@ -266,6 +266,8 @@ export const api = {
   publicHeroBanners: () => request<BannerApi[]>("/banners/hero", { auth: false }),
   publicOpeningCard: () =>
     request<BannerApi[]>("/banners/opening-card", { auth: false }),
+  visitorCount: () => request<VisitorCount>("/visitors", { auth: false }),
+  trackVisitor: () => request<VisitorCount>("/visitors/track", { method: "POST", auth: false }),
 
   submitOrder: (data: SubmitOrderInput) =>
     request<OrderApi>("/orders", { method: "POST", body: data, auth: false }),
@@ -481,7 +483,7 @@ export interface BlogApi {
   slug: string;
   excerpt: string;
   content: string;
-  coverImage: string;
+  images: string[];
   author: string;
   authorImage?: string;
   category: string;
@@ -608,4 +610,8 @@ export interface DashboardStats {
   };
   testimonials: { total: number };
   recentOrders: OrderApi[];
+}
+
+export interface VisitorCount {
+  count: number;
 }

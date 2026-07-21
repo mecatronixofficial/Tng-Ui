@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import Breadcrumbs, { type Crumb } from "@/components/Breadcrumbs";
 
 interface PageHeroProps {
@@ -10,48 +13,42 @@ interface PageHeroProps {
 
 export default function PageHero({
   title,
-  subtitle,
   eyebrow,
   bgImage,
   breadcrumbs,
 }: PageHeroProps) {
+  const router = useRouter();
+
   return (
-    <section className="relative bg-primary-950 overflow-hidden">
+    <section className="relative bg-primary-950 overflow-hidden border-b border-white/10">
       {bgImage && (
         <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={bgImage}
             alt=""
-            className="absolute inset-0 h-full w-full object-cover opacity-30"
+            className="absolute inset-0 h-full w-full object-cover object-right"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-primary-950/70 via-primary-950/85 to-primary-950" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary-950 via-primary-950/70 to-transparent" />
         </>
       )}
-      <div className="absolute inset-0 bg-weave-dark opacity-50" />
+      <div className="absolute inset-0 bg-weave-dark opacity-20" />
 
-      <div className="relative container-x py-24 md:py-32">
-        {breadcrumbs && (
-          <div className="mb-6">
-            <Breadcrumbs items={breadcrumbs} />
-          </div>
-        )}
-        {eyebrow && (
-          <div className="flex items-center gap-3 mb-4">
-            <span className="h-px w-10 bg-green-400" />
-            <span className="text-[11px] uppercase tracking-widest-x text-green-400 font-semibold">
+      <div className="relative container-x py-10 md:py-14">
+        <div className="max-w-xl">
+          {breadcrumbs && (
+            <div className="mb-3">
+              <Breadcrumbs items={breadcrumbs} />
+            </div>
+          )}
+          {eyebrow && (
+            <span className="inline-flex items-center rounded-full border border-green-400/30 bg-green-400/10 px-2.5 py-1 text-[10px] uppercase tracking-widest-x text-green-400 font-semibold">
               {eyebrow}
             </span>
-          </div>
-        )}
-        <h1 className="display text-5xl md:text-7xl font-semibold leading-[1.02] tracking-tight max-w-4xl text-white">
-          {title}
-        </h1>
-        {subtitle && (
-          <p className="mt-6 text-lg text-cream-100 max-w-2xl leading-relaxed">
-            {subtitle}
-          </p>
-        )}
+          )}
+          <h1 className="display mt-3 text-3xl md:text-5xl font-semibold leading-[1.05] tracking-tight text-white">
+            {title}
+          </h1>
+        </div>
       </div>
     </section>
   );

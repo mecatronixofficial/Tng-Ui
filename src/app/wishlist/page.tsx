@@ -19,13 +19,26 @@ import { api, type ProductApi } from "@/lib/api";
 import { useWishlist } from "@/store";
 import type { Product } from "@/types";
 
+async function fetchAllProducts() {
+  const firstPage = await api.publicProducts("page=1&limit=100");
+  if (firstPage.meta.pages <= 1) return firstPage.data;
+
+  const remainingPages = await Promise.all(
+    Array.from({ length: firstPage.meta.pages - 1 }, (_, index) =>
+      api.publicProducts(`page=${index + 2}&limit=100`),
+    ),
+  );
+
+  return [firstPage.data, ...remainingPages.map((page) => page.data)].flat();
+}
+
 export default function WishlistPage() {
   const items = useWishlist((s) => s.items);
   const clear = useWishlist((s) => s.clear);
   const [allProducts, setAllProducts] = useState<ProductApi[]>([]);
 
   useEffect(() => {
-    api.publicProducts().then((res) => setAllProducts(res.data)).catch(() => {});
+    fetchAllProducts().then(setAllProducts).catch(() => {});
   }, []);
 
   const saved = allProducts.filter((p) => items.includes(p.id)) as unknown as Product[];
@@ -33,13 +46,14 @@ export default function WishlistPage() {
     `Hello, I have shortlisted ${saved.length} cloth product(s). Please share retail/wholesale availability.`,
   );
 
+  const banner = "/banners/360_F_247212982_3iULSUUExOJt3CpFbwqQ1LUebmn5qyNj.jpg"
   return (
     <>
       <PageHero
         eyebrow="Cloth shortlist"
         title="Saved retail and wholesale cloths."
         subtitle="Keep products here while comparing retail needs, shop stock, colours, sizes and wholesale quantities."
-        bgImage="https://images.unsplash.com/photo-1583846552345-d2ce05fbe1c5?w=1920&auto=format&fit=crop&q=80"
+        bgImage={banner}
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Wishlist" }]}
       />
 
