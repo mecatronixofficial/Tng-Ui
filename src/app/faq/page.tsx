@@ -19,6 +19,18 @@ import { siteConfig } from "@/data/site";
 export const metadata: Metadata = {
   title: "Retail & Wholesale FAQ",
   description: `Answers to common retail and wholesale cloth questions for ${siteConfig.name}: products, bulk orders, delivery and support.`,
+  keywords: [
+    "textile FAQ",
+    "wholesale cloth order questions",
+    "Thangavel Textile support",
+  ],
+  alternates: { canonical: "/faq" },
+  openGraph: {
+    title: `Retail & Wholesale FAQ — ${siteConfig.name}`,
+    description: `Answers to common retail and wholesale cloth questions for ${siteConfig.name}: products, bulk orders, delivery and support.`,
+    url: "/faq",
+    type: "website",
+  },
 };
 
 const helpCards = [
@@ -30,8 +42,22 @@ const helpCards = [
 export default async function FAQPage() {
   const faqs = await loadFaqs();
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <PageHero
         eyebrow="Cloth buyer help"
         title="Retail and wholesale questions answered."

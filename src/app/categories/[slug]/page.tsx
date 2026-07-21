@@ -25,10 +25,24 @@ export async function generateMetadata({
   const { slug } = await params;
   const categories = await loadCategories();
   const cat = categories.find((c) => c.slug === slug);
-  if (!cat) return { title: "Category Not Found" };
+  if (!cat) {
+    return { title: "Category Not Found", robots: { index: false, follow: false } };
+  }
+
+  const description = `${cat.description} Retail and wholesale cloth supply from ${siteConfig.name}.`;
+
   return {
     title: `${cat.name} Category`,
-    description: `${cat.description} Retail and wholesale cloth supply from ${siteConfig.name}.`,
+    description,
+    keywords: [cat.name, `${cat.name} wholesale`, `${cat.name} Erode`, "textile category"],
+    alternates: { canonical: `/categories/${slug}` },
+    openGraph: {
+      title: `${cat.name} Category — ${siteConfig.name}`,
+      description,
+      url: `/categories/${slug}`,
+      type: "website",
+      images: cat.image ? [{ url: cat.image, alt: cat.name }] : [],
+    },
   };
 }
 
@@ -65,8 +79,22 @@ export default async function CategoryDetail({
     return true;
   });
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.thangaveltextile.in" },
+      { "@type": "ListItem", position: 2, name: "Categories", item: "https://www.thangaveltextile.in/categories" },
+      { "@type": "ListItem", position: 3, name: cat.name, item: `https://www.thangaveltextile.in/categories/${slug}` },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <PageHero
         eyebrow="Cloth category"
         title={`${cat.name} for retail and wholesale`}

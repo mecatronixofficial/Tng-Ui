@@ -29,6 +29,26 @@ import FAQAccordion from "@/components/FAQAccordion";
 export const metadata: Metadata = {
   title: "About Us",
   description: `Learn about ${siteConfig.name} — a retail and wholesale cloth supplier from ${siteConfig.address.city}, ${siteConfig.address.state}, serving cotton and handloom textile buyers since ${siteConfig.established}.`,
+  keywords: [
+    "about Thangavel Textile",
+    "textile manufacturer Erode history",
+    "cotton wholesale supplier Tamil Nadu",
+  ],
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: `About Us — ${siteConfig.name}`,
+    description: `Learn about ${siteConfig.name} — a retail and wholesale cloth supplier from ${siteConfig.address.city}, ${siteConfig.address.state}, serving cotton and handloom textile buyers since ${siteConfig.established}.`,
+    url: "/about",
+    type: "website",
+    images: [
+      {
+        url: "/banners/WhatsApp%20Image%202026-07-21%20at%2023.39.25.jpeg",
+        width: 1200,
+        height: 630,
+        alt: `About ${siteConfig.name}`,
+      },
+    ],
+  },
 };
 
 const buyerPaths = [

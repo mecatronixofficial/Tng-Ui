@@ -20,6 +20,18 @@ import { cn } from "@/utils";
 export const metadata: Metadata = {
   title: "Retail & Wholesale Customer Reviews",
   description: `Retail and wholesale cloth buyer reviews for ${siteConfig.name}, including shop owners, traders and family customers.`,
+  keywords: [
+    "Thangavel Textile reviews",
+    "wholesale cloth buyer feedback",
+    "textile customer testimonials",
+  ],
+  alternates: { canonical: "/testimonials" },
+  openGraph: {
+    title: `Customer Reviews — ${siteConfig.name}`,
+    description: `Retail and wholesale cloth buyer reviews for ${siteConfig.name}, including shop owners, traders and family customers.`,
+    url: "/testimonials",
+    type: "website",
+  },
 };
 
 const proofPoints = [
@@ -30,10 +42,39 @@ const proofPoints = [
 
 export default async function TestimonialsPage() {
   const testimonials = await loadTestimonials();
-const banner = "/banners/WhatsApp%20Image%202026-07-21%20at%2023.49.14.jpeg";
+  const banner = "/banners/WhatsApp%20Image%202026-07-21%20at%2023.49.14.jpeg";
+
+  const avgRating =
+    testimonials.length > 0
+      ? testimonials.reduce((sum, t) => sum + t.rating, 0) / testimonials.length
+      : 0;
+
+  const reviewsJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ClothingStore",
+    "@id": "https://www.thangaveltextile.in/#organization",
+    name: siteConfig.name,
+    ...(testimonials.length > 0 && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: avgRating.toFixed(1),
+        reviewCount: testimonials.length,
+      },
+      review: testimonials.slice(0, 20).map((t) => ({
+        "@type": "Review",
+        author: { "@type": "Person", name: t.name },
+        reviewRating: { "@type": "Rating", ratingValue: t.rating, bestRating: 5 },
+        reviewBody: t.review,
+      })),
+    }),
+  };
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewsJsonLd) }}
+      />
       <PageHero
         eyebrow="Buyer reviews"
         title="Retail and wholesale cloth buyers speak."
