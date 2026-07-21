@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   FaSearch,
   FaHeart,
+  FaShoppingCart,
   FaBars,
   FaTimes,
   FaWhatsapp,
@@ -15,7 +16,7 @@ import {
 
 import { siteConfig } from "@/data/site";
 import { cn } from "@/utils";
-import { useWishlist } from "@/store";
+import { useCart, useWishlist } from "@/store";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -36,6 +37,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const wishlistCount = useWishlist((s) => s.items.length);
+  const cartCount = useCart((s) => s.items.reduce((sum, i) => sum + i.quantity, 0));
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 32);
@@ -88,7 +90,7 @@ export default function Navbar() {
 
               <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest text-secondary-dark">
                 <span className="h-px w-4 bg-gradient-to-r from-secondary to-transparent" />
-                Textile manufacturer
+                Textile since {siteConfig.established}
               </span>
             </span>
           </Link>
@@ -150,6 +152,23 @@ export default function Navbar() {
               )}
             </Link>
 
+            <Link
+              href="/cart"
+              aria-label="Cart"
+              className="relative grid h-10 w-10 place-items-center rounded-lg border border-primary-100 bg-white text-primary-600 transition-all duration-200 hover:border-secondary/40 hover:bg-secondary/5 hover:text-secondary"
+            >
+              <FaShoppingCart className="h-3.5 w-3.5" />
+              {cartCount > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -right-1.5 -top-1.5 grid h-4 min-w-4 place-items-center rounded-full bg-secondary px-1 text-[9px] font-black text-white shadow-[0_0_8px_rgba(220,38,38,0.35)]"
+                >
+                  {cartCount}
+                </motion.span>
+              )}
+            </Link>
+
             <a
               href={whatsappHref}
               target="_blank"
@@ -194,6 +213,22 @@ export default function Navbar() {
                   className="absolute -right-1.5 -top-1.5 grid h-4 min-w-4 place-items-center rounded-full bg-secondary px-1 text-[9px] font-black text-white shadow-[0_0_8px_rgba(220,38,38,0.35)]"
                 >
                   {wishlistCount}
+                </motion.span>
+              )}
+            </Link>
+            <Link
+              href="/cart"
+              aria-label="Cart"
+              className="relative grid h-9 w-9 place-items-center rounded-lg border border-primary-100 bg-white text-primary-600"
+            >
+              <FaShoppingCart className="h-3.5 w-3.5" />
+              {cartCount > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -right-1.5 -top-1.5 grid h-4 min-w-4 place-items-center rounded-full bg-secondary px-1 text-[9px] font-black text-white shadow-[0_0_8px_rgba(220,38,38,0.35)]"
+                >
+                  {cartCount}
                 </motion.span>
               )}
             </Link>

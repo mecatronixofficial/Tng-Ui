@@ -321,16 +321,19 @@ export function ImageUploader({
   onChange,
   multiple = false,
   label = "Images",
+  max,
 }: {
   value: string[];
   onChange: (urls: string[]) => void;
   multiple?: boolean;
   label?: string;
+  max?: number;
 }) {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState({ done: 0, total: 0 });
   const [inputKey, setInputKey] = useState(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const remaining = max ? Math.max(0, max - value.length) : undefined;
 
   async function handleFiles(files: FileList | null) {
     if (!files || files.length === 0) return;
@@ -340,6 +343,12 @@ export function ImageUploader({
 
     if (selectedFiles.length === 0) {
       toast("No image files found to upload.", "error");
+      setInputKey((key) => key + 1);
+      return;
+    }
+
+    if (remaining !== undefined && selectedFiles.length > remaining) {
+      toast(`You can add ${remaining} more image${remaining === 1 ? "" : "s"} (max ${max}).`, "error");
       setInputKey((key) => key + 1);
       return;
     }
@@ -417,6 +426,12 @@ export function ImageUploader({
       )}
 
       <div className="block">
+        {remaining === 0 ? (
+          <div className="rounded-lg border-2 border-dashed border-primary-100 bg-primary-50 p-6 text-center">
+            <p className="text-sm font-semibold text-ink-soft">Maximum {max} images reached</p>
+            <p className="text-xs text-ink-muted mt-1">Remove an image above to add another.</p>
+          </div>
+        ) : (
         <div
           role="button"
           tabIndex={uploading ? -1 : 0}
@@ -451,7 +466,10 @@ export function ImageUploader({
                 {multiple ? "Select image files" : "Click to upload"}
               </p>
               <p className="text-xs text-ink-muted mt-1">
-                JPG, PNG, WebP up to {formatBytes(MAX_UPLOAD_FILE_SIZE)} each. Up to {MAX_UPLOAD_FILES} images at once.
+                JPG, PNG, WebP up to {formatBytes(MAX_UPLOAD_FILE_SIZE)} each.{" "}
+                {remaining !== undefined
+                  ? `Up to ${remaining} more image${remaining === 1 ? "" : "s"} (max ${max}).`
+                  : `Up to ${MAX_UPLOAD_FILES} images at once.`}
               </p>
               <div className="mt-4 flex flex-wrap justify-center gap-2">
                 <button
@@ -469,6 +487,7 @@ export function ImageUploader({
             </>
           )}
         </div>
+        )}
         <input
           key={inputKey}
           ref={fileInputRef}

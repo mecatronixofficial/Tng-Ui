@@ -14,37 +14,36 @@ export const metadata: Metadata = {
 
 export default async function CategoriesPage() {
   const categories = await loadCategories();
-
+  const banner = "/banners/a-picturesque-arrangement-of-cotton-fabric-in-a-rainbow-of-colors-with-expansive-copy-space-perfect-for-use-in-textile-industry-catalogs-or-creative-arts-flyers-free-photo.jpg"
   return (
     <>
       <PageHero
         eyebrow="Cloth categories"
         title="Retail and wholesale cloth range."
         subtitle="Browse practical textile categories for home shopping, shop stock, repeat trade and bulk supply."
-        bgImage="https://images.unsplash.com/photo-1564584217132-2271feaeb3c5?w=1920&auto=format&fit=crop&q=80"
+        bgImage={banner}
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Categories" }]}
       />
 
       <section className="section-y bg-cream-50">
         <div className="container-x">
-          <div className="mb-10 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-            <SectionTitle
-              eyebrow="Shop by cloth type"
-              title="Categories made for retail counters and wholesale cartons."
-              description="Choose a category, compare available products, and message us for single-piece retail needs or bulk wholesale supply."
-            />
-            <a
-              href={siteConfig.socials.whatsapp}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-5 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-secondary-dark"
-            >
-              <FaWhatsapp className="h-4 w-4" />
-              Ask on WhatsApp
-            </a>
-          </div>
+          <SectionTitle
+            eyebrow="Shop by cloth type"
+            title="Categories made for retail counters and wholesale cartons."
+            action={
+              <a
+                href={siteConfig.socials.whatsapp}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-5 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-secondary-dark"
+              >
+                <FaWhatsapp className="h-4 w-4" />
+                Ask on WhatsApp
+              </a>
+            }
+          />
 
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-3 lg:grid-cols-4">
             {categories.map((cat, i) => (
               <CategoryCard
                 key={cat.id}

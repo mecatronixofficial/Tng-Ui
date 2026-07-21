@@ -78,6 +78,7 @@ const enquiryHelp = [
   "Quantity, packing, bundle count and delivery city",
   "Fabric, GSM, GST invoice or repeat shop stock requirement",
 ];
+const banner = "/banners/WhatsApp%20Image%202026-07-21%20at%2023.49.15.jpeg";
 
 export default function ContactPage() {
   return (
@@ -86,29 +87,28 @@ export default function ContactPage() {
         eyebrow="Contact cloth store"
         title="Retail shopping and wholesale cloth enquiries."
         subtitle="Message us for product availability, shop supply, despatch support or visit details."
-        bgImage="https://images.unsplash.com/photo-1564584217132-2271feaeb3c5?w=1920&auto=format&fit=crop&q=80"
+        bgImage={banner}
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]}
       />
 
       {/* Contact paths */}
       <section className="section-y bg-cream-50">
         <div className="container-x">
-          <div className="mb-10 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-            <SectionTitle
-              eyebrow="Reach us"
-              title="Choose the fastest way to contact us."
-              description="For wholesale enquiries, WhatsApp is quickest. For retail visits or product questions, call or send the form below."
-            />
-            <a
-              href={contactWhatsappHref}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-5 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-secondary-dark"
-            >
-              <FaWhatsapp className="h-4 w-4" />
-              Ask cloth details
-            </a>
-          </div>
+          <SectionTitle
+            eyebrow="Reach us"
+            title="Choose the fastest way to contact us."
+            action={
+              <a
+                href={contactWhatsappHref}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-5 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-secondary-dark"
+              >
+                <FaWhatsapp className="h-4 w-4" />
+                Ask cloth details
+              </a>
+            }
+          />
 
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {contactTiles.map(({ Icon, label, title, text, href }) => {
@@ -152,7 +152,6 @@ export default function ContactPage() {
           <SectionTitle
             eyebrow="Send enquiry"
             title="Tell us your cloth requirement."
-            description="Let us know if your requirement is for retail or wholesale supply. Please include product type, size, color, quantity, packing, delivery location and any fabric or GSM preferences."
             align="center"
           />
 
@@ -291,27 +290,26 @@ export default function ContactPage() {
       {/* Visit and map */}
       <section className="section-y bg-cream-50">
         <div className="container-x">
-          <div className="mb-10 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-            <SectionTitle
-              eyebrow="Find us"
-              title={`Visit our cloth business in ${siteConfig.address.city}.`}
-              description="Conveniently located in the heart of Erode's textile market, our showroom serves both retail and wholesale customers. Please contact us before visiting to confirm product availability, discuss bulk orders, or schedule a business meeting."
-            />
-            <div className="grid gap-2 rounded-lg border border-primary-100 bg-white p-4 shadow-soft sm:min-w-[280px]">
-              <div className="flex items-center gap-3 text-sm font-bold text-primary-950">
-                <FaStore className="h-4 w-4 text-secondary" />
-                Retail counter support
+          <SectionTitle
+            eyebrow="Find us"
+            title={`Visit our cloth business in ${siteConfig.address.city}.`}
+            action={
+              <div className="grid gap-2 rounded-lg border border-primary-100 bg-white p-4 shadow-soft sm:min-w-[280px]">
+                <div className="flex items-center gap-3 text-sm font-bold text-primary-950">
+                  <FaStore className="h-4 w-4 text-secondary" />
+                  Retail counter support
+                </div>
+                <div className="flex items-center gap-3 text-sm font-bold text-primary-950">
+                  <FaBoxes className="h-4 w-4 text-secondary" />
+                  Wholesale order discussion
+                </div>
+                <div className="flex items-center gap-3 text-sm font-bold text-primary-950">
+                  <FaTruckMoving className="h-4 w-4 text-secondary" />
+                  Despatch coordination
+                </div>
               </div>
-              <div className="flex items-center gap-3 text-sm font-bold text-primary-950">
-                <FaBoxes className="h-4 w-4 text-secondary" />
-                Wholesale order discussion
-              </div>
-              <div className="flex items-center gap-3 text-sm font-bold text-primary-950">
-                <FaTruckMoving className="h-4 w-4 text-secondary" />
-                Despatch coordination
-              </div>
-            </div>
-          </div>
+            }
+          />
 
           <div className="overflow-hidden rounded-lg border border-primary-100 bg-white p-2 shadow-warm">
             <iframe

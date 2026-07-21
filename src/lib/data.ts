@@ -183,7 +183,7 @@ function mapBlog(api: any): BlogPost {
     slug: asString(api.slug),
     excerpt: asString(api.excerpt),
     content: asString(api.content),
-    coverImage: asString(api.coverImage),
+    images: asStringArray(api.images),
     author: asString(api.author, "Thangavel Textile"),
     authorImage: asString(api.authorImage) || undefined,
     publishedAt: asString(api.publishedAt, new Date().toISOString()),

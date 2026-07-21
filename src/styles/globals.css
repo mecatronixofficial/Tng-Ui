@@ -135,7 +135,7 @@ h6 {
   }
 
   .section-y {
-    @apply py-16 md:py-24;
+    @apply py-4 md:py-8;
   }
 
   /* Buttons */

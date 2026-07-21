@@ -170,7 +170,6 @@ export default async function ProductDetailPage({
             <SectionTitle
               eyebrow="Details"
               title="Specifications"
-              description="The technical details you need before placing a wholesale or retail order."
             />
           </div>
           <div className="lg:col-span-7">
@@ -218,19 +217,18 @@ export default async function ProductDetailPage({
       {related.length > 0 && (
         <section className="section-y bg-cream-50">
           <div className="container-x">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
-              <SectionTitle
-                eyebrow="You may also like"
-                title="Related products"
-                description="Similar cloth products for retail shopping and wholesale stock planning."
-              />
-              <Link
-                href="/products"
-                className="inline-flex items-center gap-2 text-sm uppercase tracking-wider-x font-bold text-primary-800 hover:text-secondary"
-              >
-                View All <FaArrowRight className="h-3 w-3" />
-              </Link>
-            </div>
+            <SectionTitle
+              eyebrow="You may also like"
+              title="Related products"
+              action={
+                <Link
+                  href="/products"
+                  className="inline-flex items-center gap-2 text-sm uppercase tracking-wider-x font-bold text-primary-800 hover:text-secondary"
+                >
+                  View All <FaArrowRight className="h-3 w-3" />
+                </Link>
+              }
+            />
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-7">
               {related.map((p) => (
                 <ProductCard key={p.id} product={p} />

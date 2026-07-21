@@ -102,7 +102,7 @@ export default function AdminSubcategoriesPage() {
         name: form.name,
         slug: form.slug || undefined,
         category: form.category,
-        image: form.image || undefined,
+        image: form.image || null,
         order: Number(form.order),
         active: form.active,
       };

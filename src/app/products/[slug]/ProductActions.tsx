@@ -3,6 +3,8 @@
 import { useState } from "react";
 import {
   FaBoxes,
+  FaCartPlus,
+  FaCheck,
   FaHeart,
   FaRegHeart,
   FaShareAlt,
@@ -11,8 +13,9 @@ import {
 } from "react-icons/fa";
 
 import type { Product } from "@/types";
-import { useWishlist } from "@/store";
+import { useCart, useWishlist } from "@/store";
 import { buildWhatsAppOrderUrl } from "@/lib/whatsapp";
+import OrderEnquiryModal from "@/components/OrderEnquiryModal";
 import { cn } from "@/utils";
 
 type Mode = "retail" | "wholesale";
@@ -31,9 +34,12 @@ export default function ProductActions({ product }: { product: Product }) {
   const [size, setSize] = useState(product.sizes[0] || "");
   const [qty, setQty] = useState(1);
   const [bundles, setBundles] = useState(1);
+  const [showEnquiry, setShowEnquiry] = useState(false);
+  const [added, setAdded] = useState(false);
 
   const has = useWishlist((s) => s.has(product.id));
   const toggle = useWishlist((s) => s.toggle);
+  const addToCart = useCart((s) => s.add);
 
   const totalPieces = bundles * bundleSize;
 
@@ -44,14 +50,16 @@ export default function ProductActions({ product }: { product: Product }) {
       ? "retail"
       : mode;
 
+  const quantityLabel =
+    activeMode === "wholesale"
+      ? `${bundles} bundle${bundles > 1 ? "s" : ""} (${totalPieces} pieces) – Wholesale`
+      : `${qty} piece${qty > 1 ? "s" : ""} – Retail`;
+
   const whatsapp = buildWhatsAppOrderUrl({
     productName: product.name,
     color,
     size,
-    quantity:
-      activeMode === "wholesale"
-        ? `${bundles} bundle${bundles > 1 ? "s" : ""} (${totalPieces} pieces) – Wholesale`
-        : `${qty} piece${qty > 1 ? "s" : ""} – Retail`,
+    quantity: quantityLabel,
     productLink: `https://thangaveltextile.in/products/${product.slug}`,
   });
 
@@ -63,6 +71,22 @@ export default function ProductActions({ product }: { product: Product }) {
     setSize(product.sizes[0] || "");
     setQty(1);
     setBundles(1);
+  };
+
+  const handleAddToCart = () => {
+    addToCart({
+      productId: product.id,
+      name: product.name,
+      slug: product.slug,
+      image: product.images[0],
+      color,
+      size,
+      mode: activeMode,
+      quantity: activeMode === "wholesale" ? bundles : qty,
+      bundleSize,
+    });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1600);
   };
 
   const share = async () => {
@@ -289,15 +313,27 @@ export default function ProductActions({ product }: { product: Product }) {
 
       {/* CTAs */}
       <div className="flex flex-wrap gap-3 border-t border-primary-100 pt-5">
-        <a
-          href={whatsapp}
-          target="_blank"
-          rel="noreferrer"
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          className={cn(
+            "inline-flex min-w-[160px] flex-1 items-center justify-center gap-2 rounded-lg border-2 px-5 py-3 text-sm font-bold shadow-soft transition",
+            added
+              ? "border-emerald-500 bg-emerald-500 text-white"
+              : "border-primary-700 bg-white text-primary-800 hover:bg-primary-50",
+          )}
+        >
+          {added ? <FaCheck className="h-4 w-4" /> : <FaCartPlus className="h-4 w-4" />}
+          {added ? "Added to Cart" : "Add to Cart"}
+        </button>
+        <button
+          type="button"
+          onClick={() => setShowEnquiry(true)}
           className="inline-flex min-w-[200px] flex-1 items-center justify-center gap-2 rounded-lg bg-secondary px-5 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-secondary-dark"
         >
           <FaWhatsapp className="h-4 w-4" />
           {activeMode === "wholesale" ? "Enquire Wholesale" : "Ask on WhatsApp"}
-        </a>
+        </button>
         <button
           type="button"
           onClick={() => toggle(product.id)}
@@ -315,6 +351,19 @@ export default function ProductActions({ product }: { product: Product }) {
           <FaShareAlt className="h-4 w-4" />
         </button>
       </div>
+
+      <OrderEnquiryModal
+        open={showEnquiry}
+        onClose={() => setShowEnquiry(false)}
+        whatsappUrl={whatsapp}
+        productName={product.name}
+        productSlug={product.slug}
+        color={color}
+        size={size}
+        quantity={activeMode === "wholesale" ? totalPieces : qty}
+        quantityLabel={quantityLabel}
+        source={activeMode === "wholesale" ? "wholesale" : "product_enquiry"}
+      />
     </div>
   );
 }
