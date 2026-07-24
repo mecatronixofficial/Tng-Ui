@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { loadCategories, loadBlogs, loadProducts } from "@/lib/data";
 
-const BASE = "https://www.thangaveltextile.in";
+const BASE = "https://www.thangaveltextile.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [categories, blogPosts, products] = await Promise.all([loadCategories(), loadBlogs(), loadProducts()]);

@@ -21,6 +21,20 @@ export const metadata: Metadata = {
     description: `Browse ${siteConfig.name} retail and wholesale cloth products — petticoats, lungis, towels, gamcha, bed sheets, handloom and dhotis from Erode.`,
     url: "/products",
     type: "website",
+    images: [
+      {
+        url: "/banners/WhatsApp%20Image%202026-07-21%20at%2023.35.15.jpeg",
+        width: 1200,
+        height: 630,
+        alt: `${siteConfig.name} products`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Retail & Wholesale Cloth Products — ${siteConfig.name}`,
+    description: `Browse ${siteConfig.name} retail and wholesale cloth products — petticoats, lungis, towels, gamcha, bed sheets, handloom and dhotis from Erode.`,
+    images: ["/banners/WhatsApp%20Image%202026-07-21%20at%2023.35.15.jpeg"],
   },
 };
 

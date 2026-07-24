@@ -74,7 +74,7 @@ export default function CartEnquiryModal({
     const whatsappUrl = buildWhatsAppCartUrl(
       items.map((item) => ({
         productName: item.name,
-        productLink: `https://thangaveltextile.in/products/${item.slug}`,
+        productLink: `https://thangaveltextile.com/products/${item.slug}`,
         color: item.color,
         size: item.size,
         quantityLabel: quantityLabel(item),

@@ -43,6 +43,12 @@ export async function generateMetadata({
       type: "website",
       images: cat.image ? [{ url: cat.image, alt: cat.name }] : [],
     },
+    twitter: {
+      card: "summary_large_image",
+      title: `${cat.name} Category — ${siteConfig.name}`,
+      description,
+      images: cat.image ? [cat.image] : [],
+    },
   };
 }
 
@@ -83,9 +89,9 @@ export default async function CategoryDetail({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.thangaveltextile.in" },
-      { "@type": "ListItem", position: 2, name: "Categories", item: "https://www.thangaveltextile.in/categories" },
-      { "@type": "ListItem", position: 3, name: cat.name, item: `https://www.thangaveltextile.in/categories/${slug}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.thangaveltextile.com" },
+      { "@type": "ListItem", position: 2, name: "Categories", item: "https://www.thangaveltextile.com/categories" },
+      { "@type": "ListItem", position: 3, name: cat.name, item: `https://www.thangaveltextile.com/categories/${slug}` },
     ],
   };
 

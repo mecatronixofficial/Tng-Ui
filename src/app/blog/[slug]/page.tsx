@@ -87,20 +87,20 @@ export default async function BlogDetail({
     publisher: {
       "@type": "Organization",
       name: siteConfig.name,
-      logo: { "@type": "ImageObject", url: "https://www.thangaveltextile.in/logo/tng%20logo.jpeg" },
+      logo: { "@type": "ImageObject", url: "https://www.thangaveltextile.com/logo/tng%20logo.jpeg" },
     },
     datePublished: post.publishedAt,
     dateModified: post.publishedAt,
-    mainEntityOfPage: `https://www.thangaveltextile.in/blog/${slug}`,
+    mainEntityOfPage: `https://www.thangaveltextile.com/blog/${slug}`,
   };
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.thangaveltextile.in" },
-      { "@type": "ListItem", position: 2, name: "Blog", item: "https://www.thangaveltextile.in/blog" },
-      { "@type": "ListItem", position: 3, name: post.title, item: `https://www.thangaveltextile.in/blog/${slug}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.thangaveltextile.com" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://www.thangaveltextile.com/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: `https://www.thangaveltextile.com/blog/${slug}` },
     ],
   };
 

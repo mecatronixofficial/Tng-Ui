@@ -1,4 +1,5 @@
 import Link from "next/link";
+import moment from "moment";
 import {
   FaArrowRight,
   FaWhatsapp,
@@ -8,10 +9,12 @@ import {
   FaCheckCircle,
   FaQuoteLeft,
   FaQuestionCircle,
+  FaClock,
 } from "react-icons/fa";
 
 import HeroSlider from "@/components/HeroSlider";
 import SectionTitle from "@/components/SectionTitle";
+import RichParagraphs from "@/components/RichParagraphs";
 import CategorySlider from "@/components/CategorySlider";
 import CollapsibleProductGrid from "@/components/CollapsibleProductGrid";
 import TestimonialSlider from "@/components/TestimonialSlider";
@@ -30,6 +33,7 @@ import {
   siteConfig,
   manufacturingProcess,
 } from "@/data/site";
+import { blogImage } from "@/utils";
 
 
 
@@ -292,9 +296,11 @@ export default async function HomePage() {
                 {siteConfig.tagline}
               </h2>
 
-              <p className="mt-4 max-w-xl text-sm leading-6 text-ink-muted md:text-base md:leading-7">
-                {siteConfig.description}
-              </p>
+              <RichParagraphs
+                text={siteConfig.description}
+                className="mt-4 max-w-xl"
+                paragraphClassName="text-sm leading-6 text-ink-muted md:text-base md:leading-7"
+              />
 
               <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2">
                 {[
@@ -452,6 +458,95 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Blog / trade notes */}
+      {blogPosts.length > 0 && (
+        <section className="section-y bg-primary-50/40">
+          <div className="container-x">
+            <SectionTitle
+              eyebrow="Trade Notes"
+              title="Cloth buying guides & updates"
+              action={
+                <Link
+                  href="/blog"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary-100 px-5 py-3 text-sm font-bold text-primary-700 transition hover:border-primary-300 hover:text-primary-900"
+                >
+                  All Articles <FaArrowRight className="h-3 w-3" />
+                </Link>
+              }
+            />
+
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {blogPosts.slice(0, 3).map((post) => (
+                <Link
+                  key={post.id}
+                  href={`/blog/${post.slug}`}
+                  className="group overflow-hidden rounded-2xl border border-primary-100 bg-white shadow-[0_12px_35px_-28px_rgba(45,5,5,0.4)] transition-all duration-300 hover:-translate-y-1 hover:border-primary-300"
+                >
+                  <div className="relative aspect-[16/10] overflow-hidden bg-primary-50">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={blogImage(post.images, 0)}
+                      alt={post.title}
+                      className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    />
+                    <span className="absolute left-3 top-3 rounded-lg bg-primary-950/85 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white">
+                      {post.category}
+                    </span>
+                  </div>
+                  <div className="p-5">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-ink-muted">
+                      <span>{moment(post.publishedAt).format("MMM D, YYYY")}</span>
+                      <span>·</span>
+                      <span className="flex items-center gap-1">
+                        <FaClock className="h-3 w-3" />
+                        {post.readTime} min read
+                      </span>
+                    </div>
+                    <h3 className="mt-3 text-lg font-black leading-snug text-ink transition-colors group-hover:text-primary-700">
+                      {post.title}
+                    </h3>
+                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-ink-muted">
+                      {post.excerpt}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* FAQ */}
+      {faqs.length > 0 && (
+        <section className="section-y bg-white">
+          <div className="container-x">
+            <div className="grid gap-10 lg:grid-cols-12">
+              <div className="lg:col-span-4">
+                <span className="inline-flex items-center gap-2 rounded-full border border-primary-100 bg-white px-4 py-2 text-[10px] font-black uppercase tracking-widest text-primary-600 shadow-sm">
+                  <FaQuestionCircle className="h-3 w-3 text-primary-500" />
+                  Buyer help
+                </span>
+                <h2 className="mt-3 font-display text-2xl font-black text-primary-950 sm:text-3xl">
+                  Common questions before you order
+                </h2>
+                <p className="mt-2 max-w-sm text-sm leading-6 text-ink-muted">
+                  Quick answers on cloth categories, bulk orders and delivery.
+                </p>
+                <Link
+                  href="/faq"
+                  className="btn-outline mt-6 rounded-xl bg-white shadow-soft"
+                >
+                  View All FAQs <FaArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
+              <div className="lg:col-span-8">
+                <FAQAccordion items={faqs.slice(0, 6)} />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
     </>
   );
 }

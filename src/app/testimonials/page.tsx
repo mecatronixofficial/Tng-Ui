@@ -17,6 +17,8 @@ import { siteConfig } from "@/data/site";
 import { loadTestimonials } from "@/lib/data";
 import { cn } from "@/utils";
 
+const banner = "/banners/WhatsApp%20Image%202026-07-21%20at%2023.49.14.jpeg";
+
 export const metadata: Metadata = {
   title: "Retail & Wholesale Customer Reviews",
   description: `Retail and wholesale cloth buyer reviews for ${siteConfig.name}, including shop owners, traders and family customers.`,
@@ -31,6 +33,13 @@ export const metadata: Metadata = {
     description: `Retail and wholesale cloth buyer reviews for ${siteConfig.name}, including shop owners, traders and family customers.`,
     url: "/testimonials",
     type: "website",
+    images: [{ url: banner, width: 1200, height: 630, alt: `${siteConfig.name} customer reviews` }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Customer Reviews — ${siteConfig.name}`,
+    description: `Retail and wholesale cloth buyer reviews for ${siteConfig.name}, including shop owners, traders and family customers.`,
+    images: [banner],
   },
 };
 
@@ -42,7 +51,6 @@ const proofPoints = [
 
 export default async function TestimonialsPage() {
   const testimonials = await loadTestimonials();
-  const banner = "/banners/WhatsApp%20Image%202026-07-21%20at%2023.49.14.jpeg";
 
   const avgRating =
     testimonials.length > 0
@@ -52,7 +60,7 @@ export default async function TestimonialsPage() {
   const reviewsJsonLd = {
     "@context": "https://schema.org",
     "@type": "ClothingStore",
-    "@id": "https://www.thangaveltextile.in/#organization",
+    "@id": "https://www.thangaveltextile.com/#organization",
     name: siteConfig.name,
     ...(testimonials.length > 0 && {
       aggregateRating: {

@@ -30,6 +30,20 @@ export const metadata: Metadata = {
     description: `Answers to common retail and wholesale cloth questions for ${siteConfig.name}: products, bulk orders, delivery and support.`,
     url: "/faq",
     type: "website",
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1583846552345-d2ce05fbe1c5?w=1920&auto=format&fit=crop&q=80",
+        width: 1200,
+        height: 630,
+        alt: `${siteConfig.name} FAQ`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Retail & Wholesale FAQ — ${siteConfig.name}`,
+    description: `Answers to common retail and wholesale cloth questions for ${siteConfig.name}: products, bulk orders, delivery and support.`,
+    images: ["https://images.unsplash.com/photo-1583846552345-d2ce05fbe1c5?w=1920&auto=format&fit=crop&q=80"],
   },
 };
 

@@ -103,7 +103,7 @@ export default async function ProductDetailPage({
         : "https://schema.org/OutOfStock",
       itemCondition: "https://schema.org/NewCondition",
       seller: { "@type": "Organization", name: "Thangavel Textile" },
-      url: `https://www.thangaveltextile.in/products/${slug}`,
+      url: `https://www.thangaveltextile.com/products/${slug}`,
     },
   };
 
@@ -111,9 +111,9 @@ export default async function ProductDetailPage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.thangaveltextile.in" },
-      { "@type": "ListItem", position: 2, name: "Products", item: "https://www.thangaveltextile.in/products" },
-      { "@type": "ListItem", position: 3, name: product.name, item: `https://www.thangaveltextile.in/products/${slug}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.thangaveltextile.com" },
+      { "@type": "ListItem", position: 2, name: "Products", item: "https://www.thangaveltextile.com/products" },
+      { "@type": "ListItem", position: 3, name: product.name, item: `https://www.thangaveltextile.com/products/${slug}` },
     ],
   };
 
@@ -170,7 +170,7 @@ export default async function ProductDetailPage({
                 )}
               </div>
 
-              <h1 className="text-4xl md:text-5xl font-extrabold text-primary-950 leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-primary-950 leading-tight">
                 {product.name}
               </h1>
 

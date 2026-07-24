@@ -28,7 +28,7 @@ export default function SectionTitle({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.6 }}
-      className="mb-12 flex flex-nowrap items-end justify-between gap-4"
+      className="mb-10 flex flex-col items-start gap-4 sm:mb-12 sm:flex-row sm:flex-nowrap sm:items-end sm:justify-between"
     >
       <div
         className={cn(

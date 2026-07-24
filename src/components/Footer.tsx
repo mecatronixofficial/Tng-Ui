@@ -27,6 +27,7 @@ import {
 
 import { siteConfig } from "@/data/site";
 import { api, type CategoryApi } from "@/lib/api";
+import RichParagraphs from "@/components/RichParagraphs";
 
 const logoSrc = "/logo/tng%20logo.jpeg";
 
@@ -240,9 +241,11 @@ export default function Footer() {
             </span>
           </Link>
 
-          <p className="mt-5 text-sm leading-7 text-white/55">
-            {siteConfig.description}
-          </p>
+          <RichParagraphs
+            text={siteConfig.description}
+            className="mt-5"
+            paragraphClassName="text-sm leading-7 text-white/55"
+          />
 
           <div className="mt-6 flex flex-wrap gap-2">
             {servicePoints.map(({ label, Icon }) => (
