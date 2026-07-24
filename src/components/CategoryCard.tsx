@@ -42,7 +42,7 @@ export default function CategoryCard({
 
         <div className="absolute inset-x-0 bottom-0 p-5 text-white">
           <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/70">
-            Shop collection
+            Wholesale collection
           </p>
           <div className="flex items-end justify-between gap-3">
             <h3 className="line-clamp-2 text-xl font-semibold leading-tight tracking-tight sm:text-2xl">
