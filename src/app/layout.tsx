@@ -27,7 +27,7 @@ const ogImage =
   "/banners/a-picturesque-arrangement-of-cotton-fabric-in-a-rainbow-of-colors-with-expansive-copy-space-perfect-for-use-in-textile-industry-catalogs-or-creative-arts-flyers-free-photo.jpg";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.thangaveltextile.in"),
+  metadataBase: new URL("https://www.thangaveltextile.com"),
   title: {
     default: `${siteConfig.name} — ${siteConfig.tagline}`,
     template: `%s — ${siteConfig.name}`,
@@ -40,8 +40,7 @@ export const metadata: Metadata = {
     "wholesale textile India",
     "handloom lungi",
     "cotton bed sheets",
-    "Tamil Nadu textile",
-    "gamcha",
+    "Tamil Nadu textiles",
     "cotton dhoti",
   ],
   authors: [{ name: siteConfig.name }],
@@ -78,12 +77,12 @@ export const metadata: Metadata = {
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "ClothingStore",
-  "@id": "https://www.thangaveltextile.in/#organization",
+  "@id": "https://www.thangaveltextile.com/#organization",
   name: siteConfig.name,
   description: siteConfig.description,
-  url: "https://www.thangaveltextile.in",
-  logo: "https://www.thangaveltextile.in/logo/tng%20logo.jpeg",
-  image: "https://www.thangaveltextile.in/logo/tng%20logo.jpeg",
+  url: "https://www.thangaveltextile.com",
+  logo: "https://www.thangaveltextile.com/logo/tng%20logo.jpeg",
+  image: "https://www.thangaveltextile.com/logo/tng%20logo.jpeg",
   telephone: siteConfig.phone,
   email: siteConfig.email,
   foundingDate: siteConfig.established,
@@ -107,10 +106,10 @@ const organizationJsonLd = {
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "@id": "https://www.thangaveltextile.in/#website",
+  "@id": "https://www.thangaveltextile.com/#website",
   name: siteConfig.name,
-  url: "https://www.thangaveltextile.in",
-  publisher: { "@id": "https://www.thangaveltextile.in/#organization" },
+  url: "https://www.thangaveltextile.com",
+  publisher: { "@id": "https://www.thangaveltextile.com/#organization" },
 };
 
 export default function RootLayout({

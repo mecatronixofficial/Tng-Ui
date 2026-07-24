@@ -42,6 +42,12 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: `Contact Us — ${siteConfig.name}`,
+    description: `Contact ${siteConfig.name} for retail cloth shopping, wholesale textile supply, bulk orders and store enquiries in ${siteConfig.address.city}.`,
+    images: ["/banners/WhatsApp%20Image%202026-07-21%20at%2023.49.15.jpeg"],
+  },
 };
 
 const whatsappNumber = siteConfig.whatsapp.replace(/\D/g, "");

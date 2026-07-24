@@ -35,7 +35,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
   const whatsappUrl = buildWhatsAppOrderUrl({
     productName: product.name,
-    productLink: `https://thangaveltextile.in/products/${product.slug}`,
+    productLink: `https://thangaveltextile.com/products/${product.slug}`,
   });
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -112,7 +112,7 @@ export default function ProductCard({ product }: { product: Product }) {
           onClick={(e) => { e.stopPropagation(); toggle(product.id); }}
           aria-label={has ? "Remove from wishlist" : "Save"}
           className={[
-            "absolute right-3 top-3 z-10 grid h-8 w-8 place-items-center rounded-full backdrop-blur-md transition-all duration-200 active:scale-90",
+            "absolute right-3 top-3 z-10 grid h-9 w-9 touch-manipulation place-items-center rounded-full backdrop-blur-md transition-all duration-200 active:scale-90",
             has
               ? "bg-rose-500 text-white shadow-lg shadow-rose-500/40"
               : "border border-white/30 bg-white/10 text-white hover:bg-white/20",
@@ -122,20 +122,25 @@ export default function ProductCard({ product }: { product: Product }) {
         </button>
 
         {imageCount > 1 && (
-          <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1">
+          <div className="absolute bottom-3 left-3 z-10 flex items-center gap-2">
             {galleryImages.map((_, i) => (
               <button
                 key={i}
                 type="button"
+                onClick={(e) => { e.stopPropagation(); e.preventDefault(); setActiveImage(i); }}
                 onMouseEnter={() => setActiveImage(i)}
                 aria-label={`Image ${i + 1}`}
-                className={[
-                  "rounded-full transition-all duration-200",
-                  i === activeImage
-                    ? "h-1.5 w-5 bg-white"
-                    : "h-1.5 w-1.5 bg-white/50 hover:bg-white/75",
-                ].join(" ")}
-              />
+                className="touch-manipulation p-1"
+              >
+                <span
+                  className={[
+                    "block rounded-full transition-all duration-200",
+                    i === activeImage
+                      ? "h-1.5 w-5 bg-white"
+                      : "h-1.5 w-1.5 bg-white/50 hover:bg-white/75",
+                  ].join(" ")}
+                />
+              </button>
             ))}
           </div>
         )}
@@ -143,7 +148,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <Link
           href={`/products/${product.slug}`}
           aria-label={`View ${product.name}`}
-          className="absolute bottom-3 right-3 z-10 flex h-9 w-9 translate-y-2 items-center justify-center rounded-full bg-white text-stone-900 opacity-0 shadow-md transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-hover:bg-amber-500 group-hover:text-white"
+          className="absolute bottom-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white text-stone-900 opacity-100 shadow-md transition-all duration-300 ease-out sm:translate-y-2 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 sm:group-hover:bg-amber-500 sm:group-hover:text-white"
         >
           <FiArrowUpRight className="h-4 w-4" />
         </Link>
@@ -193,7 +198,7 @@ export default function ProductCard({ product }: { product: Product }) {
             aria-label="Add to cart"
             title="Add to cart"
             className={[
-              "flex items-center justify-center rounded-xl py-2 transition-all duration-200 active:scale-95",
+              "flex touch-manipulation items-center justify-center rounded-xl py-2.5 transition-all duration-200 active:scale-95",
               added
                 ? "bg-emerald-500 text-white"
                 : "border border-stone-900 text-stone-900 hover:bg-stone-900 hover:text-white",
@@ -208,18 +213,11 @@ export default function ProductCard({ product }: { product: Product }) {
               e.preventDefault();
               setShowEnquiry(true);
             }}
-            className="flex items-center justify-center gap-1.5 rounded-xl bg-[#25D366] py-2 text-[11px] font-semibold text-white transition-all duration-200 hover:bg-[#1ebe5d] active:scale-95"
+            className="flex touch-manipulation items-center justify-center gap-1.5 rounded-xl bg-[#25D366] py-2.5 text-[11px] font-semibold text-white transition-all duration-200 hover:bg-[#1ebe5d] active:scale-95"
           >
             <FaWhatsapp className="h-3 w-3" />
             Enquire
           </button>
-          <Link
-            href={`/products/${product.slug}`}
-            className="flex items-center justify-center gap-1.5 rounded-xl border border-stone-900 py-2 text-[11px] font-semibold text-stone-900 transition-all duration-200 hover:bg-stone-900 hover:text-white active:scale-95"
-          >
-            View
-            <FiArrowUpRight className="h-3 w-3" />
-          </Link>
         </div>
       </div>
 

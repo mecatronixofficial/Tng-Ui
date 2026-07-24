@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/admin", "/api", "/cart", "/wishlist"],
     },
-    sitemap: "https://www.thangaveltextile.in/sitemap.xml",
-    host: "https://www.thangaveltextile.in",
+    sitemap: "https://www.thangaveltextile.com/sitemap.xml",
+    host: "https://www.thangaveltextile.com",
   };
 }

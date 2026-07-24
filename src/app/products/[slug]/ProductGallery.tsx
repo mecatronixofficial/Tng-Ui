@@ -18,29 +18,9 @@ export default function ProductGallery({
   const [active, setActive] = useState(0);
 
   return (
-    <div className="grid grid-cols-5 gap-4 rounded-lg border border-primary-100 bg-white p-3 shadow-soft">
-      {/* Thumbs */}
-      <div className="col-span-1 flex flex-col gap-3">
-        {galleryImages.map((img, i) => (
-          <button
-            key={i}
-            type="button"
-            onClick={() => setActive(i)}
-            className={cn(
-              "relative aspect-square overflow-hidden rounded-lg border-2 transition",
-              i === active
-                ? "border-secondary opacity-100"
-                : "border-primary-100 opacity-70 hover:border-primary-400 hover:opacity-100"
-            )}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={img} alt="" className="h-full w-full object-cover" />
-          </button>
-        ))}
-      </div>
-
+    <div className="flex flex-col gap-4 rounded-lg border border-primary-100 bg-white p-3 shadow-soft sm:grid sm:grid-cols-5">
       {/* Main */}
-      <div className="col-span-4 relative aspect-[4/5] overflow-hidden rounded-lg bg-primary-50">
+      <div className="relative order-1 aspect-[4/5] overflow-hidden rounded-lg bg-primary-50 sm:order-2 sm:col-span-4">
         <AnimatePresence mode="wait">
           <motion.img
             key={active}
@@ -57,6 +37,28 @@ export default function ProductGallery({
           Retail + Wholesale
         </div>
       </div>
+
+      {/* Thumbs */}
+      {galleryImages.length > 1 && (
+        <div className="no-scrollbar order-2 flex gap-3 overflow-x-auto sm:order-1 sm:col-span-1 sm:flex-col sm:overflow-visible">
+          {galleryImages.map((img, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setActive(i)}
+              className={cn(
+                "relative aspect-square w-16 shrink-0 overflow-hidden rounded-lg border-2 transition sm:w-auto",
+                i === active
+                  ? "border-secondary opacity-100"
+                  : "border-primary-100 opacity-70 hover:border-primary-400 hover:opacity-100"
+              )}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={img} alt="" className="h-full w-full object-cover" />
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

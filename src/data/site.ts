@@ -10,8 +10,9 @@ export const siteConfig = {
   logo: "",
   name: "Thangavel Textile",
   tagline: "Woven in Erode. Worn across India.",
-  description:
-    "Thangavel Textile — a leading textile manufacturer and wholesaler from Erode, Tamil Nadu. Specialists in petticoats, lungis, towels, gamcha, bed sheets, dhotis and handloom products.",
+  description: `Thangavel Textile, Erode is a trusted textile manufacturer with a proud legacy of 27+ years in delivering quality, comfort, and craftsmanship. We specialize in manufacturing premium-quality Women Cotton Petticoats, Nighties, Lungi, Dhotis, Towels and Bedsheets serving wholesalers, retailers, and customers across India.`,
+  des2: "With our manufacturing unit at Manickampalayam and our wholesale and retail showroom on Eswaran Kovil Street, Erode, we oversee every stage of production under one roof. From sourcing high-quality grey fabric to dyeing, finishing, cutting, stitching, and quality inspection, every product is crafted with precision by our skilled team to ensure superior quality and consistency.",
+  des3: "For more than two decades, our commitment to excellence, fair pricing, and customer satisfaction has earned us the trust of thousands of business partners and families. At Thangavel Textile, we believe in blending traditional craftsmanship with modern manufacturing to create products that are comfortable, durable, and made to last. As we continue to grow, our mission remains the same to deliver quality textiles that customers can trust, generation after generation.",
   ceo: "Thangavel",
   established: "1999",
   gstSince: "Jul 2017",

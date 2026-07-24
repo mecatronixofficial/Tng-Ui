@@ -60,7 +60,7 @@ export default function ProductActions({ product }: { product: Product }) {
     color,
     size,
     quantity: quantityLabel,
-    productLink: `https://thangaveltextile.in/products/${product.slug}`,
+    productLink: `https://thangaveltextile.com/products/${product.slug}`,
   });
 
   const switchMode = (next: Mode) => {
@@ -312,12 +312,12 @@ export default function ProductActions({ product }: { product: Product }) {
       )}
 
       {/* CTAs */}
-      <div className="flex flex-wrap gap-3 border-t border-primary-100 pt-5">
+      <div className="flex flex-col gap-3 border-t border-primary-100 pt-5 sm:flex-row sm:flex-wrap">
         <button
           type="button"
           onClick={handleAddToCart}
           className={cn(
-            "inline-flex min-w-[160px] flex-1 items-center justify-center gap-2 rounded-lg border-2 px-5 py-3 text-sm font-bold shadow-soft transition",
+            "inline-flex w-full items-center justify-center gap-2 rounded-lg border-2 px-5 py-3 text-sm font-bold shadow-soft transition sm:min-w-[160px] sm:flex-1",
             added
               ? "border-emerald-500 bg-emerald-500 text-white"
               : "border-primary-700 bg-white text-primary-800 hover:bg-primary-50",
@@ -329,27 +329,29 @@ export default function ProductActions({ product }: { product: Product }) {
         <button
           type="button"
           onClick={() => setShowEnquiry(true)}
-          className="inline-flex min-w-[200px] flex-1 items-center justify-center gap-2 rounded-lg bg-secondary px-5 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-secondary-dark"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-secondary px-5 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-secondary-dark sm:min-w-[200px] sm:flex-1"
         >
           <FaWhatsapp className="h-4 w-4" />
           {activeMode === "wholesale" ? "Enquire Wholesale" : "Ask on WhatsApp"}
         </button>
-        <button
-          type="button"
-          onClick={() => toggle(product.id)}
-          className="grid h-12 w-12 place-items-center rounded-lg border border-primary-200 bg-white text-primary-800 transition hover:border-secondary hover:text-secondary"
-          aria-label="Wishlist"
-        >
-          {has ? <FaHeart className="h-4 w-4" /> : <FaRegHeart className="h-4 w-4" />}
-        </button>
-        <button
-          type="button"
-          onClick={share}
-          className="grid h-12 w-12 place-items-center rounded-lg border border-primary-200 bg-white text-primary-800 transition hover:border-secondary hover:text-secondary"
-          aria-label="Share"
-        >
-          <FaShareAlt className="h-4 w-4" />
-        </button>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => toggle(product.id)}
+            className="grid h-12 w-12 flex-1 place-items-center rounded-lg border border-primary-200 bg-white text-primary-800 transition hover:border-secondary hover:text-secondary sm:flex-none"
+            aria-label="Wishlist"
+          >
+            {has ? <FaHeart className="h-4 w-4" /> : <FaRegHeart className="h-4 w-4" />}
+          </button>
+          <button
+            type="button"
+            onClick={share}
+            className="grid h-12 w-12 flex-1 place-items-center rounded-lg border border-primary-200 bg-white text-primary-800 transition hover:border-secondary hover:text-secondary sm:flex-none"
+            aria-label="Share"
+          >
+            <FaShareAlt className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       <OrderEnquiryModal

@@ -43,7 +43,7 @@ export default function NotFound() {
             Error 404
           </div>
 
-          <h1 className="mt-6 text-6xl font-extrabold leading-none tracking-tight text-primary-950 md:text-8xl">
+          <h1 className="mt-6 text-4xl font-extrabold leading-none tracking-tight text-primary-950 sm:text-6xl md:text-8xl">
             Page not found
           </h1>
           <p className="mt-5 max-w-lg text-base leading-7 text-ink-muted">

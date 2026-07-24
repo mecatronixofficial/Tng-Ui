@@ -25,6 +25,7 @@ import StatsCounter from "@/components/StatsCounter";
 import { loadCategories, loadFaqs } from "@/lib/data";
 import { siteConfig, stats, whyChooseUs } from "@/data/site";
 import FAQAccordion from "@/components/FAQAccordion";
+import RichParagraphs from "@/components/RichParagraphs";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -48,6 +49,12 @@ export const metadata: Metadata = {
         alt: `About ${siteConfig.name}`,
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `About Us — ${siteConfig.name}`,
+    description: `Learn about ${siteConfig.name} — a retail and wholesale cloth supplier from ${siteConfig.address.city}, ${siteConfig.address.state}, serving cotton and handloom textile buyers since ${siteConfig.established}.`,
+    images: ["/banners/WhatsApp%20Image%202026-07-21%20at%2023.39.25.jpeg"],
   },
 };
 
@@ -112,7 +119,7 @@ export default async function AboutPage() {
     siteConfig.office.workplace5,
   ];
 
-const banner = "/banners/WhatsApp%20Image%202026-07-21%20at%2023.39.25.jpeg";
+  const banner = "/banners/WhatsApp%20Image%202026-07-21%20at%2023.39.25.jpeg";
   return (
     <>
       <PageHero
@@ -152,7 +159,11 @@ const banner = "/banners/WhatsApp%20Image%202026-07-21%20at%2023.39.25.jpeg";
               eyebrow="Who we serve"
               title="A cloth business built for both walk-in needs and bulk trade."
             />
-
+            <RichParagraphs
+              text={siteConfig.des2}
+              className="mb-6"
+              paragraphClassName="text-sm leading-6 text-ink-muted md:text-base md:leading-7"
+            />
             <div className="grid gap-4 md:grid-cols-3">
               {buyerPaths.map(({ title, text, Icon }) => (
                 <div
@@ -187,6 +198,13 @@ const banner = "/banners/WhatsApp%20Image%202026-07-21%20at%2023.39.25.jpeg";
                 Ask on WhatsApp
               </a>
             </div>
+          </div>
+          <div className="lg:col-span-12">
+            <RichParagraphs
+              text={siteConfig.des3}
+              className="mt-2 mb-2"
+              paragraphClassName="text-sm leading-6 text-ink-muted md:text-base md:leading-7"
+            />
           </div>
         </div>
       </section>

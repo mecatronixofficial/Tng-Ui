@@ -30,6 +30,12 @@ export const metadata: Metadata = {
     type: "website",
     images: [{ url: banner, width: 1200, height: 630, alt: "Thangavel Textile categories" }],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: `Categories — ${siteConfig.name}`,
+    description: `${siteConfig.name} retail and wholesale cloth categories including petticoats, lungis, towels, gamcha, bed sheets, dhotis and handloom products.`,
+    images: [banner],
+  },
 };
 
 export default async function CategoriesPage() {
