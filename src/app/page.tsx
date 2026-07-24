@@ -131,9 +131,9 @@ export default async function HomePage() {
             }
           />
 
-          <div className="rounded-2xl border border-neutral-200 p-3 md:p-6">
-            <CategorySlider categories={categories} />
-          </div>
+
+          <CategorySlider categories={categories} />
+
         </div>
       </section>
 

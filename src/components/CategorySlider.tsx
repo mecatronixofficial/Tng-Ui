@@ -26,7 +26,7 @@ export default function CategorySlider({ categories }: { categories: Category[] 
           768: { slidesPerView: 3.2 },
           1024: { slidesPerView: 4 },
         }}
-        className="!px-1 !pb-4"
+        className="!px-3 !py-3 "
       >
         {categories.map((c, i) => (
           <SwiperSlide key={c.id} className="!h-auto">
