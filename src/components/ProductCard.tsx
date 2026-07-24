@@ -213,7 +213,7 @@ export default function ProductCard({ product }: { product: Product }) {
               e.preventDefault();
               setShowEnquiry(true);
             }}
-            className="flex touch-manipulation items-center justify-center gap-1.5 rounded-xl bg-[#25D366] py-2.5 text-[11px] font-semibold text-white transition-all duration-200 hover:bg-[#1ebe5d] active:scale-95"
+            className="flex touch-manipulation items-center justify-center gap-1.5 rounded-xl bg-[#25D366] py-2.5 px-1.5 text-[11px] font-semibold text-white transition-all duration-200 hover:bg-[#1ebe5d] active:scale-95"
           >
             <FaWhatsapp className="h-3 w-3" />
             Enquire
