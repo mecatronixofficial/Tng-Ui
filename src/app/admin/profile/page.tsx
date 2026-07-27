@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   FaAt,
+  FaCamera,
   FaCheckCircle,
   FaClock,
   FaEnvelope,
@@ -67,6 +68,8 @@ export default function AdminProfilePage() {
   const [savingPwd, setSavingPwd] = useState(false);
   const [showPasswords, setShowPasswords] = useState(false);
   const [lastSynced, setLastSynced] = useState("");
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (user) setInfo({ name: user.name, email: user.email });
@@ -130,6 +133,29 @@ export default function AdminProfilePage() {
       toast((err as Error).message, "error");
     } finally {
       setSavingInfo(false);
+    }
+  }
+
+  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast("Please choose an image file.", "error");
+      return;
+    }
+
+    setUploadingAvatar(true);
+    try {
+      const uploaded = await api.uploadImage(file);
+      await api.updateProfile({ avatar: uploaded.url });
+      await refresh?.();
+      toast("Profile photo updated");
+    } catch (err) {
+      toast((err as Error).message, "error");
+    } finally {
+      setUploadingAvatar(false);
     }
   }
 
@@ -197,8 +223,44 @@ export default function AdminProfilePage() {
         <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="bg-primary-900 p-4 text-white sm:p-6 md:p-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
-              <div className="grid h-16 w-16 shrink-0 place-items-center rounded-lg bg-white text-2xl font-extrabold text-primary-900 shadow-soft sm:h-20 sm:w-20 sm:text-3xl">
-                {initials(user.name)}
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => !uploadingAvatar && avatarInputRef.current?.click()}
+                onKeyDown={(event) => {
+                  if (!uploadingAvatar && (event.key === "Enter" || event.key === " ")) {
+                    event.preventDefault();
+                    avatarInputRef.current?.click();
+                  }
+                }}
+                className="group relative grid h-16 w-16 shrink-0 cursor-pointer place-items-center overflow-hidden rounded-lg bg-white text-2xl font-extrabold text-primary-900 shadow-soft sm:h-20 sm:w-20 sm:text-3xl"
+                aria-label="Change profile photo"
+              >
+                {user.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
+                ) : (
+                  initials(user.name)
+                )}
+                <div
+                  className={cn(
+                    "absolute inset-0 grid place-items-center bg-black/50 text-white transition-opacity",
+                    uploadingAvatar ? "opacity-100" : "opacity-0 group-hover:opacity-100",
+                  )}
+                >
+                  {uploadingAvatar ? (
+                    <FaSpinner className="h-4 w-4 animate-spin sm:h-5 sm:w-5" />
+                  ) : (
+                    <FaCamera className="h-4 w-4 sm:h-5 sm:w-5" />
+                  )}
+                </div>
+                <input
+                  ref={avatarInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarChange}
+                  className="hidden"
+                />
               </div>
               <div className="min-w-0">
                 <div className="mb-2 inline-flex items-center gap-2 rounded-lg bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest-x text-cream-100">

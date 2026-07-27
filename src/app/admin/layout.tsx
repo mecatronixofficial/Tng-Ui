@@ -67,7 +67,7 @@ function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="admin-shell min-h-screen bg-cream-50 flex">
       {/* Sidebar */}
-      <aside className="admin-sidebar hidden lg:flex flex-col w-64 bg-primary-600 text-cream-50 shrink-0">
+      <aside className="admin-sidebar hidden lg:flex flex-col w-64 bg-primary-600 text-cream-50 shrink-0 sticky top-0 h-screen overflow-y-auto no-scrollbar">
         <div className="px-6 py-6 border-b border-cream-50/10">
           <Link href="/admin" className="flex items-center gap-4 group">
             {siteConfig.logo ? (
@@ -155,8 +155,13 @@ function Shell({ children }: { children: React.ReactNode }) {
                 {user.role}
               </div>
             </div>
-            <div className="grid h-10 w-10 place-items-center rounded-full bg-primary-500 text-cream-50 font-semibold group-hover:bg-primary-400 transition">
-              {user.name.charAt(0).toUpperCase()}
+            <div className="grid h-10 w-10 place-items-center overflow-hidden rounded-full bg-primary-500 text-cream-50 font-semibold group-hover:bg-primary-400 transition">
+              {user.avatar ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
+              ) : (
+                user.name.charAt(0).toUpperCase()
+              )}
             </div>
           </Link>
         </header>

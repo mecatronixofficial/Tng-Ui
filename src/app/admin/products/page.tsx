@@ -46,6 +46,7 @@ interface FormState {
   description: string;
   clothType: string;
   colors: string;       // comma-separated in form
+  colorsCount: number;  // optional total count; overrides listing colors names on the storefront
   sizes: string;        // comma-separated in form
   stock: number;
   offerPrice: number;
@@ -70,7 +71,7 @@ interface FormState {
 const emptyForm: FormState = {
   name: "", slug: "", category: "", subcategory: "",
   images: [], description: "", clothType: "",
-  colors: "", sizes: "",
+  colors: "", colorsCount: 0, sizes: "",
   stock: 0,
   offerPrice: 0,
   originalPrice: 0,
@@ -84,7 +85,7 @@ const emptyForm: FormState = {
 const bulkTemplate = [
   [
     "name", "slug", "category", "subcategory", "images", "description",
-    "clothType", "colors", "sizes", "stock",
+    "clothType", "colors", "colorsCount", "sizes", "stock",
     "offerPrice", "originalPrice", "material", "gsm", "pattern", "tags", "retailEnabled",
     "wholesaleEnabled", "bundleSize", "allowMixedColors", "allowMixedSizes",
     "featured", "newArrival", "active",
@@ -92,7 +93,7 @@ const bulkTemplate = [
   [
     "Premium Cotton Petticoat", "premium-cotton-petticoat", "petticoats", "",
     "https://example.com/image-1.jpg | https://example.com/image-2.jpg",
-    "Soft cotton petticoat for daily wear", "Cotton", "White | Maroon | Black",
+    "Soft cotton petticoat for daily wear", "Cotton", "White | Maroon | Black", "",
     "S | M | L | XL", "100", "199", "249", "100% Pure Cotton", "150 GSM",
     "Solid", "cotton | daily-wear", "true", "true", "12", "false", "false",
     "false", "true", "true",
@@ -183,6 +184,10 @@ function buildBulkProducts(csvText: string) {
       description: getCell(row, ["description", "details"]) || name,
       clothType: getCell(row, ["clothType", "cloth type", "type"]) || "Cotton",
       colors: splitList(getCell(row, ["colors", "colour", "color"])),
+      colorsCount: (() => {
+        const n = toNumber(getCell(row, ["colorsCount", "colors count", "total colors"]));
+        return n > 0 ? n : undefined;
+      })(),
       sizes: splitList(getCell(row, ["sizes", "size"])),
       stock: toNumber(getCell(row, ["stock", "qty", "quantity"])),
       offerPrice: toNumber(getCell(row, ["offerPrice", "offer price", "sale price", "price"])),
@@ -272,6 +277,7 @@ export default function AdminProductsPage() {
       description: p.description,
       clothType: p.clothType,
       colors: p.colors.join(", "),
+      colorsCount: p.colorsCount ?? 0,
       sizes: p.sizes.join(", "),
       stock: p.stock,
       offerPrice: p.offerPrice ?? 0,
@@ -328,6 +334,7 @@ export default function AdminProductsPage() {
         description: form.description,
         clothType: form.clothType,
         colors: form.colors.split(",").map((s) => s.trim()).filter(Boolean),
+        colorsCount: Number(form.colorsCount) > 0 ? Number(form.colorsCount) : undefined,
         sizes: form.sizes.split(",").map((s) => s.trim()).filter(Boolean),
         tags: form.tags.split(",").map((s) => s.trim()).filter(Boolean),
         stock: Number(form.stock),
@@ -662,6 +669,19 @@ export default function AdminProductsPage() {
               />
             </Field>
           </div>
+
+          <Field
+            label="Total Colors Available"
+            hint="Optional. If you have too many colors to list by name, just enter the total count here (e.g. 40) — the storefront will show it instead of the color list above."
+          >
+            <Input
+              type="number"
+              min={0}
+              value={form.colorsCount}
+              onChange={(e) => setForm({ ...form, colorsCount: Number(e.target.value) })}
+              placeholder="e.g. 40"
+            />
+          </Field>
 
           <div className="grid sm:grid-cols-2 gap-4">
             <Field label="Stock">

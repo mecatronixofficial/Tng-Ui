@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import {
+  animate,
+  motion,
+  useInView,
+  useMotionValue,
+  useMotionValueEvent,
+  useTransform,
+} from "framer-motion";
 import { FaBoxes, FaStore, FaTags, FaTruckMoving } from "react-icons/fa";
 
 interface Stat {
@@ -52,92 +59,61 @@ function StatTile({
   Icon: React.ComponentType<{ className?: string }>;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
-  const [n, setN] = useState(0);
-  const [started, setStarted] = useState(false);
+  const inView = useInView(ref, { once: true, amount: 0.4 });
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, (v) => Math.round(v).toLocaleString("en-IN"));
+  const [display, setDisplay] = useState("0");
+
+  useMotionValueEvent(rounded, "change", setDisplay);
 
   useEffect(() => {
-    if (!ref.current) return;
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting && !started) setStarted(true);
-      },
-      { threshold: 0.4 }
-    );
-    obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, [started]);
-
-  useEffect(() => {
-    if (!started) return;
-    const dur = 1600;
-    const start = performance.now();
-    let raf = 0;
-    const step = (t: number) => {
-      const p = Math.min((t - start) / dur, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setN(Math.round(item.value * eased));
-      if (p < 1) raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, [started, item.value]);
+    if (!inView) return;
+    const controls = animate(count, item.value, {
+      duration: 1.6,
+      ease: [0.33, 1, 0.68, 1],
+    });
+    return controls.stop;
+  }, [inView, item.value, count]);
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      initial={{ opacity: 0, x: -8 }}
+      whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      className={`group relative overflow-hidden rounded-lg border transition hover:-translate-y-1 ${
-        compact ? "p-3 md:p-4" : "p-3 md:p-6"
+      className={`group relative flex items-center border-l-2 pl-3 transition-colors ${
+        compact ? "gap-2.5 py-1" : "gap-3 py-1.5"
       } ${
         light
-          ? "border-secondary/30 bg-primary-900/80 shadow-warm"
-          : "border-primary-100 bg-white shadow-soft hover:border-secondary hover:shadow-warm"
+          ? "border-white/15 hover:border-secondary"
+          : "border-primary-100 hover:border-secondary"
       }`}
     >
-      <div
-        className={`${compact ? "mb-3 pb-3" : "mb-5 pb-4"} flex items-center justify-between gap-3 border-b ${
-          light ? "border-white/10" : "border-primary-100"
+      <Icon
+        className={`shrink-0 transition-colors ${compact ? "h-4 w-4" : "h-5 w-5"} ${
+          light
+            ? "text-secondary-light/70 group-hover:text-secondary-light"
+            : "text-primary-300 group-hover:text-secondary"
         }`}
-      >
-        <span
-          className={`grid place-items-center rounded-lg text-white transition group-hover:bg-secondary ${
-            compact ? "h-9 w-9" : "h-11 w-11"
-          } ${
-            light ? "bg-secondary" : "bg-primary-600"
+      />
+      <div className="min-w-0">
+        <div
+          className={`font-extrabold leading-tight tracking-tight ${
+            compact ? "text-2xl md:text-3xl" : "text-3xl md:text-4xl"
+          } ${light ? "text-white" : "text-primary-950"}`}
+        >
+          {display}
+          <span className={light ? "text-secondary-light" : "text-secondary"}>
+            {item.suffix}
+          </span>
+        </div>
+        <div
+          className={`truncate text-[11px] font-semibold uppercase tracking-wider-x ${
+            light ? "text-cream-100/60" : "text-ink-muted"
           }`}
         >
-          <Icon className="h-4 w-4" />
-        </span>
-        <span
-          className={`rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest-x ${
-            light
-              ? "bg-white/10 text-secondary-light"
-              : "bg-primary-50 text-primary-800"
-          }`}
-        >
-          Cloth trade
-        </span>
-      </div>
-      <div
-        className={`font-extrabold leading-none ${
-          compact ? "text-3xl md:text-4xl" : "text-4xl md:text-5xl"
-        } ${
-          light ? "text-secondary-light" : "text-primary-950"
-        }`}
-      >
-        {n.toLocaleString("en-IN")}
-        <span className={light ? "text-white" : "text-secondary"}>
-          {item.suffix}
-        </span>
-      </div>
-      <div
-        className={`${compact ? "mt-2 text-[10px]" : "mt-3 text-xs"} font-bold uppercase leading-5 tracking-wider-x ${
-          light ? "text-cream-100/70" : "text-ink-muted"
-        }`}
-      >
-        {item.label}
+          {item.label}
+        </div>
       </div>
     </motion.div>
   );

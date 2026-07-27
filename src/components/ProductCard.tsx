@@ -181,9 +181,6 @@ export default function ProductCard({ product }: { product: Product }) {
                   className={`${colorSwatch(c)} h-3 w-3 rounded-full ring-1 ring-stone-200 ring-offset-1 ring-offset-white`}
                 />
               ))}
-              {product.colors.length > 5 && (
-                <span className="text-[9px] font-semibold text-stone-400">+{product.colors.length - 5}</span>
-              )}
             </div>
           ) : <span />}
           <span className="shrink-0 text-[9px] font-medium uppercase tracking-wide text-stone-400">

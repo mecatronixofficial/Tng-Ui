@@ -28,7 +28,7 @@ const navLinks = [
 ];
 
 const logoSrc = "/logo/tng%20logo.jpeg";
-const logoClassName = "h-[50px] w-auto shrink-0 rounded object-contain";
+const logoClassName = "h-[55px] w-auto shrink-0 rounded object-contain";
 
 const whatsappHref = `https://wa.me/${siteConfig.whatsapp.replace(/\D/g, "")}`;
 

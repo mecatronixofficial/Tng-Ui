@@ -212,7 +212,7 @@ export const api = {
 
   me: () => request<AdminUser>("/auth/me"),
 
-  updateProfile: (body: { name?: string; email?: string; currentPassword?: string; newPassword?: string }) =>
+  updateProfile: (body: { name?: string; email?: string; currentPassword?: string; newPassword?: string; avatar?: string }) =>
     request<AdminUser>("/auth/profile", { method: "PATCH", body }),
 
   forgotPassword: (email: string) =>
@@ -406,6 +406,7 @@ export interface AdminUser {
   email: string;
   name: string;
   role: "admin" | "editor" | "user";
+  avatar?: string;
 }
 
 export interface Paginated<T> {
@@ -423,6 +424,7 @@ export interface ProductApi {
   description: string;
   clothType: string;
   colors: string[];
+  colorsCount?: number;
   sizes: string[];
   stock: number;
   offerPrice: number;
