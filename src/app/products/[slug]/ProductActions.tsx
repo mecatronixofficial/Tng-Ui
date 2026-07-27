@@ -163,10 +163,15 @@ export default function ProductActions({ product }: { product: Product }) {
       )}
 
       {/* Colors */}
-      {product.colors.length > 0 && (
+      {(product.colors.length > 0 || product.allowMixedColors) && (
         <div>
           <div className="mb-3 text-[10px] font-bold uppercase tracking-widest-x text-primary-800">
-            Color&nbsp;·&nbsp;<span className="normal-case font-normal text-ink-soft">{color}</span>
+            Color
+            {color && (
+              <>
+                &nbsp;·&nbsp;<span className="normal-case font-normal text-ink-soft">{color}</span>
+              </>
+            )}
           </div>
           <div className="flex flex-wrap gap-2">
             {product.colors.map((c) => (
@@ -184,7 +189,7 @@ export default function ProductActions({ product }: { product: Product }) {
                 {c}
               </button>
             ))}
-            {activeMode === "wholesale" && product.allowMixedColors && (
+            {product.allowMixedColors && (
               <button
                 type="button"
                 onClick={() => setColor(MIXED_COLOR)}
@@ -195,7 +200,7 @@ export default function ProductActions({ product }: { product: Product }) {
                     : "border-dashed border-secondary/60 text-secondary hover:border-secondary hover:bg-secondary/5"
                 )}
               >
-                Mixed Colors
+                {(product.colorsCount ?? 0) > 0 ? `${product.colorsCount} Mixed Colors` : "Mixed Colors"}
               </button>
             )}
           </div>
@@ -224,7 +229,7 @@ export default function ProductActions({ product }: { product: Product }) {
                 {s}
               </button>
             ))}
-            {activeMode === "wholesale" && product.allowMixedSizes && (
+            {product.allowMixedSizes && (
               <button
                 type="button"
                 onClick={() => setSize(MIXED_SIZE)}

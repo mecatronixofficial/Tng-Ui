@@ -141,6 +141,7 @@ function mapProduct(api: any): ProductType {
     description: asString(api.description),
     clothType: asString(api.clothType),
     colors: asStringArray(api.colors),
+    colorsCount: Number.isFinite(Number(api.colorsCount)) && api.colorsCount != null ? asNumber(api.colorsCount) : undefined,
     sizes: asStringArray(api.sizes),
     stock: asNumber(api.stock),
     material: asString(api.material),

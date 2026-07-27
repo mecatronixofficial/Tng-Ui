@@ -8,6 +8,7 @@ import {
   FaHandshake,
   FaIndustry,
   FaLeaf,
+  FaMapMarkerAlt,
   FaQuestionCircle,
   FaQuoteRight,
   FaShippingFast,
@@ -23,7 +24,7 @@ import PageHero from "@/components/PageHero";
 import SectionTitle from "@/components/SectionTitle";
 import StatsCounter from "@/components/StatsCounter";
 import { loadCategories, loadFaqs } from "@/lib/data";
-import { siteConfig, stats, whyChooseUs } from "@/data/site";
+import { siteConfig, stats, whyChooseUs, manufacturingProcess } from "@/data/site";
 import FAQAccordion from "@/components/FAQAccordion";
 import RichParagraphs from "@/components/RichParagraphs";
 
@@ -199,78 +200,20 @@ export default async function AboutPage() {
               </a>
             </div>
           </div>
-          <div className="lg:col-span-12">
+          {/* <div className="lg:col-span-12">
             <RichParagraphs
               text={siteConfig.des3}
               className="mt-2 mb-2"
               paragraphClassName="text-sm leading-6 text-ink-muted md:text-base md:leading-7"
             />
-          </div>
+          </div> */}
         </div>
       </section>
 
       {/* Stats */}
-      <section className="border-y border-primary-100 bg-white py-12">
+      <section className="border-y border-primary-900 bg-primary-950 py-12">
         <div className="container-x">
-          <StatsCounter items={stats} />
-        </div>
-      </section>
-
-      {/* Why choose */}
-      <section className="section-y bg-white">
-        <div className="container-x">
-          <SectionTitle
-            eyebrow={`Why ${siteConfig.name}`}
-            title="Retail care. Wholesale discipline."
-            align="center"
-          />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {whyChooseUs.map((item, i) => {
-              const Icon = iconMap[item.icon as keyof typeof iconMap];
-              return (
-                <div
-                  key={i}
-                  className="rounded-2xl border border-primary-100 bg-white p-6 transition hover:border-primary-300"
-                >
-                  <div className="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-primary-50 text-primary-600">
-                    {Icon && <Icon className="h-5 w-5" />}
-                  </div>
-                  <h3 className="text-base font-bold leading-tight text-ink">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-6 text-ink-muted">
-                    {item.description}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Promises */}
-      <section className="section-y bg-primary-950 text-white">
-        <div className="container-x grid gap-10 lg:grid-cols-12 lg:items-start">
-          <div className="lg:col-span-4">
-            <SectionTitle
-              eyebrow="What we promise"
-              title="Trade-friendly service without confusion."
-              light
-            />
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:col-span-8">
-            {promises.map((item) => (
-              <div
-                key={item}
-                className="flex items-start gap-3 rounded-xl border border-white/10 p-4"
-              >
-                <FaCheckCircle className="mt-1 h-4 w-4 shrink-0 text-secondary" />
-                <span className="text-sm font-semibold leading-6 text-white/80">
-                  {item}
-                </span>
-              </div>
-            ))}
-          </div>
+          <StatsCounter items={stats} light />
         </div>
       </section>
 
@@ -367,6 +310,154 @@ export default async function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Promises */}
+      <section className="section-y bg-primary-950 text-white">
+        <div className="container-x grid gap-10 lg:grid-cols-12 lg:items-start">
+          <div className="lg:col-span-4">
+            <SectionTitle
+              eyebrow="What we promise"
+              title="Trade-friendly service without confusion."
+              light
+            />
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:col-span-8">
+            {promises.map((item) => (
+              <div
+                key={item}
+                className="flex items-start gap-3 rounded-xl border border-white/10 p-4"
+              >
+                <FaCheckCircle className="mt-1 h-4 w-4 shrink-0 text-secondary" />
+                <span className="text-sm font-semibold leading-6 text-white/80">
+                  {item}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Manufacturing */}
+      <section className="section-y bg-cream-50">
+        <div className="container-x">
+          <SectionTitle
+            eyebrow="Our Manufacturing"
+            title="From yarn to finished cloth, under one roof."
+            align="center"
+          />
+
+          <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:items-center">
+            <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+              <div className="overflow-hidden rounded-3xl border border-primary-100 shadow-warm">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={siteConfig.office.workplace2}
+                  alt={`${siteConfig.name} manufacturing unit at Manickampalayam`}
+                  className="aspect-[4/3] w-full object-cover"
+                />
+              </div>
+              <a
+                href={siteConfig.manufacturingMapLink}
+                target="_blank"
+                rel="noreferrer"
+                className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-lg bg-white/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-primary-700 backdrop-blur transition hover:bg-white"
+              >
+                <FaMapMarkerAlt className="h-3 w-3 text-secondary" />
+                Manufacturing Unit
+              </a>
+              <div className="absolute -bottom-5 -right-3 flex items-center gap-3 rounded-2xl border border-primary-100 bg-white px-5 py-3 shadow-warm sm:-right-5">
+                <span className="text-2xl font-extrabold leading-none text-primary-950">
+                  {String(manufacturingProcess.length).padStart(2, "0")}
+                </span>
+                <span className="max-w-[7rem] text-[10px] font-bold uppercase leading-tight tracking-widest text-primary-500">
+                  Step production process
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <RichParagraphs
+                text={siteConfig.des2}
+                className="mb-6"
+                paragraphClassName="text-sm leading-6 text-ink-muted md:text-base md:leading-7"
+              />
+              <div className="flex flex-col gap-5 border-l-2 border-dashed border-primary-200 pl-6">
+                {manufacturingProcess.map((item) => (
+                  <div key={item.step} className="relative">
+                    <span className="absolute -left-[36px] grid h-6 w-6 place-items-center rounded-full bg-primary-700 text-[10px] font-extrabold text-white ring-4 ring-cream-50">
+                      {item.step}
+                    </span>
+                    <div className="text-sm font-bold text-primary-950">
+                      {item.title}
+                    </div>
+                    <p className="mt-1 text-xs leading-5 text-ink-muted">
+                      {item.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-10 grid gap-4 sm:grid-cols-2">
+            {[
+              { src: siteConfig.office.workplace7, label: "Inside the unit" },
+              { src: siteConfig.office.workplace8, label: "Cloth finishing" },
+            ].map((v, i) => (
+              <div
+                key={v.src}
+                className="group relative overflow-hidden rounded-3xl border border-primary-100 bg-black shadow-warm"
+              >
+                <span className="absolute left-4 top-4 z-10 grid h-8 w-8 place-items-center rounded-full bg-secondary text-xs font-extrabold text-primary-950">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="absolute right-4 top-4 z-10 rounded-lg bg-white/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-primary-700 backdrop-blur">
+                  {v.label}
+                </span>
+                <video
+                  src={v.src}
+                  controls
+                  muted
+                  playsInline
+                  className="aspect-video w-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why choose */}
+      {/* <section className="section-y bg-white">
+        <div className="container-x">
+          <SectionTitle
+            eyebrow={`Why ${siteConfig.name}`}
+            title="Retail care. Wholesale discipline."
+            align="center"
+          />
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {whyChooseUs.map((item, i) => {
+              const Icon = iconMap[item.icon as keyof typeof iconMap];
+              return (
+                <div
+                  key={i}
+                  className="rounded-2xl border border-primary-100 bg-white p-6 transition hover:border-primary-300"
+                >
+                  <div className="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-primary-50 text-primary-600">
+                    {Icon && <Icon className="h-5 w-5" />}
+                  </div>
+                  <h3 className="text-base font-bold leading-tight text-ink">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-ink-muted">
+                    {item.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section> */}
 
       {/* Business info */}
       <section className="section-y bg-white">

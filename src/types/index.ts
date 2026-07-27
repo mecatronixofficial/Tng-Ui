@@ -8,6 +8,7 @@ export interface Product {
   description: string;
   clothType: string;
   colors: string[];
+  colorsCount?: number; // total colors available; shown instead of the color list when set
   sizes: string[];
   stock: number;
   material: string;
