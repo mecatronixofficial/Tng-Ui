@@ -11,7 +11,7 @@ const banner =
   "/banners/a-picturesque-arrangement-of-cotton-fabric-in-a-rainbow-of-colors-with-expansive-copy-space-perfect-for-use-in-textile-industry-catalogs-or-creative-arts-flyers-free-photo.jpg";
 
 export const metadata: Metadata = {
-  title: "Categories",
+ title: "Textile Categories | Wholesale Textiles in Erode,India",
   description: `${siteConfig.name} retail and wholesale cloth categories including petticoats, lungis, towels, gamcha, bed sheets, dhotis and handloom products.`,
   keywords: [
   "cloth categories in Erode",
