@@ -24,7 +24,12 @@ import PageHero from "@/components/PageHero";
 import SectionTitle from "@/components/SectionTitle";
 import StatsCounter from "@/components/StatsCounter";
 import { loadCategories, loadFaqs } from "@/lib/data";
-import { siteConfig, stats, whyChooseUs, manufacturingProcess } from "@/data/site";
+import {
+  siteConfig,
+  stats,
+  whyChooseUs,
+  manufacturingProcess,
+} from "@/data/site";
 import FAQAccordion from "@/components/FAQAccordion";
 import RichParagraphs from "@/components/RichParagraphs";
 
@@ -32,10 +37,22 @@ export const metadata: Metadata = {
   title: "About Us",
   description: `Learn about ${siteConfig.name} — a retail and wholesale cloth supplier from ${siteConfig.address.city}, ${siteConfig.address.state}, serving cotton and handloom textile buyers since ${siteConfig.established}.`,
   keywords: [
-    "about Thangavel Textile",
-    "textile manufacturer Erode history",
-    "cotton wholesale supplier Tamil Nadu",
-  ],
+  "about Thangavel Textile",
+  "Thangavel Textile Erode",
+  "Thangavel Textile company",
+  "Thangavel Textile manufacturer",
+  "textile manufacturer in Erode",
+  "textile wholesaler in Erode",
+  "textile manufacturer and wholesaler in Erode",
+  "cotton textile manufacturer in Erode",
+  "cotton wholesale supplier Tamil Nadu",
+  "textile wholesale supplier Tamil Nadu",
+  "textile supplier in Erode",
+  "textile manufacturers in Tamil Nadu",
+  "Erode textile manufacturing company",
+  "Erode textile industry",
+  "trusted textile supplier in Tamil Nadu"
+],
   alternates: { canonical: "/about" },
   openGraph: {
     title: `About Us — ${siteConfig.name}`,
@@ -109,10 +126,7 @@ const iconMap = {
   FaLeaf,
 };
 
-const [faqs] =
-  await Promise.all([
-    loadFaqs(),
-  ]);
+const [faqs] = await Promise.all([loadFaqs()]);
 
 export default async function AboutPage() {
   const aboutOfficeImages = [
@@ -177,7 +191,9 @@ export default async function AboutPage() {
                   <h3 className="mt-4 text-base font-bold text-primary-950">
                     {title}
                   </h3>
-                  <p className="mt-2 text-sm leading-6 text-ink-muted">{text}</p>
+                  <p className="mt-2 text-sm leading-6 text-ink-muted">
+                    {text}
+                  </p>
                 </div>
               ))}
             </div>
@@ -232,8 +248,8 @@ export default async function AboutPage() {
               </div>
 
               <blockquote className="max-w-3xl text-2xl font-extrabold leading-tight text-white md:text-4xl">
-                &ldquo;We believe cloth buying should be simple, clear and dependable
-                for every retail customer and wholesale buyer.&rdquo;
+                &ldquo;We believe cloth buying should be simple, clear and
+                dependable for every retail customer and wholesale buyer.&rdquo;
               </blockquote>
 
               <p className="mt-5 max-w-2xl text-sm font-semibold leading-7 text-white/70 md:text-base">
@@ -288,8 +304,8 @@ export default async function AboutPage() {
                 From cloth selection to despatch, every step stays clear.
               </h3>
               <p className="max-w-md text-sm font-semibold leading-6 text-ink-muted">
-                A practical buying process for retail customers, shop owners
-                and wholesale partners.
+                A practical buying process for retail customers, shop owners and
+                wholesale partners.
               </p>
             </div>
             <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -472,7 +488,11 @@ export default async function AboutPage() {
             <dl className="grid gap-px overflow-hidden rounded-2xl border border-primary-100 sm:grid-cols-2">
               {[
                 ["Nature of Business", siteConfig.natureOfBusiness, FaStore],
-                ["Additional Business", siteConfig.additionalBusiness.join(", "), FaBoxes],
+                [
+                  "Additional Business",
+                  siteConfig.additionalBusiness.join(", "),
+                  FaBoxes,
+                ],
                 ["CEO", siteConfig.ceo, FaHandshake],
                 ["GST Registration Date", siteConfig.gstSince, FaFileInvoice],
                 ["Legal Status", siteConfig.legalStatus, FaTags],
@@ -484,7 +504,9 @@ export default async function AboutPage() {
                 ],
                 ["Working Hours", siteConfig.workingHours, FaStore],
               ].map(([label, value, Icon]) => {
-                const InfoIcon = Icon as React.ComponentType<{ className?: string }>;
+                const InfoIcon = Icon as React.ComponentType<{
+                  className?: string;
+                }>;
                 return (
                   <div key={label as string} className="bg-white p-5">
                     <div className="flex items-center gap-2">
