@@ -10,7 +10,7 @@ export const siteConfig = {
   logo: "",
   name: "Thangavel Textile",
   tagline: "Woven in Erode. Worn across India.",
-  description: `Thangavel Textile, Erode is a trusted textile manufacturer with a proud legacy of 27+ years in delivering quality, comfort, and craftsmanship. We specialize in manufacturing premium-quality Women Cotton Petticoats, Nighties, Lungi, Dhotis, Towels and Bedsheets serving wholesalers, retailers, and customers across India.`,
+  description: `Thangavel Textile, Erode is a trusted textile manufacturer with 27+ years of excellence, producing premium Women Cotton Petticoats, Nighties, Lungi, Dhotis, Towels, and Bedsheets for wholesalers, retailers, and customers across India.`,
   des2: "With our manufacturing unit at Manickampalayam and our wholesale and retail showroom on Eswaran Kovil Street, Erode, we oversee every stage of production under one roof. From sourcing high-quality grey fabric to dyeing, finishing, cutting, stitching, and quality inspection, every product is crafted with precision by our skilled team to ensure superior quality and consistency.",
   des3: "For more than two decades, our commitment to excellence, fair pricing, and customer satisfaction has earned us the trust of thousands of business partners and families. At Thangavel Textile, we believe in blending traditional craftsmanship with modern manufacturing to create products that are comfortable, durable, and made to last. As we continue to grow, our mission remains the same to deliver quality textiles that customers can trust, generation after generation.",
   ceo: "Thangavel",
@@ -50,14 +50,14 @@ export const siteConfig = {
     whatsapp: `https://wa.me/${whatsappNumber}`,
   },
   office: {
-    workplace1: "/logo/tng%20shop.png",
+    workplace1: "https://res.cloudinary.com/ddpfxvydm/image/upload/v1785231572/tang_ii_xhu3f5.png",
     workplace2:
-      "https://res.cloudinary.com/ddpfxvydm/image/upload/v1785164284/WhatsApp_Image_2026-07-27_at_18.53.13_f9wnlp.jpg",
+      "https://res.cloudinary.com/ddpfxvydm/image/upload/v1785230896/thnd_erpuqy.png",
     workplace3: "https://res.cloudinary.com/ddpfxvydm/image/upload/v1785164490/pro_sp0jms.png",
     workplace4:
-      "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1783405030/DSC09659_jmdxc1.jpg",
+      "https://res.cloudinary.com/ddpfxvydm/image/upload/v1785229473/tng_cmpy_img_ktzy9n.png",
     workplace5:
-      "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1783405030/DSC09659_jmdxc1.jpg",
+      "https://res.cloudinary.com/ddpfxvydm/image/upload/v1785229473/tng_cmpy_img_ktzy9n.png",
     workplace6:
       "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1782368406/c6b31125-7a39-4fdd-aba4-fb114116034b_beh2tp.png",
     workplace7:

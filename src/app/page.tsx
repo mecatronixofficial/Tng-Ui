@@ -105,7 +105,7 @@ export default async function HomePage() {
         <div className="container-x">
           <SectionTitle
             eyebrow="Cloth Range"
-            title="Search by Collections!"
+            title="Explore Collections Made for You!"
             action={
               <div className="flex flex-wrap justify-end gap-3">
                 <Link
@@ -155,7 +155,7 @@ export default async function HomePage() {
         <div className="container-x">
           <SectionTitle
             eyebrow="Retail Picks"
-            title="New arrivals for everyday use"
+            title="New Arrivals for Everyday Comfort!"
             action={
               <Link
                 href="/products"
@@ -277,7 +277,7 @@ export default async function HomePage() {
         <div className="container-x">
           <SectionTitle
             eyebrow="Wholesale Ready"
-            title="Fast-moving cloths for shops"
+            title="Fast-Moving Fabrics for Wholesale Shops"
             action={
               <Link
                 href="/products"
