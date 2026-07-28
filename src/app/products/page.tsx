@@ -5,7 +5,7 @@ import ProductsBrowser from "./ProductsBrowser";
 import { siteConfig } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "Retail & Wholesale Cloth Products",
+  title: "Products |Retail & Wholesale Cloth Manufactures",
   description: `Browse ${siteConfig.name} retail and wholesale cloth products — petticoats, lungis, towels, gamcha, bed sheets, handloom and dhotis from Erode.`,
   keywords: [
   "cotton petticoat wholesale",

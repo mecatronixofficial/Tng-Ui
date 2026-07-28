@@ -20,7 +20,7 @@ import ContactForm from "@/components/ContactForm";
 import { siteConfig } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "Contact Us",
+  title: "Contact | Textile Supplier in Erode",
   description: `Contact ${siteConfig.name} for retail cloth shopping, wholesale textile supply, bulk orders and store enquiries in ${siteConfig.address.city}.`,
   keywords: [
   "contact Thangavel Textile",

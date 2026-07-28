@@ -28,21 +28,32 @@ const ogImage =
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.thangaveltextile.com"),
+
   title: {
-    default: `${siteConfig.name} — ${siteConfig.tagline}`,
-    template: `%s — ${siteConfig.name}`,
+    default: "Thangavel Textile | Textile Manufacturer & Wholesaler in Erode,India",
+    template: "%s | Thangavel Textile",
   },
-  description: siteConfig.description,
-  keywords: [
-    "textile manufacturer Erode",
-    "cotton petticoat",
-    "lungi manufacturer",
-    "wholesale textile India",
-    "handloom lungi",
-    "cotton bed sheets",
-    "Tamil Nadu textiles",
-    "cotton dhoti",
-  ],
+
+  description:
+    "Thangavel Textile is a trusted textile manufacturer and wholesaler in Erode, Tamil Nadu, offering quality cotton petticoats, lungis, towels, gamcha, bed sheets, and dhotis for wholesale buyers.",
+
+ keywords: [
+  "Thangavel Textile",
+  "Thangavel Textile Erode,India",
+  "textile manufacturer in Erode",
+  "textile wholesaler in Erode",
+  "textile manufacturer and wholesaler in Erode",
+  "cotton textile manufacturer in Erode",
+  "cotton textile wholesaler in Erode",
+  "textile supplier in Erode",
+  "cotton wholesale supplier Tamil Nadu",
+  "textile wholesale supplier Tamil Nadu",
+  "textile manufacturer in Tamil Nadu",
+  "wholesale textile supplier India",
+  "cotton textile supplier India",
+  "Erode textile manufacturer",
+  "Erode textile wholesale supplier"
+],
   authors: [{ name: siteConfig.name }],
   creator: siteConfig.name,
   publisher: siteConfig.name,

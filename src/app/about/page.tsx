@@ -37,10 +37,10 @@ export const metadata: Metadata = {
   title: "About Us",
   description: `Learn about ${siteConfig.name} — a retail and wholesale cloth supplier from ${siteConfig.address.city}, ${siteConfig.address.state}, serving cotton and handloom textile buyers since ${siteConfig.established}.`,
   keywords: [
-  "about Thangavel Textile",
-  "Thangavel Textile Erode",
+  "about Thangavel Textile- Erode,India",
+  " Textile Company Erode",
   "Thangavel Textile company",
-  "Thangavel Textile manufacturer",
+  "Thangavel Textile manufacturer- All over India",
   "textile manufacturer in Erode",
   "textile wholesaler in Erode",
   "textile manufacturer and wholesaler in Erode",
