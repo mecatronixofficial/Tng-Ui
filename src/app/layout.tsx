@@ -30,12 +30,12 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.thangaveltextile.com"),
 
   title: {
-    default: "Thangavel Textile | Textile Manufacturer & Wholesaler in Erode,India",
+    default: "Thangavel Textile|Textile Manufacturer & Wholesaler in Erode,India",
     template: "%s | Thangavel Textile",
   },
 
   description:
-    "Thangavel Textile is a trusted textile manufacturer and wholesaler in Erode, Tamil Nadu, offering quality cotton petticoats, lungis, towels, gamcha, bed sheets, and dhotis for wholesale buyers.",
+    "Thangavel Textile is a trusted textile manufacturer and wholesaler in Erode, Tamil Nadu, offering quality cotton petticoats, lungis, towels, bed sheets, and dhotis for wholesale buyers.",
 
  keywords: [
   "Thangavel Textile",
