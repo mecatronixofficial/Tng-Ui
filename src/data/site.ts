@@ -10,7 +10,7 @@ export const siteConfig = {
   logo: "",
   name: "Thangavel Textile",
   tagline: "Woven in Erode. Worn across India.",
-  description: `Thangavel Textile is a trusted textile manufacturer and wholesaler in Erode, Tamil Nadu, offering quality cotton petticoats, lungis, towels, bed sheets, Sammy and dhotis for wholesale buyers.`,
+  description: "Thangavel Textile is a trusted textile manufacturer and wholesaler in Erode, Tamil Nadu, offering quality cotton petticoats, lungis, towels, bedsheets, Samy Items and dhotis for wholesale buyers",
   des2: "With our manufacturing unit at Manickampalayam and our wholesale and retail showroom on Eswaran Kovil Street, Erode, we oversee every stage of production under one roof. From sourcing high-quality grey fabric to dyeing, finishing, cutting, stitching, and quality inspection, every product is crafted with precision by our skilled team to ensure superior quality and consistency.",
   des3: "For more than two decades, our commitment to excellence, fair pricing, and customer satisfaction has earned us the trust of thousands of business partners and families. At Thangavel Textile, we believe in blending traditional craftsmanship with modern manufacturing to create products that are comfortable, durable, and made to last. As we continue to grow, our mission remains the same to deliver quality textiles that customers can trust, generation after generation.",
   ceo: "Thangavel",
@@ -55,9 +55,9 @@ export const siteConfig = {
       "https://res.cloudinary.com/ddpfxvydm/image/upload/v1785230896/thnd_erpuqy.png",
     workplace3: "https://res.cloudinary.com/ddpfxvydm/image/upload/v1785164490/pro_sp0jms.png",
     workplace4:
-      "https://res.cloudinary.com/ddpfxvydm/image/upload/v1785229473/tng_cmpy_img_ktzy9n.png",
+      "https://res.cloudinary.com/ddpfxvydm/image/upload/v1785841729/sign_board_img_tng_sj5ej9.png",
     workplace5:
-      "https://res.cloudinary.com/ddpfxvydm/image/upload/v1785229473/tng_cmpy_img_ktzy9n.png",
+      "https://res.cloudinary.com/ddpfxvydm/image/upload/v1785841729/sign_board_img_tng_sj5ej9.png",
     workplace6:
       "https://res.cloudinary.com/dtbjt4hvf/image/upload/v1782368406/c6b31125-7a39-4fdd-aba4-fb114116034b_beh2tp.png",
     workplace7:
